@@ -6,9 +6,25 @@ import { ButtonSecondary } from '../components/ButtonSecondary'
 import { Icon } from '@/components/Icon'
 import HealthyWoman from '../public/woman2.png'
 import Link from 'next/link'
+import { useState } from 'react'
+import { useApi } from '@/libs/useApi'
+import { useRouter } from 'next/router'
 
 
 const Login = () => {
+
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+
+  const api = useApi();
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    await api.loginUser(email, password);
+    router.push('/calendar')
+  }
+
   return (
     <>
       <Head>
@@ -30,14 +46,14 @@ const Login = () => {
         </div>
         <div className={styles.registerArea}>
           <div className={styles.formArea}>
-            <InputMain fontSizeLabel={12} name={`emailInputLogin`} textLabel={'Email'} widthInput={262} typeInput="text" />
-            <InputMain fontSizeLabel={12} name={`passwordInputLogin`} textLabel={'Password'} widthInput={262} typeInput="password" />
+            <InputMain onChange={e => setEmail(e)} fontSizeLabel={12} name={`emailInputLogin`} textLabel={'Email'} widthInput={262} typeInput="text" />
+            <InputMain onChange={e => setPassword(e)} fontSizeLabel={12} name={`passwordInputLogin`} textLabel={'Password'} widthInput={262} typeInput="password" />
             <div className={styles.forgotPasswordText}>
               ¿Ha olvidado su contraseña? <Link legacyBehavior href={`/forgotPassword`}><a>Pulse aquí</a></Link>
             </div>
           </div>
           <div className={styles.buttonLoginArea}>
-          <ButtonSecondary textButton='Acceder' />
+            <ButtonSecondary onClick={handleLogin} textButton='Acceder' />
           </div>
           <div className={styles.registerAreaText}>
             <Link legacyBehavior href={`/register`}><a>¿No tiene una cuenta? Regístrese</a></Link>

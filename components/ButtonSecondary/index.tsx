@@ -1,13 +1,14 @@
 import styles from './styles.module.css'
 
 type Props = {
-    textButton : string
+    textButton : string;
+    onClick : () => void;
 }
 
-export const ButtonSecondary = ({textButton} : Props) => {
+export const ButtonSecondary = ({textButton, onClick} : Props) => {
 
     return(
-        <div className={styles.container}>
+        <div onClick={onClick} className={styles.container}>
             <div className={styles.text}>{textButton}</div>
         </div>
     )
