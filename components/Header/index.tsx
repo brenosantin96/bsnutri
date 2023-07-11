@@ -12,24 +12,27 @@ type Props = {
 export const Header = ({ title, leftIcon, rightIcon, onClickLeftIcon, onClickRightIcon }: Props) => {
     return (
         <div className={styles.container}>
-            <div className={styles.leftArea}>
-                {leftIcon &&
+            {leftIcon &&
+                <div className={styles.leftArea}>
+
                     <div onClick={onClickLeftIcon}>
                         <Icon svg={leftIcon} height={30} width={30} />
                     </div>
-                }
-            </div>
+
+                </div>
+            }
             <div className={styles.centerArea}>
                 {title}
             </div>
-            <div className={styles.rightArea}>
-                {rightIcon &&
+            {rightIcon &&
+                <div className={styles.rightArea}>
+
                     <div onClick={onClickRightIcon}>
                         <Icon svg={rightIcon} height={30} width={30} />
                     </div>
-                }
-            </div>
 
+                </div>
+            }
         </div>
     )
 }
