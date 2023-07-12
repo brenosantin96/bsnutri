@@ -1,0 +1,29 @@
+.container{
+    margin: 58px 27px 24px 27px;
+}
+
+.searchArea{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+}
+
+.buttonWithIcon{
+    flex: 1;
+}
+
+.buttonSearchArea{
+}
+
+
+@media (max-width: 400px) {
+    .container {
+      margin: 58px 10px 24px 10px; /* Ajuste as margens laterais conforme necessário */
+    }
+    
+    .buttonWithIcon {
+      flex: 0 0 40px; /* Define uma largura fixa para o componente */
+    }
+  }

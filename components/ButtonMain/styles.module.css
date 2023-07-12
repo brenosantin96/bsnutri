@@ -1,0 +1,19 @@
+.container {
+    border: 2px solid #FAA846;
+    background-color: #FFF;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    border-radius: 10px;
+}
+
+.text {
+    color: #FAA846;
+    font-family: 'Montserrat';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

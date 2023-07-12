@@ -6,6 +6,7 @@ import Meal from './meal.svg'
 import Book from './book.svg'
 import Fav from './fav.svg'
 import Logout from './logout.svg'
+import Lupa from './lupa.svg'
 
 type Props = {
     svg: string;
@@ -25,6 +26,7 @@ export const Icon = ({ svg, color, width, height }: Props) => {
             {svg === 'book' && <Book color={color} />}
             {svg === 'fav' && <Fav color={color} />}
             {svg === 'logout' && <Logout color={color} />}
+            {svg === 'lupa' && <Lupa color={color} />}
         </div>
     )
 }

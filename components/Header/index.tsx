@@ -11,7 +11,10 @@ type Props = {
 
 export const Header = ({ title, leftIcon, rightIcon, onClickLeftIcon, onClickRightIcon }: Props) => {
     return (
-        <div className={styles.container}>
+        <div className={styles.container}
+            style={{
+                justifyContent: rightIcon ? "space-between" : "center"
+            }}>
             {leftIcon &&
                 <div className={styles.leftArea}>
 
