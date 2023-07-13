@@ -1,29 +1,53 @@
-.container{
-    margin: 58px 27px 24px 27px;
+.container {
+  margin: 58px 27px 24px 27px;
+  height: 100vh;
 }
 
-.searchArea{
+.searchArea {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonWithIcon {
+}
+
+.buttonSearchArea {}
+
+.foodArea{
+  margin-top: 10px;
+}
+
+.paginationArea{
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+@media (max-width: 400px) {
+  .searchArea input {
+    width: 70%;
+  }
+
+  .container {
+    margin: 58px 17px 24px 17px;
+    height: 100vh;
+  }
+}
+
+/* display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: red;
+  padding: 0 20px; */
+
+/*   .searchArea{
     display: flex;
     gap: 20px;
     justify-content: center;
     align-items: center;
     background-color: red;
-}
-
-.buttonWithIcon{
-    flex: 1;
-}
-
-.buttonSearchArea{
-}
-
-
-@media (max-width: 400px) {
-    .container {
-      margin: 58px 10px 24px 10px; /* Ajuste as margens laterais conforme necessário */
-    }
-    
-    .buttonWithIcon {
-      flex: 0 0 40px; /* Define uma largura fixa para o componente */
-    }
-  }
+} */

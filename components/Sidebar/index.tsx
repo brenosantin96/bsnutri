@@ -22,7 +22,7 @@ export const Sidebar = ({ menuOpened, onClose }: Props) => {
 
             <div className={styles.area}>
                 <div className={styles.header}>
-                    <Header title={`Bien Venido ${user}`} rightIcon={"menu"} onClickRightIcon={onClose} />
+                    <Header title={`Bien Venido ${user}`} rightIcon={"menu"} onClickRightIcon={onClose} textLeft />
                 </div>
                 <div className={styles.midArea}>
                     <div className={styles.menuItemsMidArea}>

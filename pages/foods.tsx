@@ -4,10 +4,11 @@ import { Header } from '@/components/Header';
 import Head from 'next/head'
 import { useRouter } from 'next/router';
 import styles from '../styles/Foods.module.css'
+import { FoodComponent } from '@/components/FoodComponent';
+import { Icon } from '@/components/Icon';
 
 
 const FoodsPage = () => {
-
 
 
     const router = useRouter();
@@ -27,12 +28,21 @@ const FoodsPage = () => {
 
                 <div className={styles.searchArea}>
                     <div className={styles.buttonSearchArea}>
-                        <ButtonMain textButton='Cadastrar' onClick={() => { }} fill={false}  />
+                        <ButtonMain textButton='Cadastrar' onClick={() => { }} fill={false} />
                     </div>
                     <div className={styles.buttonWithIcon}>
                         <ButtonWithIcon icon='lupa' />
-
                     </div>
+                </div>
+                <div className={styles.foodArea}>
+                    <FoodComponent />
+                    <FoodComponent light />
+                    <FoodComponent />
+                    <FoodComponent light />
+                </div>
+                <div className={styles.paginationArea}>
+                    <Icon svg='leftArrow' height={40} width={40} />
+                    <Icon svg='rightArrow' height={40} width={40} />
                 </div>
             </div>
 

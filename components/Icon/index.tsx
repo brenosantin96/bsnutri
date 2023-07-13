@@ -7,6 +7,9 @@ import Book from './book.svg'
 import Fav from './fav.svg'
 import Logout from './logout.svg'
 import Lupa from './lupa.svg'
+import LeftArrow from './leftArrow.svg'
+import RightArrow from './rightArrow.svg'
+import BlankBox from './blank24x24.svg'
 
 type Props = {
     svg: string;
@@ -27,6 +30,9 @@ export const Icon = ({ svg, color, width, height }: Props) => {
             {svg === 'fav' && <Fav color={color} />}
             {svg === 'logout' && <Logout color={color} />}
             {svg === 'lupa' && <Lupa color={color} />}
+            {svg === 'leftArrow' && <LeftArrow color={color} />}
+            {svg === 'rightArrow' && <RightArrow color={color} />}
+            {svg === 'blank' && <BlankBox color={color} />}
         </div>
     )
 }

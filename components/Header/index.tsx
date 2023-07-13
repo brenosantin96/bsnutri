@@ -7,14 +7,12 @@ type Props = {
     onClickLeftIcon?: () => void;
     onClickRightIcon?: () => void;
     rightIcon?: string;
+    textLeft?: boolean
 }
 
-export const Header = ({ title, leftIcon, rightIcon, onClickLeftIcon, onClickRightIcon }: Props) => {
+export const Header = ({ title, leftIcon, rightIcon, onClickLeftIcon, onClickRightIcon, textLeft }: Props) => {
     return (
-        <div className={styles.container}
-            style={{
-                justifyContent: rightIcon ? "space-between" : "center"
-            }}>
+        <div className={styles.container}>
             {leftIcon &&
                 <div className={styles.leftArea}>
 
@@ -24,7 +22,9 @@ export const Header = ({ title, leftIcon, rightIcon, onClickLeftIcon, onClickRig
 
                 </div>
             }
-            <div className={styles.centerArea}>
+            <div className={styles.centerArea}
+                style={{ textAlign: textLeft ? 'left' : 'center' }}
+            >
                 {title}
             </div>
             {rightIcon &&
