@@ -1,4 +1,5 @@
 import { User } from '../types/User'
+import { foods } from '../data/food'
 
 export const useApi = () => ({
 
@@ -10,6 +11,11 @@ export const useApi = () => ({
     loginUser: async (email: string, password: string) => {
         await console.log("Fazendo o login");
         return true;
+    },
+
+    getFoods: async () => {
+        
+        return foods;
     },
 
 

@@ -1,0 +1,21 @@
+.container{
+    display: flex;
+    align-items: center;
+    height: 35px;
+    border: 2px solid #FAA846;
+    background: #FFF;
+    border-radius: 10px;
+    padding: 0 5px;
+}
+
+.container input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0 10px;
+  }
+  
+
+
+
