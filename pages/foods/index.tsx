@@ -1,11 +1,10 @@
 import { ButtonMain } from '@/components/ButtonMain';
-import { ButtonWithIcon } from '../components/ButtonWithIcon'
 import { Header } from '@/components/Header';
 import Head from 'next/head'
 import { useRouter } from 'next/router';
-import styles from '../styles/Foods.module.css'
+import styles from '../../styles/Foods.module.css'
 import { FoodComponent } from '@/components/FoodComponent';
-import { SearchInput } from '../components/searchInput';
+import { SearchInput } from '../../components/searchInput';
 import { Icon } from '@/components/Icon';
 import { GetServerSideProps } from 'next';
 import { useApi } from '@/libs/useApi';
@@ -40,6 +39,10 @@ const FoodsPage = (data: ServerProps) => {
         setSearchText(value)
     }
 
+    const createNewFood = () => {
+        router.push('/foods/new')
+    }
+
 
     return (
         <>
@@ -56,7 +59,7 @@ const FoodsPage = (data: ServerProps) => {
 
                 <div className={styles.searchArea}>
                     <div className={styles.buttonSearchArea}>
-                        <ButtonMain textButton='Cadastrar' onClick={() => { }} fill={false} />
+                        <ButtonMain textButton='Cadastrar' onClick={createNewFood} fill={false} />
                     </div>
                     <div className={styles.buttonWithIcon}>
                         {/* <input type="text" value={searchText} onChange={(e) => setSearchText(e.target.value)}/> */}
@@ -71,13 +74,13 @@ const FoodsPage = (data: ServerProps) => {
                         {filteredFoods.length > 0 &&
                             <div>
                                 {filteredFoods.map((item, index) => (
-                                    <FoodComponent key={index} data={item} />
+                                    <FoodComponent key={index} data={item} light={index % 2 === 0} />
                                 ))}
                             </div>
                         }
 
                         {filteredFoods.length === 0 &&
-                            <div>Lo siento, no se tiene productos con este nombre.</div>
+                            <div>Lo siento, no hay alimentos con este nombre.</div>
                         }
 
                     </div>
@@ -87,7 +90,7 @@ const FoodsPage = (data: ServerProps) => {
                 {!searchText &&
                     <div className={styles.foodArea}>
                         {foods.map((item, index) => (
-                            <FoodComponent key={index} data={item} />
+                            <FoodComponent key={index} data={item} light={index % 2 === 0} />
                         ))}
                     </div>
                 }
