@@ -1,10 +1,11 @@
 import styles from './styles.module.css'
 import Image from 'next/image'
 import { Header } from '../Header/index'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Icon } from '../Icon/index'
 import Link from 'next/link'
 import Elipse5 from '../../public/Elipse5.png'
+import { AuthContext } from '@/contexts/Auth/AuthContext'
 
 type Props = {
     menuOpened: boolean;
@@ -14,7 +15,7 @@ type Props = {
 
 export const Sidebar = ({ menuOpened, onClose }: Props) => {
 
-    const [user, setUser] = useState('Breno')
+    const auth = useContext(AuthContext);
 
     return (
 
@@ -22,7 +23,7 @@ export const Sidebar = ({ menuOpened, onClose }: Props) => {
 
             <div className={styles.area}>
                 <div className={styles.header}>
-                    <Header title={`Bien Venido ${user}`} rightIcon={"menu"} onClickRightIcon={onClose} textLeft />
+                    <Header title={`Bien Venido ${auth.user?.name}`} rightIcon={"menu"} onClickRightIcon={onClose} textLeft />
                 </div>
                 <div className={styles.midArea}>
                     <div className={styles.menuItemsMidArea}>

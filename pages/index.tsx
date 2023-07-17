@@ -6,9 +6,11 @@ import { ButtonSecondary } from '../components/ButtonSecondary'
 import { Icon } from '@/components/Icon'
 import HealthyWoman from '../public/woman2.png'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useApi } from '@/libs/useApi'
 import { useRouter } from 'next/router'
+import { AuthContext } from '@/contexts/Auth/AuthContext'
+import { setCookie } from 'cookies-next';
 
 
 const Login = () => {
@@ -16,13 +18,21 @@ const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const auth = useContext(AuthContext);
+
 
   const api = useApi();
   const router = useRouter();
 
   const handleLogin = async () => {
-    await api.loginUser(email, password);
-    router.push('/calendar')
+    const res = await auth.signIn(email, password);
+    if (!res) {
+      alert("Correo electrónico y/o contraseña incorrectos.")
+    }
+    if (res) {
+      setCookie("token", auth.token);
+      router.push('/calendar');
+    }
   }
 
   return (

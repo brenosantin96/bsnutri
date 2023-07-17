@@ -21,7 +21,7 @@ const Register = () => {
     const router = useRouter();
 
     const handleRegister = async () => {
-        api.createUser({id: 1, email, name, password});
+        api.createUser({id: 1, email, name, password, isAdmin : false});
         router.push('/')
     }
 
