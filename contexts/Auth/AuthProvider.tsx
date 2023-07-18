@@ -37,8 +37,12 @@ export const AuthProvider = ({ children }: ProviderType) => {
         setToken(tokenString);
     }
 
+    const isLogged = () => {
+        return token ? true : false;
+    }
+
     return (
-        <AuthContext.Provider value={{ user, signIn, signOut, token, handleToken }} >
+        <AuthContext.Provider value={{ user, signIn, signOut, token, handleToken, isLogged }} >
             {children}
         </AuthContext.Provider>
     )

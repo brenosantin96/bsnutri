@@ -6,6 +6,7 @@ import { Icon } from '../Icon/index'
 import Link from 'next/link'
 import Elipse5 from '../../public/Elipse5.png'
 import { AuthContext } from '@/contexts/Auth/AuthContext'
+import { setCookie } from 'cookies-next'
 
 type Props = {
     menuOpened: boolean;
@@ -16,6 +17,11 @@ type Props = {
 export const Sidebar = ({ menuOpened, onClose }: Props) => {
 
     const auth = useContext(AuthContext);
+
+    const logout = () => {
+        auth.handleToken("noToken");
+        setCookie("token", auth.token);
+    }
 
     return (
 
@@ -70,7 +76,7 @@ export const Sidebar = ({ menuOpened, onClose }: Props) => {
                             <Icon svg='logout' width={24} height={24} />
                         </div>
                         <div className={styles.menuItemText}>
-                            <Link legacyBehavior href={`/logout`}><a>Salir</a></Link>
+                            <Link legacyBehavior href={`/`}><a onClick={logout}>Salir</a></Link>
                         </div>
                     </div>
                 </div>

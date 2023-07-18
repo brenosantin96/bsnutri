@@ -9,12 +9,12 @@ const baseURL = process.env.NEXT_PUBLIC_BASEURL;
 export const useApi = () => ({
 
     validateToken: async (token: string) => {
-        const response = await axios.post(`${baseURL}/validate`, {token});
+        const response = await axios.post(`${baseURL}/validate`, { token });
         return response.data;
     },
 
     signin: async (email: string, password: string) => {
-        const response = await axios.post(`${baseURL}/login`, {email, password});
+        const response = await axios.post(`${baseURL}/login`, { email, password });
         return response.data;
     },
 
@@ -36,6 +36,15 @@ export const useApi = () => ({
     getFoods: async () => {
 
         return foods;
+    },
+
+    getOneFood: async (id: number) => {
+        let food = await foods.find(item => item.id === id);
+        if (food) {
+            return food;
+        } else {
+            alert("Nao foi possivel encontrar food com esse nome")
+        }
     },
 
     createFood: async (newFood: Food) => {

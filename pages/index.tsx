@@ -6,7 +6,7 @@ import { ButtonSecondary } from '../components/ButtonSecondary'
 import { Icon } from '@/components/Icon'
 import HealthyWoman from '../public/woman2.png'
 import Link from 'next/link'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useApi } from '@/libs/useApi'
 import { useRouter } from 'next/router'
 import { AuthContext } from '@/contexts/Auth/AuthContext'
@@ -30,10 +30,14 @@ const Login = () => {
       alert("Correo electrónico y/o contraseña incorrectos.")
     }
     if (res) {
-      setCookie("token", auth.token);
       router.push('/calendar');
     }
   }
+
+
+  useEffect(() => {
+    if (auth.token !== "") { setCookie("token", auth.token); }
+  }, [auth.token])
 
   return (
     <>

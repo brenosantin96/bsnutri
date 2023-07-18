@@ -10,7 +10,7 @@ type Props = {
 }
 
 
-export const FoodComponent = ({ data, light }: Props) => {
+export const FoodComponent2 = ({ data, light }: Props) => {
 
 
     return (

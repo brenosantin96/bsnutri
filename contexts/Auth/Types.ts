@@ -6,6 +6,7 @@ export type AuthContextType = {
     signOut: () => void;
     handleToken: (token : string) => void;
     token: string | null;
+    isLogged: () => boolean;
 }
 
 export type ProviderType = {
