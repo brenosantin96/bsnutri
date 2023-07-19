@@ -1,3 +1,16 @@
-.container{
-    
-}
+.container {
+    margin: 58px 27px 24px 27px;
+    height: 100vh;
+  }
+
+  .areaEditButton{
+    display: flex;
+    max-width: 110px;
+    margin-bottom: 22px;
+  }
+
+  .backAndSaveArea{
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+  }

@@ -32,13 +32,17 @@
 }
 
 .foodContainer {
-    display: flex;
     border-radius: 10px;
     border: 2px solid #FAA846;
     background: #FA881E;
 }
 
-.leftSideFoodContainer {}
+.topSideFoodContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
 
 .spaceImage {
     margin: 10px 17px 10px 10px;
@@ -52,21 +56,21 @@
     align-items: center;
 }
 
-.rightSideFoodContainer {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    margin: 10px 0px 10px 0px;
+.downSideContainer{
+   margin-bottom: 30px;
 }
 
 .infoItem {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    padding: 2px 0px;
+    justify-content: center;
+    gap: 30px;
+    padding: 4px 0px;
 }
 
 .descriptionItem {
+    margin-left: 10%;
+    flex: 1;
     color: #FFF;
     font-family: 'Inter';
     font-size: 14px;
@@ -74,6 +78,17 @@
     font-weight: 600;
     line-height: normal;
 }
+
+.inputDescriptionItem {
+    width: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Ajustar o padding para centralizar o texto */
+    padding-left: 25px;
+    margin-left: 20px;
+}
+
 
 .valueItem {
     
@@ -84,4 +99,13 @@
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+}
+
+.inputvalueItem {
+    width: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 25px;
+    margin-right: 20px;
 }

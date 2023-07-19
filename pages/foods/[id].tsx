@@ -1,15 +1,45 @@
 import { FoodComponent2 } from '@/components/FoodComponent2';
+import { Header } from '@/components/Header';
+import { ButtonMain } from '@/components/ButtonMain';
 import { useApi } from '@/libs/useApi';
 import { Food } from '@/types/Food';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import styles from '../../styles/Food-id.module.css';
+import { useState } from 'react';
 
 
-const FoodId = (data : ServerProps) => {
+const FoodId = (data: ServerProps) => {
+
+    const router = useRouter();
+
+    const [isEdditing, setIsEdditing] = useState(false);
+
+    const startEdditing = () => {
+        setIsEdditing(true);
+    }
+    
+    const saveEdittedFood = () => {
+        console.log("Salvado o food")
+    }
+
+
     return (
-        <div className={styles.container}>
-            <FoodComponent2 data={data.food} />
-        </div>
+        <>
+            <Header title={data.food.name} leftIcon='back' onClickLeftIcon={() => router.push('/foods')} />
+            <div className={styles.container}>
+
+                <div className={styles.areaEditButton}>
+                    <ButtonMain onClick={startEdditing} textButton={"Editar"} fill={false} />
+                </div>
+                <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} />
+
+                <div className={styles.backAndSaveArea}>
+                    <ButtonMain onClick={() => {router.push("/foods")}} textButton={"Volver"} fill={false} />
+                    <ButtonMain onClick={saveEdittedFood} textButton={"Guardar"} fill={true} />
+                </div>
+            </div>
+        </>
     )
 }
 

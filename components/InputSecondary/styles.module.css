@@ -1,0 +1,41 @@
+.container {
+    width: 120px;
+    border-radius: 5px;
+    background-color: white;
+    color: #262424;
+    font-family: 'Inter';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.inputContainer {
+    border: none;
+    outline: none;
+    /* Isso remove o contorno quando o input está focado */
+    background: transparent;
+    max-width: 100%;
+}
+
+.inputContainerDiv{
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e6e3e3;
+    border-radius: 5px;
+    
+}
+
+/* Estilos para telas menores que 400 pixels */
+@media (max-width: 400px) {
+
+    .container {
+        width: 100px;
+    }
+
+    .inputContainerDiv {
+        width: 100px; /* Estilo para telas menores que 400 pixels */
+    }
+}
