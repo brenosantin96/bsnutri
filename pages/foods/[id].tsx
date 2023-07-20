@@ -18,9 +18,13 @@ const FoodId = (data: ServerProps) => {
     const startEdditing = () => {
         setIsEdditing(true);
     }
-    
+
     const saveEdittedFood = () => {
         console.log("Salvado o food")
+    }
+
+    const cancelSave = () => {
+        setIsEdditing(false)
     }
 
 
@@ -35,7 +39,7 @@ const FoodId = (data: ServerProps) => {
                 <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} />
 
                 <div className={styles.backAndSaveArea}>
-                    <ButtonMain onClick={() => {router.push("/foods")}} textButton={"Volver"} fill={false} />
+                    <ButtonMain onClick={cancelSave} textButton={"Cancelar"} fill={false} />
                     <ButtonMain onClick={saveEdittedFood} textButton={"Guardar"} fill={true} />
                 </div>
             </div>

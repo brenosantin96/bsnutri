@@ -8,8 +8,8 @@ import { InputSecondary } from '../InputSecondary';
 
 type Props = {
     data: Food;
+    isEdditing: boolean;
     light?: boolean;
-    isEdditing?: boolean;
 }
 
 
@@ -24,15 +24,14 @@ export const FoodComponent2 = ({ data, light, isEdditing }: Props) => {
     const [inputSaltValue, setInputSaltValue] = useState(data.salt.toString());
 
 
-
-
-
     return (
         <div className={styles.container}>
-            <div className={styles.headerFoodContainer}>
-                <div className={styles.headerName}>{data.name}</div>
-                <div className={styles.headerPortion}>{`${data.portion}g`}</div>
-            </div>
+            {isEdditing &&
+                <div className={styles.headerFoodContainer}>
+                    <div className={styles.headerName}>{data.name}</div>
+                    <div className={styles.headerPortion}>{`${data.portion}g`}</div>
+                </div>
+            }
 
             <Link legacyBehavior href={`/foods/${data.id}`}>
                 <div className={styles.foodContainer} style={{ backgroundColor: light ? '#FAA846' : '#FA881E', border: light ? '2px solid #FA881E' : '2px solid #FAA846' }}>
@@ -44,10 +43,16 @@ export const FoodComponent2 = ({ data, light, isEdditing }: Props) => {
                     <div className={styles.downSideContainer}>
                         <div className={styles.infoItem}>
                             <InputSecondary disabled={true} type={'text'} value={"Proteína"} onlyText />
-                            <InputSecondary disabled={!isEdditing as boolean} type={'number'} value={isEdditing ? inputProteinValue : data.protein.toString()} onChange={setInputProteinValue} />
+                            <InputSecondary
+                                disabled={!isEdditing as boolean}
+                                type={'number'}
+                                value={isEdditing ? inputKcalValue : data.calories.toString()}
+                                onChange={setInputProteinValue}
+                            />
+
                         </div>
                         <div className={styles.infoItem}>
-                            <InputSecondary disabled={true} type={'text'} value={"Kcal"}  onlyText/>
+                            <InputSecondary disabled={true} type={'text'} value={"Kcal"} onlyText />
                             <InputSecondary disabled={!isEdditing as boolean} type={'number'} value={isEdditing ? inputKcalValue : data.calories.toString()} onChange={setInputKcalValue} />
                         </div>
                         <div className={styles.infoItem}>
