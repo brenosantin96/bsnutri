@@ -3,18 +3,18 @@ import Image from 'next/image'
 import image1 from '../../public/food1.png';
 import { Food } from '@/types/Food';
 import Link from 'next/link'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { InputSecondary } from '../InputSecondary';
 
 type Props = {
     data: Food;
     isEdditing: boolean;
     light?: boolean;
+    cancelled : boolean;
 }
 
 
-export const FoodComponent2 = ({ data, light, isEdditing }: Props) => {
-
+export const FoodComponent2 = ({ data, light, isEdditing, cancelled }: Props) => {
 
 
     //inputs
@@ -23,6 +23,26 @@ export const FoodComponent2 = ({ data, light, isEdditing }: Props) => {
     const [inputGreaseValue, setInputGreaseValue] = useState(data.grease.toString());
     const [inputSaltValue, setInputSaltValue] = useState(data.salt.toString());
 
+    const handleIsCancelled = () => {
+
+        //recebendo do componente pai se a operacao foi cancelada ou nao atraves do cancelled.
+        //sempre executando a funcao se esta cancelada atraves do useEffect.
+
+        if (cancelled) {
+            setInputProteinValue(data.protein.toString());
+            setInputKcalValue(data.calories.toString());
+            setInputGreaseValue(data.grease.toString());
+            setInputSaltValue(data.salt.toString());
+            console.log("Cancelled: ", cancelled)
+        } else {
+            console.log("Cancelled: ", cancelled)
+        }
+
+    }
+
+    useEffect(() => {
+        handleIsCancelled()
+    }, [cancelled])
 
     return (
         <div className={styles.container}>
@@ -46,22 +66,36 @@ export const FoodComponent2 = ({ data, light, isEdditing }: Props) => {
                             <InputSecondary
                                 disabled={!isEdditing as boolean}
                                 type={'number'}
-                                value={isEdditing ? inputKcalValue : data.calories.toString()}
+                                value={isEdditing ? inputProteinValue : data.calories.toString()}
                                 onChange={setInputProteinValue}
                             />
 
                         </div>
                         <div className={styles.infoItem}>
                             <InputSecondary disabled={true} type={'text'} value={"Kcal"} onlyText />
-                            <InputSecondary disabled={!isEdditing as boolean} type={'number'} value={isEdditing ? inputKcalValue : data.calories.toString()} onChange={setInputKcalValue} />
+                            <InputSecondary
+                                disabled={!isEdditing as boolean}
+                                type={'number'}
+                                value={isEdditing ? inputKcalValue : data.calories.toString()}
+                                onChange={setInputKcalValue}
+                            />
                         </div>
                         <div className={styles.infoItem}>
                             <InputSecondary disabled={true} type={'text'} value={"Grasa"} onlyText />
-                            <InputSecondary disabled={!isEdditing as boolean} type={'number'} value={isEdditing ? inputGreaseValue : data.grease.toString()} onChange={setInputGreaseValue} />
+                            <InputSecondary
+                                disabled={!isEdditing as boolean}
+                                type={'number'}
+                                value={isEdditing ? inputGreaseValue : data.grease.toString()}
+                                onChange={setInputGreaseValue}
+                            />
                         </div>
                         <div className={styles.infoItem}>
                             <InputSecondary disabled={true} type={'text'} value={"Sal"} onlyText />
-                            <InputSecondary disabled={!isEdditing as boolean} type={'number'} value={isEdditing ? inputSaltValue : data.salt.toString()} onChange={setInputSaltValue} />
+                            <InputSecondary
+                                disabled={!isEdditing as boolean}
+                                type={'number'}
+                                value={isEdditing ? inputSaltValue : data.salt.toString()}
+                                onChange={setInputSaltValue} />
                         </div>
 
                     </div>

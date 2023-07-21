@@ -14,9 +14,11 @@ const FoodId = (data: ServerProps) => {
     const router = useRouter();
 
     const [isEdditing, setIsEdditing] = useState(false);
+    const [cancelled, setIsCancelled] = useState(true);
 
     const startEdditing = () => {
         setIsEdditing(true);
+        setIsCancelled(false);
     }
 
     const saveEdittedFood = () => {
@@ -25,8 +27,10 @@ const FoodId = (data: ServerProps) => {
 
     const cancelSave = () => {
         setIsEdditing(false)
+        setIsCancelled(true);
     }
 
+  
 
     return (
         <>
@@ -36,7 +40,7 @@ const FoodId = (data: ServerProps) => {
                 <div className={styles.areaEditButton}>
                     <ButtonMain onClick={startEdditing} textButton={"Editar"} fill={false} />
                 </div>
-                <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} />
+                <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} cancelled={cancelled} />
 
                 <div className={styles.backAndSaveArea}>
                     <ButtonMain onClick={cancelSave} textButton={"Cancelar"} fill={false} />
