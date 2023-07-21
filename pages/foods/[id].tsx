@@ -18,21 +18,11 @@ const FoodId = (data: ServerProps) => {
     const [isEdditing, setIsEdditing] = useState(false);
     const [cancelled, setIsCancelled] = useState(true);
     const [saved, setIsSaved] = useState(false);
-    const [removing, setRemoving] = useState(false);
 
     const [food, setFood] = useState<Food>(data.food)
 
     //removeItem Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
-
 
     const startEdditing = () => {
         setIsEdditing(true);
@@ -54,7 +44,7 @@ const FoodId = (data: ServerProps) => {
     };
 
     const removeFood = () => {
-        setRemoving(true);
+        setIsModalOpen(true);
     }
 
 
@@ -80,8 +70,8 @@ const FoodId = (data: ServerProps) => {
                 </div>
                 <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} cancelled={cancelled} saved={saved} onSave={handleUpdateFood} />
 
-                {removing &&
-                    <ModalExclude id={food.id} valueToRemove={food.name} />
+                {isModalOpen &&
+                    <ModalExclude id={food.id} valueToRemove={food.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)}  />
                 }
 
 

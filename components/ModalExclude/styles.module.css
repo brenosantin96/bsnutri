@@ -1,11 +1,89 @@
-.container{
+.container {
+   
+}
+
+.modal {
     position: fixed;
-    top: 20px;
-    bottom: 20px;
-    right: 20px;
-    width: 20px;
-    background-color: #CCC;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    /* 80% da largura da tela */
+    max-width: 80%;
+    /* Largura máxima do modal */
+    height: 380px;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    background-color: #EBEAE9;
     z-index: 9999;
     transition: all ease .2s;
     overflow-x: hidden;
+}
+
+.headerModal {
+    margin-top: 40px;
+    color: #51463C;
+    text-align: center;
+    font-family: 'Inter';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.modalProduct {
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+    border-radius: 10px;
+    background: #7F6C55;
+    color: #FFF;
+    text-align: center;
+    font-family: 'Inter';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.bottomArea {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 10px;
+
+}
+
+.bottomAreaYesButton {
+    color: #FFF;
+    height: 40px;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #7F6C55;
+    font-family: 'Montserrat';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border-radius: 10px;
+}
+
+.bottomAreaNoButton {
+    color: #7F6C55;
+    height: 40px;
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    font-family: 'Montserrat';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    border-radius: 10px;
 }
