@@ -4,8 +4,9 @@
   }
 
   .areaEditButton{
+    gap: 50px;
     display: flex;
-    max-width: 110px;
+    justify-content: space-between;
     margin-bottom: 22px;
   }
 

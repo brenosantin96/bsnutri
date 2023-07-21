@@ -52,6 +52,14 @@ export const useApi = () => ({
             let request = await axios.post("https://api/foods", newFood);
             return request.data;
         }
+    },
+
+    saveEditedFood: async (food: Food) => {
+
+        if (food) {
+            let request = await axios.put("https://api/foods", food);
+            return request.data;
+        }
     }
 
 

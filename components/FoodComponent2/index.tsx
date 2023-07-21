@@ -10,11 +10,15 @@ type Props = {
     data: Food;
     isEdditing: boolean;
     light?: boolean;
-    cancelled : boolean;
+    cancelled: boolean;
+    saved: boolean;
+    onSave: (food: Food) => void
 }
 
 
-export const FoodComponent2 = ({ data, light, isEdditing, cancelled }: Props) => {
+export const FoodComponent2 = ({ data, light, isEdditing, cancelled, saved, onSave }: Props) => {
+
+
 
 
     //inputs
@@ -24,7 +28,6 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled }: Props) =>
     const [inputSaltValue, setInputSaltValue] = useState(data.salt.toString());
 
     const handleIsCancelled = () => {
-
         //recebendo do componente pai se a operacao foi cancelada ou nao atraves do cancelled.
         //sempre executando a funcao se esta cancelada atraves do useEffect.
 
@@ -40,9 +43,28 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled }: Props) =>
 
     }
 
+    const handleIsSaved = () => {
+        if (saved) {
+            let food: Food = {
+                id: data.id,
+                name: data.name,
+                portion: data.portion,
+                protein: parseInt(inputProteinValue),
+                calories: parseInt(inputKcalValue),
+                grease: parseInt(inputGreaseValue),
+                salt: parseInt(inputSaltValue),
+            }
+            onSave(food);
+        }
+    }
+
     useEffect(() => {
         handleIsCancelled()
     }, [cancelled])
+
+    useEffect(() => {
+        handleIsSaved()
+    }, [saved])
 
     return (
         <div className={styles.container}>
@@ -66,7 +88,7 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled }: Props) =>
                             <InputSecondary
                                 disabled={!isEdditing as boolean}
                                 type={'number'}
-                                value={isEdditing ? inputProteinValue : data.calories.toString()}
+                                value={isEdditing ? inputProteinValue : data.protein.toString()}
                                 onChange={setInputProteinValue}
                             />
 

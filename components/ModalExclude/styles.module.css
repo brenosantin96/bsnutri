@@ -1,0 +1,11 @@
+.container{
+    position: fixed;
+    top: 20px;
+    bottom: 20px;
+    right: 20px;
+    width: 20px;
+    background-color: #CCC;
+    z-index: 9999;
+    transition: all ease .2s;
+    overflow-x: hidden;
+}

@@ -7,30 +7,67 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import styles from '../../styles/Food-id.module.css';
 import { useState } from 'react';
+import { ModalExclude } from '@/components/ModalExclude';
 
 
 const FoodId = (data: ServerProps) => {
 
     const router = useRouter();
+    const api = useApi();
 
     const [isEdditing, setIsEdditing] = useState(false);
     const [cancelled, setIsCancelled] = useState(true);
+    const [saved, setIsSaved] = useState(false);
+    const [removing, setRemoving] = useState(false);
+
+    const [food, setFood] = useState<Food>(data.food)
+
+    //removeItem Modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
 
     const startEdditing = () => {
         setIsEdditing(true);
         setIsCancelled(false);
+        setIsSaved(false);
     }
 
+
     const saveEdittedFood = () => {
-        console.log("Salvado o food")
+        console.log("Salvado o food: ", food)
+        setIsSaved(true);
+
     }
+
+    const handleUpdateFood = (updatedFood: Food) => {
+        // Atualiza o estado do alimento com os novos dados vindo do componente filho.
+        setFood(updatedFood);
+        console.log(updatedFood);
+    };
+
+    const removeFood = () => {
+        setRemoving(true);
+    }
+
 
     const cancelSave = () => {
         setIsEdditing(false)
         setIsCancelled(true);
+        setIsSaved(false);
     }
 
-  
+    //quando eu clicar no salvar do componente pai, vai pegar todos dados do componente FoodComponent2 e vai mandar na APi
+    //do foodcomponent2 eu tenho que enviar um food com os valores atualizados aqui para o componente pai.
+    //no child vamo mandar uma funcao que manda o estado do parent component
+
 
     return (
         <>
@@ -39,8 +76,14 @@ const FoodId = (data: ServerProps) => {
 
                 <div className={styles.areaEditButton}>
                     <ButtonMain onClick={startEdditing} textButton={"Editar"} fill={false} />
+                    <ButtonMain onClick={removeFood} textButton={"Remover"} fill={false} />
                 </div>
-                <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} cancelled={cancelled} />
+                <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} cancelled={cancelled} saved={saved} onSave={handleUpdateFood} />
+
+                {removing &&
+                    <ModalExclude id={food.id} valueToRemove={food.name} />
+                }
+
 
                 <div className={styles.backAndSaveArea}>
                     <ButtonMain onClick={cancelSave} textButton={"Cancelar"} fill={false} />
