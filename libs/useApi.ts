@@ -2,6 +2,7 @@ import { User } from '../types/User'
 import { foods } from '../data/food'
 import { Food } from '@/types/Food';
 import axios from 'axios';
+import { meals } from '@/data/meal';
 
 const baseURL = process.env.NEXT_PUBLIC_BASEURL;
 
@@ -65,7 +66,12 @@ export const useApi = () => ({
     deleteFood: async (id: number) => {
         return true;
 
-    }
+    },
+
+    getMeals: async () => {
+
+        return meals;
+    },
 
 
 
