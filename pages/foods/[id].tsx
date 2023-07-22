@@ -47,12 +47,23 @@ const FoodId = (data: ServerProps) => {
         setIsModalOpen(true);
     }
 
+    const handleDeleteFood = async (id: number) => {
+       let deleted = await api.deleteFood(id);
+
+       if(deleted){
+        console.log("deletado com sucesso o food: ", id)
+        //router.push('/foods');
+       }
+
+    }
+
 
     const cancelSave = () => {
         setIsEdditing(false)
         setIsCancelled(true);
         setIsSaved(false);
     }
+
 
     //quando eu clicar no salvar do componente pai, vai pegar todos dados do componente FoodComponent2 e vai mandar na APi
     //do foodcomponent2 eu tenho que enviar um food com os valores atualizados aqui para o componente pai.
@@ -71,7 +82,10 @@ const FoodId = (data: ServerProps) => {
                 <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} cancelled={cancelled} saved={saved} onSave={handleUpdateFood} />
 
                 {isModalOpen &&
-                    <ModalExclude id={food.id} valueToRemove={food.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)}  />
+                    <div>
+                        <ModalExclude id={food.id} valueToRemove={food.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onDelete={handleDeleteFood}  />
+                        <div className={styles.backdrop} />
+                    </div>
                 }
 
 

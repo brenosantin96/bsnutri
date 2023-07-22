@@ -1,17 +1,31 @@
 .container {
     margin: 58px 27px 24px 27px;
     height: 100vh;
-  }
+}
 
-  .areaEditButton{
+.areaEditButton {
     gap: 50px;
     display: flex;
     justify-content: space-between;
     margin-bottom: 22px;
-  }
+}
 
-  .backAndSaveArea{
+.backAndSaveArea {
     display: flex;
     justify-content: space-between;
     gap: 50px;
-  }
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Cor de fundo semi-transparente */
+    backdrop-filter: blur(8px);
+    /* Aplica o filtro de desfoque */
+    z-index: 5;
+    /* Coloca a camada do fundo atrás do modal */
+}

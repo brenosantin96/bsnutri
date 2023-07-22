@@ -19,7 +19,7 @@ const Calendar = () => {
   //Managing Cookie
 
   useEffect(() => {
-    if (auth.token === "") router.push('/')
+    //if (auth.token === "") router.push('/')
   }, [])
 
 

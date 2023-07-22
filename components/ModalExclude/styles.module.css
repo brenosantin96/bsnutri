@@ -1,7 +1,3 @@
-.container {
-   
-}
-
 .modal {
     position: fixed;
     top: 50%;
@@ -14,10 +10,13 @@
     transform: translate(-50%, -50%);
     border-radius: 10px;
     background-color: #EBEAE9;
-    z-index: 9999;
+    z-index: 500;
     transition: all ease .2s;
     overflow-x: hidden;
 }
+
+
+/* Pseudo-elemento para o fundo com efeito de desfoque */
 
 .headerModal {
     margin-top: 40px;
@@ -53,7 +52,6 @@
     display: flex;
     justify-content: space-between;
     margin: 30px 10px;
-
 }
 
 .bottomAreaYesButton {

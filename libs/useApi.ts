@@ -60,6 +60,11 @@ export const useApi = () => ({
             let request = await axios.put("https://api/foods", food);
             return request.data;
         }
+    },
+
+    deleteFood: async (id: number) => {
+        return true;
+
     }
 
 
