@@ -13,6 +13,7 @@
 
 .styleInput {
     border-radius: 5px;
+    line-height: 25px;
     height: 24px;
     border: 1px solid #DFDFDF;
     padding: 0 5px;

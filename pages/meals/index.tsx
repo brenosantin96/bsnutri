@@ -40,7 +40,7 @@ const MealsPage = (data: ServerProps) => {
         setSearchText(value)
     }
 
-    const createNewFood = () => {
+    const createNewMeal = () => {
         router.push('/meals/new')
     }
 
@@ -60,7 +60,7 @@ const MealsPage = (data: ServerProps) => {
 
                 <div className={styles.searchArea}>
                     <div className={styles.buttonSearchArea}>
-                        <ButtonMain textButton='Cadastrar' onClick={createNewFood} fill={false} />
+                        <ButtonMain textButton='Cadastrar' onClick={createNewMeal} fill={false} />
                     </div>
                     <div className={styles.buttonWithIcon}>
                         {/* <input type="text" value={searchText} onChange={(e) => setSearchText(e.target.value)}/> */}
@@ -75,7 +75,7 @@ const MealsPage = (data: ServerProps) => {
                         {filteredMeals.length > 0 &&
                             <div>
                                 {filteredMeals.map((item, index) => (
-                                    <FoodComponent key={index} data={item} light={index % 2 === 0} />
+                                    <FoodComponent key={index} data={item} light={index % 2 === 0} url={"meals"} />
                                 ))}
                             </div>
                         }
@@ -91,7 +91,7 @@ const MealsPage = (data: ServerProps) => {
                 {!searchText &&
                     <div className={styles.foodArea}>
                         {meals.map((item, index) => (
-                            <FoodComponent key={index} data={item} light={index % 2 === 0} />
+                            <FoodComponent key={index} data={item} light={index % 2 === 0} url={"meals"}  />
                         ))}
                     </div>
                 }

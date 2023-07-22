@@ -3,14 +3,16 @@ import Image from 'next/image'
 import image1 from '../../public/food1.png';
 import { Food } from '@/types/Food';
 import Link from 'next/link'
+import { Meal } from '@/types/Meal';
 
 type Props = {
-    data: Food;
-    light?: boolean
+    data: Food | Meal;
+    light?: boolean;
+    url: 'foods' | 'meals';
 }
 
 
-export const FoodComponent = ({ data, light }: Props) => {
+export const FoodComponent = ({ data, light, url }: Props) => {
 
 
     return (
@@ -20,7 +22,7 @@ export const FoodComponent = ({ data, light }: Props) => {
                 <div className={styles.headerPortion}>{data.portion}</div>
             </div>
 
-            <Link legacyBehavior href={`/foods/${data.id}`}>
+            <Link legacyBehavior href={`/${url}/${data.id}`}>
                 <div className={styles.foodContainer} style={{ backgroundColor: light ? '#FAA846' : '#FA881E', border: light ? '2px solid #FA881E' : '2px solid #FAA846' }}>
                     <div className={styles.leftSideFoodContainer}>
                         <div className={styles.spaceImage}>

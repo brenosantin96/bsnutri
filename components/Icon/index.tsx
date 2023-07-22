@@ -10,6 +10,8 @@ import Lupa from './lupa.svg'
 import LeftArrow from './leftArrow.svg'
 import RightArrow from './rightArrow.svg'
 import BlankBox from './blank24x24.svg'
+import Plus from './plus.svg'
+import Minus from './minus.svg'
 
 type Props = {
     svg: string;
@@ -33,6 +35,8 @@ export const Icon = ({ svg, color, width, height }: Props) => {
             {svg === 'leftArrow' && <LeftArrow color={color} />}
             {svg === 'rightArrow' && <RightArrow color={color} />}
             {svg === 'blank' && <BlankBox color={color} />}
+            {svg === 'plus' && <Plus color={color} />}
+            {svg === 'minus' && <Minus color={color} />}
         </div>
     )
 }

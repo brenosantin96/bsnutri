@@ -3,6 +3,7 @@ import { foods } from '../data/food'
 import { Food } from '@/types/Food';
 import axios from 'axios';
 import { meals } from '@/data/meal';
+import { Meal } from '@/types/Meal';
 
 const baseURL = process.env.NEXT_PUBLIC_BASEURL;
 
@@ -71,6 +72,13 @@ export const useApi = () => ({
     getMeals: async () => {
 
         return meals;
+    },
+
+    createMeal: async (newMeal: Meal) => {
+        if (newMeal) {
+            let request = await axios.post("https://api/meals", newMeal);
+            return request.data;
+        }
     },
 
 

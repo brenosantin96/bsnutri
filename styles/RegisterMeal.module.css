@@ -1,0 +1,56 @@
+.container {
+  margin: 58px 27px 24px 27px;
+  height: 100vh;
+}
+
+.formRegisterArea {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3px;
+  gap: 10px;
+}
+
+.buttonsRegisterArea {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.nameArea {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.inputArea {
+  flex: 1;
+}
+
+.selectFoodArea{
+  flex: 1;
+  border: 1px solid #dfdfdf;
+  border-radius: 5px;
+  font-family: 'Montserrat';
+  line-height: 25px;
+  height: 25px;
+  
+}
+
+
+
+
+@media (max-width: 400px) {
+  .formRegisterArea input {
+    width: 100%;
+    flex: 1;
+    height: 24px;
+  }
+
+  .container {
+    margin: 58px 17px 24px 17px;
+    height: 100vh;
+  }
+}

@@ -74,7 +74,7 @@ const FoodsPage = (data: ServerProps) => {
                         {filteredFoods.length > 0 &&
                             <div>
                                 {filteredFoods.map((item, index) => (
-                                    <FoodComponent key={index} data={item} light={index % 2 === 0} />
+                                    <FoodComponent key={index} data={item} light={index % 2 === 0} url={"foods"}  />
                                 ))}
                             </div>
                         }
@@ -90,7 +90,7 @@ const FoodsPage = (data: ServerProps) => {
                 {!searchText &&
                     <div className={styles.foodArea}>
                         {foods.map((item, index) => (
-                            <FoodComponent key={index} data={item} light={index % 2 === 0} />
+                            <FoodComponent key={index} data={item} light={index % 2 === 0} url={"foods"} />
                         ))}
                     </div>
                 }
