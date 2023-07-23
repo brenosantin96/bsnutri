@@ -25,9 +25,7 @@ const RegisterMealPage = (data: ServerProps) => {
     const [foods, setFoods] = useState(data.foods);
 
     //selects
-    const [selectedFoodId1, setSelectedFoodId1] = useState<number | null>(null);
     const [selectedFoodIds, setSelectedFoodIds] = useState<number[]>([]);
-
     const [selectComponents, setSelectComponents] = useState<JSX.Element[]>([]);
 
     useEffect(() => {
@@ -53,16 +51,14 @@ const RegisterMealPage = (data: ServerProps) => {
 
     const handleSelectedItem = (id: number) => {
 
-        if (selectedFoodIds.includes(id)) {
+        //pegando o id do item selecionado e retornando pro nosso state de itens
+        setSelectedFoodIds([...selectedFoodIds, id]);
+        //removendo valor da opcao ja selecionada.
+        setFoods(foods.filter((foodId) => foodId.id !== id));
 
-            //removendo de selectedFoodIds valor da opcao ja existente se selecionar denovo
-            // setSelectedFoodIds(selectedFoodIds.filter((foodId) => foodId !== id));
-        }
-        else {
-            setSelectedFoodIds([...selectedFoodIds, id]);
-            //removendo valor da opcao ja selecionada.
-            setFoods(foods.filter((foodId) => foodId.id !== id));
-        }
+
+
+
     }
 
     const handleDeletedItem = async (id: number) => {
