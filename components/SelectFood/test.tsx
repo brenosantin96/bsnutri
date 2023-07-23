@@ -5,7 +5,7 @@ import styles from '../../styles/RegisterMeal.module.css'
 import { GetServerSideProps } from 'next';
 import { useApi } from '@/libs/useApi';
 import { InputMain } from '../../components/InputMain'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ButtonMain } from '@/components/ButtonMain';
 import { Food } from '@/types/Food';
 import { Meal } from '@/types/Meal';
@@ -30,9 +30,7 @@ const RegisterMealPage = (data: ServerProps) => {
 
     const [selectComponents, setSelectComponents] = useState<JSX.Element[]>([]);
 
-    useEffect(() => {
-        console.log("SELECTS IDS: ", selectedFoodIds)
-    }, [selectedFoodIds])
+
 
     const handleSaveMeal = () => {
         //api.createMeal(newMeal);
@@ -46,33 +44,16 @@ const RegisterMealPage = (data: ServerProps) => {
             foods={foods}
             onChange={handleSelectedItem}
             onClick={handleOnClickMinus}
-            selectedFoodsId={selectedFoodIds}
-            deleteSelectedItem={handleDeletedItem}
         />])
     }
 
     const handleSelectedItem = (id: number) => {
 
         if (selectedFoodIds.includes(id)) {
-
-            //removendo de selectedFoodIds valor da opcao ja existente se selecionar denovo
-            // setSelectedFoodIds(selectedFoodIds.filter((foodId) => foodId !== id));
+            setSelectedFoodIds(selectedFoodIds.filter((foodId) => foodId !== id));
         }
         else {
             setSelectedFoodIds([...selectedFoodIds, id]);
-            //removendo valor da opcao ja selecionada.
-            setFoods(foods.filter((foodId) => foodId.id !== id));
-        }
-    }
-
-    const handleDeletedItem = async (id: number) => {
-        //ao clicar no -, remover dE selectedFoodIds o ID do item selecionado.
-        setSelectedFoodIds(selectedFoodIds.filter((foodId) => foodId !== id))
-
-        //adicionar novamente o elemento eliminado previamente no LIST:
-        let food = await api.getOneFood(id);
-        if (food) {
-            setFoods([...foods, food]);
         }
     }
 
@@ -81,14 +62,12 @@ const RegisterMealPage = (data: ServerProps) => {
         updatedSelectComponents.splice(index, 1); // Remove o componente pelo índice
 
         setSelectComponents(updatedSelectComponents);
-
-
     }
 
     return (
         <>
             <Head>
-                <title>Platos | BSNutri</title>
+                <title>Alimentos | BSNutri</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -119,8 +98,6 @@ const RegisterMealPage = (data: ServerProps) => {
                                 index={index}
                                 onChange={handleSelectedItem}
                                 onClick={handleOnClickMinus}
-                                deleteSelectedItem={handleDeletedItem}
-                                selectedFoodsId={selectedFoodIds}
                             />
                         )}
                     </div>
