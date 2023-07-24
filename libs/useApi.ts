@@ -45,8 +45,20 @@ export const useApi = () => ({
         if (food) {
             return food;
         } else {
-            alert("Nao foi possivel encontrar food com esse nome")
+            return;
         }
+    },
+
+    getManyFood: async (ids: number[]) => {
+        const foodsFound = foods.filter(item => ids.includes(item.id));
+
+        if (foodsFound.length > 0) {
+            return foodsFound;
+        } else {
+            alert("Não foi possível encontrar alimentos com os IDs fornecidos");
+            return [];
+        }
+
     },
 
     createFood: async (newFood: Food) => {

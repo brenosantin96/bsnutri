@@ -11,6 +11,8 @@ import { Food } from '@/types/Food';
 import { Meal } from '@/types/Meal';
 import { Icon } from '@/components/Icon';
 import { SelectFood } from '@/components/SelectFood';
+import { sumProperty } from '../../helpers/sumProperty'
+import { InfoItemNutritional } from '@/components/InfoItemNutritional';
 
 
 const RegisterMealPage = (data: ServerProps) => {
@@ -28,13 +30,61 @@ const RegisterMealPage = (data: ServerProps) => {
     const [selectedFoodIds, setSelectedFoodIds] = useState<number[]>([]);
     const [selectComponents, setSelectComponents] = useState<JSX.Element[]>([]);
 
+
+    //valueSumedProperties
+    //no Onchange assim que selecionado, tenho que pegar o valor e atualizar estas variaveis.
+    const [summedPortion, setSummedPortion] = useState(0);
+    const [summedProtein, setSummedProtein] = useState(0);
+    const [summedCalories, setSummedCalories] = useState(0);
+    const [summedGrease, setSummedGrease] = useState(0);
+    const [summedSalt, setSummedSalt] = useState(0);
+
+
+    const handleSummedPortion = (value: number, operation: 'plus' | 'minus') => {
+        if (operation === 'plus') {
+            setSummedPortion(summedPortion + value);
+        } else {
+            setSummedPortion(summedPortion - value);
+        }
+    }
+
+    const handleSummedProtein = (value: number, operation: 'plus' | 'minus') => {
+        if (operation === 'plus') {
+            setSummedProtein(summedProtein + value);
+        } else {
+            setSummedProtein(summedProtein - value);
+        }
+    }
+
+    const handleSummedCalories = (value: number, operation: 'plus' | 'minus') => {
+        if (operation === 'plus') {
+            setSummedCalories(summedCalories + value);
+        } else {
+            setSummedCalories(summedCalories - value);
+        }
+    }
+
+    const handleSummedGrease = (value: number, operation: 'plus' | 'minus') => {
+        if (operation === 'plus') {
+            setSummedGrease(summedGrease + value);
+        } else {
+            setSummedGrease(summedGrease - value);
+        }
+    }
+
+    const handleSummedSalt = (value: number, operation: 'plus' | 'minus') => {
+        if (operation === 'plus') {
+            setSummedSalt(summedSalt + value);
+        } else {
+            setSummedSalt(summedSalt - value);
+        }
+    }
+
+
     useEffect(() => {
-        console.log("SELECTS IDS: ", selectedFoodIds)
+        console.log("SELECTED IDS: ", selectedFoodIds)
     }, [selectedFoodIds])
 
-    const handleSaveMeal = () => {
-        //api.createMeal(newMeal);
-    }
 
     const addSelectFoodComponent = () => {
         setSelectComponents([...selectComponents,
@@ -46,6 +96,11 @@ const RegisterMealPage = (data: ServerProps) => {
             onClick={handleOnClickMinus}
             selectedFoodsId={selectedFoodIds}
             deleteSelectedItem={handleDeletedItem}
+            handleSummedPortion={handleSummedPortion}
+            handleSummedProtein={handleSummedProtein}
+            handleSummedCalories={handleSummedCalories}
+            handleSummedGrease={handleSummedGrease}
+            handleSummedSalt={handleSummedSalt}
         />])
     }
 
@@ -55,9 +110,6 @@ const RegisterMealPage = (data: ServerProps) => {
         setSelectedFoodIds([...selectedFoodIds, id]);
         //removendo valor da opcao ja selecionada.
         setFoods(foods.filter((foodId) => foodId.id !== id));
-
-
-
 
     }
 
@@ -77,9 +129,39 @@ const RegisterMealPage = (data: ServerProps) => {
         updatedSelectComponents.splice(index, 1); // Remove o componente pelo índice
 
         setSelectComponents(updatedSelectComponents);
+    }
 
+
+    const handleSaveMeal = async () => {
+        const foodsSelected = await api.getManyFood(selectedFoodIds);
+
+        if (foodsSelected.length === 0) {
+            console.log("Selecione pelo menos 1 alimento");
+            return;
+        }
+
+        if (foodsSelected) {
+            let meal: Meal = {
+                id: 1,
+                name: nameInput,
+                portion: sumProperty(foodsSelected, 'portion'),
+                protein: sumProperty(foodsSelected, 'protein'),
+                calories: sumProperty(foodsSelected, 'calories'),
+                grease: sumProperty(foodsSelected, 'grease'),
+                salt: sumProperty(foodsSelected, 'salt'),
+                foods: foodsSelected
+            }
+            console.log(meal);
+            router.push('/meals')
+            //chamada api para salvar a meal
+            //let save = await api.createMeal(meal);
+            //console.log(save);
+        }
 
     }
+
+
+
 
     return (
         <>
@@ -117,14 +199,31 @@ const RegisterMealPage = (data: ServerProps) => {
                                 onClick={handleOnClickMinus}
                                 deleteSelectedItem={handleDeletedItem}
                                 selectedFoodsId={selectedFoodIds}
+                                handleSummedPortion={handleSummedPortion}
+                                handleSummedProtein={handleSummedProtein}
+                                handleSummedCalories={handleSummedCalories}
+                                handleSummedGrease={handleSummedGrease}
+                                handleSummedSalt={handleSummedSalt}
                             />
                         )}
                     </div>
                 </div>
 
                 <div className={styles.buttonsRegisterArea}>
-                    <ButtonMain onClick={() => { }} textButton={"Volver"} fill={false} />
+                    <ButtonMain onClick={() => router.push('/meals')} textButton={"Volver"} fill={false} />
                     <ButtonMain onClick={handleSaveMeal} textButton={"Guardar"} fill={true} />
+                </div>
+
+                <div className={styles.infoItemNutritional}>
+                    <InfoItemNutritional
+                        foodName={nameInput}
+                        portionValue={summedPortion}
+                        proteinValue={summedProtein}
+                        caloriesValue={summedCalories}
+                        greaseValue={summedGrease}
+                        saltValue={summedSalt}
+
+                    />
                 </div>
             </div>
 
