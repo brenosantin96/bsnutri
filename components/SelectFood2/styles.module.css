@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.textLabel {
+    color: #949494;
+    font-family: 'Montserrat';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+
+}
+
+.selectArea {
+    flex: 1;
+}
+
+.selectArea select {
+    border-radius: 5px;
+    border: 1px solid #DFDFDF;
+    background: #FFF;
+    height: 24px;
+    width: 100%;
+}
+
+.addArea {
+    margin-left: 10px;
+}

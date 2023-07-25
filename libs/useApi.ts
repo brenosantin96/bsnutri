@@ -1,8 +1,8 @@
 import { User } from '../types/User'
 import { foods } from '../data/food'
+import { meals } from '@/data/meal';
 import { Food } from '@/types/Food';
 import axios from 'axios';
-import { meals } from '@/data/meal';
 import { Meal } from '@/types/Meal';
 
 const baseURL = process.env.NEXT_PUBLIC_BASEURL;
@@ -84,6 +84,15 @@ export const useApi = () => ({
     getMeals: async () => {
 
         return meals;
+    },
+
+    getOneMeal: async (id: number) => {
+        let meal = await meals.find(item => item.id === id);
+        if (meal) {
+            return meal;
+        } else {
+            return;
+        }
     },
 
     createMeal: async (newMeal: Meal) => {

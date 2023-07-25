@@ -36,6 +36,7 @@
     border-radius: 10px;
     border: 2px solid #FAA846;
     background: #FA881E;
+    flex: 1;
 }
 
 .leftSideFoodContainer {}
@@ -84,4 +85,13 @@
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+}
+
+.foodArea{
+    display: flex;
+    align-items: center;
+}
+
+.minusButtonArea{
+    margin-left: 10px;
 }
