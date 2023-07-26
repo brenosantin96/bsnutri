@@ -39,7 +39,14 @@
     flex: 1;
 }
 
-.leftSideFoodContainer {}
+.leftSideFoodContainer {
+    display: flex;
+}
+
+.boxFoodContainer{
+    display: flex;
+    width: 100%;
+}
 
 .spaceImage {
     margin: 10px 17px 10px 10px;

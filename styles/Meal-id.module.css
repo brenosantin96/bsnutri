@@ -18,3 +18,11 @@
     border-bottom: 1px solid #FAA846;
     padding-bottom: 5px;
 }
+
+.bottomArea{
+    margin-top: 30px;
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    justify-content: space-between;
+}

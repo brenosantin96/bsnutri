@@ -23,7 +23,17 @@ const MealId = (data: ServerProps) => {
     const [meal, setMeals] = useState(data.meal);
     const [foods, setFoods] = useState(data.foods);
 
+    //booleans
+    const [editting, setEdditing] = useState(false);
 
+
+    const handleSaveMeal = (edditedMeal: Meal) => {
+        console.log(edditedMeal);
+    }
+
+    const handleEditButton = () => {
+        setEdditing(true);
+    }
 
     return (
         <>
@@ -31,7 +41,7 @@ const MealId = (data: ServerProps) => {
             <div className={styles.container}>
 
                 <div className={styles.editButton}>
-                    <ButtonMain onClick={() => { }} textButton={"Editar"} fill={false} />
+                    <ButtonMain onClick={handleEditButton} textButton={"Editar"} fill={false} />
                 </div>
 
                 <div className={styles.addFoodEditArea}>
@@ -43,9 +53,14 @@ const MealId = (data: ServerProps) => {
                 <div className={styles.containerFoods}>
                     <div className={styles.item}>
                         {meal.foods.map((item, index) => (
-                            <FoodComponent data={item} url='foods' key={index} minusButton={true} />
+                            <FoodComponent data={item} url='foods' key={index} minusButton={true} link={false} />
                         ))}
                     </div>
+                </div>
+
+                <div className={styles.bottomArea}>
+                    <ButtonMain onClick={() => { router.push('/meals') }} textButton={"Volver"} fill={false} />
+                    <ButtonMain onClick={() => handleSaveMeal(data.meal)} textButton={"Guardar"} fill={true} editting={editting} />
                 </div>
 
             </div>
