@@ -7,12 +7,20 @@ import styles from './styles.module.css'
 type Props = {
     textLabel: string;
     foods: Food[];
+    handleSelectedFood: (id: number) => void;
+    disabled?: boolean;
+    onPlus: () => void;
 }
 
-const SelectFood2 = ({ textLabel, foods }: Props) => {
+const SelectFood2 = ({ textLabel, foods, handleSelectedFood, onPlus, disabled }: Props) => {
 
 
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 
+        const selectedId = parseInt(event.target.value);
+        handleSelectedFood(selectedId);
+
+    };
 
     return (
         <>
@@ -20,7 +28,7 @@ const SelectFood2 = ({ textLabel, foods }: Props) => {
             <div className={styles.container}>
 
                 <div className={styles.selectArea}>
-                    <select className={styles.selectArea} name="foods" id="food-select">
+                    <select className={styles.selectArea} name="foods" id="food-select" disabled={!disabled} onChange={handleChange}>
                         <option value="">Seleccione un item</option>
                         {foods.map((food) => (
                             <option key={food.id} value={food.id}>
@@ -29,7 +37,12 @@ const SelectFood2 = ({ textLabel, foods }: Props) => {
                         ))}
                     </select>
                 </div>
-                <div className={styles.addArea}>
+                <div className={styles.addArea} onClick={onPlus}
+                    style={{
+                        pointerEvents: !disabled ? 'none' : 'all',
+                        opacity: !disabled ? '0.4' : 'initial'
+                    }}
+                >
                     <Icon svg='plus' width={27} height={27} />
                 </div>
 

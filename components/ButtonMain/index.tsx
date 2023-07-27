@@ -6,22 +6,19 @@ type Props = {
     onClick: () => void;
     fill?: boolean
     width?: string
-    editting?: boolean
+    disabled?: boolean
 }
 
-export const ButtonMain = ({ textButton, onClick, fill, width, editting }: Props) => {
+export const ButtonMain = ({ textButton, onClick, fill, width, disabled }: Props) => {
 
-    useEffect(() => {
-        console.log(editting)
-    }, [])
 
     return (
         <div onClick={onClick} className={styles.container}
             style={{
                 backgroundColor: fill ? '#FAA846' : '#FFF',
                 width: width ? width : '100%',
-                pointerEvents: editting ? 'none' : 'all',
-                opacity: editting ? '0.4' : 'initial'
+                pointerEvents: !disabled ? 'none' : 'all',
+                opacity: !disabled ? '0.4' : 'initial'
 
             }}
         >

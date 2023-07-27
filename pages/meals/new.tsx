@@ -81,9 +81,6 @@ const RegisterMealPage = (data: ServerProps) => {
     }
 
 
-    useEffect(() => {
-        console.log("SELECTED IDS: ", selectedFoodIds)
-    }, [selectedFoodIds])
 
 
     const addSelectFoodComponent = () => {

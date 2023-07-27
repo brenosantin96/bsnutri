@@ -11,11 +11,12 @@ type Props = {
     light?: boolean;
     url: 'foods' | 'meals';
     minusButton?: boolean;
-    link?: boolean
+    link?: boolean;
+    disabled?: boolean;
 }
 
 
-export const FoodComponent = ({ data, light, url, minusButton, link }: Props) => {
+export const FoodComponent = ({ data, light, url, minusButton, link, disabled }: Props) => {
 
 
     return (
@@ -27,7 +28,7 @@ export const FoodComponent = ({ data, light, url, minusButton, link }: Props) =>
 
             <div className={styles.foodArea}>
                 <div className={styles.foodContainer} style={{ backgroundColor: light ? '#FAA846' : '#FA881E', border: light ? '2px solid #FA881E' : '2px solid #FAA846' }}>
-                    {link === true&&
+                    {link === true &&
                         <Link legacyBehavior href={`/${url}/${data.id}`}>
                             <div className={styles.boxFoodContainer}>
                                 <div className={styles.leftSideFoodContainer}>
@@ -89,7 +90,13 @@ export const FoodComponent = ({ data, light, url, minusButton, link }: Props) =>
                 </div>
 
                 {minusButton &&
-                    <div className={styles.minusButtonArea}>
+                    <div className={styles.minusButtonArea}
+                        style={{
+                            pointerEvents: !disabled ? 'none' : 'all',
+                            opacity: !disabled ? '0.4' : 'initial'
+
+                        }}
+                    >
                         <Icon svg='minus' height={27} width={27} />
                     </div>
                 }

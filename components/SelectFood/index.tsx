@@ -60,8 +60,8 @@ export const SelectFood = ({ foods, onChange, onClick, index, selectedFoodsId, d
     };
 
     const handleMinusFunction = (idFood: number) => {
-        console.log(idFood); //aqui me retorna corretamente o valor do idFood
 
+        //tive que criar uma variavel foodsClone para conseguir achar justo o elemento que necessita eliminar
         if (foodsClone) {
             const selectedFood = foodsClone.find((food) => food.id === idFood);
 
