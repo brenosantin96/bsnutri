@@ -11,13 +11,23 @@ type Props = {
     light?: boolean;
     url: 'foods' | 'meals';
     minusButton?: boolean;
+    onMinusHandle?: (idFood: number) => void
     link?: boolean;
     disabled?: boolean;
 }
 
 
-export const FoodComponent = ({ data, light, url, minusButton, link, disabled }: Props) => {
+export const FoodComponent = ({ data, light, url, minusButton, link, disabled, onMinusHandle }: Props) => {
 
+
+    const handleOnMinus = (foodId: number) => {
+
+        if(onMinusHandle){
+            const selectedId = foodId;
+            onMinusHandle(selectedId);
+        }
+
+    };
 
     return (
         <div className={styles.container}>
@@ -94,8 +104,8 @@ export const FoodComponent = ({ data, light, url, minusButton, link, disabled }:
                         style={{
                             pointerEvents: !disabled ? 'none' : 'all',
                             opacity: !disabled ? '0.4' : 'initial'
-
                         }}
+                        onClick={() => handleOnMinus(data.id)}
                     >
                         <Icon svg='minus' height={27} width={27} />
                     </div>

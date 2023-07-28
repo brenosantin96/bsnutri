@@ -207,8 +207,8 @@ const RegisterMealPage = (data: ServerProps) => {
                 </div>
 
                 <div className={styles.buttonsRegisterArea}>
-                    <ButtonMain onClick={() => router.push('/meals')} textButton={"Volver"} fill={false} />
-                    <ButtonMain onClick={handleSaveMeal} textButton={"Guardar"} fill={true} />
+                    <ButtonMain onClick={() => router.push('/meals')} textButton={"Volver"} fill={false} disabled={true} />
+                    <ButtonMain onClick={handleSaveMeal} textButton={"Guardar"} fill={true} disabled={true} />
                 </div>
 
                 <div className={styles.infoItemNutritional}>

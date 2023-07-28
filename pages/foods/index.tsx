@@ -59,7 +59,7 @@ const FoodsPage = (data: ServerProps) => {
 
                 <div className={styles.searchArea}>
                     <div className={styles.buttonSearchArea}>
-                        <ButtonMain textButton='Cadastrar' onClick={createNewFood} fill={false} />
+                        <ButtonMain textButton='Cadastrar' onClick={createNewFood} fill={false} disabled={true} />
                     </div>
                     <div className={styles.buttonWithIcon}>
                         {/* <input type="text" value={searchText} onChange={(e) => setSearchText(e.target.value)}/> */}

@@ -102,6 +102,20 @@ export const useApi = () => ({
         }
     },
 
+    saveEditedMeal: async (meal: Meal) => {
+        
+        if (meal) {
+            console.log(meal);
+            //let request = await axios.put("https://api/foods", meal);
+            //return request.data;
+        }
+    },
+
+    deleteMeal: async (id: number) => {
+        return true;
+
+    },
+
 
 
 })

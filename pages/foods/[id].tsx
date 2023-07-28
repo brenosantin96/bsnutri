@@ -76,8 +76,8 @@ const FoodId = (data: ServerProps) => {
             <div className={styles.container}>
 
                 <div className={styles.areaEditButton}>
-                    <ButtonMain onClick={startEdditing} textButton={"Editar"} fill={false} />
-                    <ButtonMain onClick={removeFood} textButton={"Remover"} fill={false} />
+                    <ButtonMain onClick={startEdditing} textButton={"Editar"} fill={false} disabled={true} />
+                    <ButtonMain onClick={removeFood} textButton={"Remover"} fill={false} disabled={true} />
                 </div>
                 <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} cancelled={cancelled} saved={saved} onSave={handleUpdateFood} />
 
@@ -90,8 +90,8 @@ const FoodId = (data: ServerProps) => {
 
 
                 <div className={styles.backAndSaveArea}>
-                    <ButtonMain onClick={cancelSave} textButton={"Cancelar"} fill={false} />
-                    <ButtonMain onClick={saveEdittedFood} textButton={"Guardar"} fill={true} />
+                    <ButtonMain onClick={cancelSave} textButton={"Cancelar"} fill={false} disabled={true} />
+                    <ButtonMain onClick={saveEdittedFood} textButton={"Guardar"} fill={true} disabled={true} />
                 </div>
             </div>
         </>
