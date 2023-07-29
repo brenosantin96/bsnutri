@@ -31,7 +31,10 @@ const Calendar = () => {
 
     console.log('Data selecionada:', formattedDate);
     setSelectedDate(date);
-    router.push(`/calendar/${formattedDate}`)
+
+    router.push({
+      pathname: `/calendar/${formattedDate}`,
+    })
   };
 
 
