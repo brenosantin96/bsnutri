@@ -1,0 +1,26 @@
+.container{
+    background-color: #FAC264;
+    padding: 13px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.itemName{
+    color: #5F4747;
+    font-family: 'Inter';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.minusIcon{
+
+}

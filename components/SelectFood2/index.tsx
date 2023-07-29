@@ -9,20 +9,15 @@ type Props = {
     handleSelectedFood: (id: number) => void;
     disabled?: boolean;
     onPlus: () => void;
-    isMeal? : boolean
 }
 
-const SelectFood2 = ({ textLabel, foods, handleSelectedFood, onPlus, disabled, isMeal }: Props) => {
+const SelectFood2 = ({ textLabel, foods, handleSelectedFood, onPlus, disabled }: Props) => {
 
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 
         const selectedId = parseInt(event.target.value);
         handleSelectedFood(selectedId);
-
-        //const selectedObject = foods.find(item => item.id === selectedId);
-
-        //quero pegar o id e verificar se é um food ou meal atraves da propriedade isMeal
 
     };
 
@@ -47,7 +42,7 @@ const SelectFood2 = ({ textLabel, foods, handleSelectedFood, onPlus, disabled, i
                         opacity: !disabled ? '0.4' : 'initial'
                     }}
                 >
-                    <Icon svg='plus' width={27} height={27} />
+                    <Icon svg='plus' width={27} height={27} color={'#5F4646'} />
                 </div>
 
             </div>

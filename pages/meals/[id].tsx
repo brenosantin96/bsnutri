@@ -56,6 +56,7 @@ const MealId = (data: ServerProps) => {
 
     const handleSelectedFood = (selectedFoodId: number) => {
         setSelectedFoodID(selectedFoodId)
+        return 'food'; 
     }
 
     const onPlusButtonAddFood = async () => {

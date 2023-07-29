@@ -13,9 +13,14 @@ import { replaceDashWithSlash } from '../../helpers/Formatters';
 import SelectFood2 from '@/components/SelectFood2';
 import { Food } from '@/types/Food';
 import { Meal } from '@/types/Meal';
+import { ButtonMain } from '../../components/ButtonMain';
+import { ComponentsSelected } from '@/components/ComponentsSelected';
+import { InfoDayNutritional } from '@/components/InfoDayNutritional';
+import { sumProperty } from '@/helpers/sumProperty';
+import { InfoNutritionalDay } from '../../types/InfoNutritionalDay';
 
 
-const Calendar = (data: ServerProps) => {
+const DatePage = (data: ServerProps) => {
 
     const router = useRouter();
     const api = useApi();
@@ -28,17 +33,86 @@ const Calendar = (data: ServerProps) => {
     const parsedDate = parse(selectedDateString, formatString, new Date());
 
     //select
-    const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>([...data.foods, ...data.meals]);
+    const [foods, setFoods] = useState<Food[]>(data.foods);
+    const [meals, setMeals] = useState<Meal[]>(data.meals);
+    const [showSelectFoods, setShowSelectFoods] = useState(true);
+    const [showSelectMeals, setShowSelectMeals] = useState(false);
+
     const [selectedFoodId, setSelectedFoodID] = useState<number>(0);
+    const [selectedMealId, setSelectedMealID] = useState<number>(0);
+    const [selectedCombinedFoodID, setSelectedCombinedFoodID] = useState<number>(0);
+
+    const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>([]);
+
+    //InfoDay
+    const [infoNutriDay, setInfoNutriDay] = useState<InfoNutritionalDay>({ calories: 0, grease: 0, portion: 0, protein: 0, salt: 0 });
+
+    useEffect(() => {
+        handleUpdateInfoNutritionalDay();
+    }, [combinedFoodsAndMeals])
 
     const handleSelectedFood = (selectedFoodId: number) => {
-        setSelectedFoodID(selectedFoodId)
+
+        setSelectedFoodID(selectedFoodId);
+        console.log("ID selecionado: ", selectedFoodId);
+    }
+
+    const handleSelectedMeal = (selectedMealId: number) => {
+
+        setSelectedMealID(selectedMealId);
+        console.log("ID selecionado: ", selectedMealId);
+    }
+
+    const handleSelectedCombinedFood = (selectedCombinedFoodIndex: number) => {
+
+        //remover food de selectedCombinedFoodID que contenha o indice selectedCombinedFoodIndex
+        //fazendo um novo array onde tiramos os que possuem o indice indicado na funcao
+        setCombinedFoodsAndMeals((prevFoodsAndMeals) => {
+            return prevFoodsAndMeals.filter((item, index) => index !== selectedCombinedFoodIndex);
+        });
+
     }
 
     const onPlusButtonAddFood = async () => {
+        const foodSelected = await api.getOneFood(selectedFoodId);
+        if (foodSelected) {
+            setCombinedFoodsAndMeals([...combinedFoodsAndMeals, foodSelected]);
+        }
 
+    }
 
+    const onPlusButtonAddMeal = async () => {
+        const mealSelected = await api.getOneMeal(selectedMealId);
+        if (mealSelected) {
+            setCombinedFoodsAndMeals([...combinedFoodsAndMeals, mealSelected]);
+        }
+    }
 
+    const handleFoodButton = () => {
+        setShowSelectFoods(true);
+        setShowSelectMeals(false);
+    }
+
+    const handleMealButton = () => {
+        setShowSelectMeals(true);
+        setShowSelectFoods(false);
+    }
+
+    //InfoItem
+    const handleUpdateInfoNutritionalDay = () => {
+        // Atualiza o estado do alimento com os novos dados vindo do componente filho.
+
+        if (combinedFoodsAndMeals.length > 0) {
+            let info: InfoNutritionalDay = {
+                portion: sumProperty(combinedFoodsAndMeals, 'portion'),
+                protein: sumProperty(combinedFoodsAndMeals, 'protein'),
+                calories: sumProperty(combinedFoodsAndMeals, 'calories'),
+                grease: sumProperty(combinedFoodsAndMeals, 'grease'),
+                salt: sumProperty(combinedFoodsAndMeals, 'salt'),
+            }
+
+            setInfoNutriDay(info);
+        }
     }
 
     return (
@@ -52,7 +126,28 @@ const Calendar = (data: ServerProps) => {
             <Header leftIcon='back' title={data.date} rightIcon='menu' onClickLeftIcon={() => router.push('/calendar')} onClickRightIcon={() => setMenuOpened(!menuOpened)} />
             <Sidebar menuOpened={menuOpened} onClose={() => setMenuOpened(false)} />
             <div className={styles.container}>
-                <SelectFood2 foods={combinedFoodsAndMeals} textLabel={"Seleccione un alimento/plato"} handleSelectedFood={handleSelectedFood} onPlus={onPlusButtonAddFood} disabled={true} />
+                <div className={styles.topButtonArea}>
+                    <ButtonMain textButton='Alimento' fill={showSelectFoods ? true : false} onClick={handleFoodButton} disabled={true} />
+                    <ButtonMain textButton='Plato' fill={showSelectMeals ? true : false} onClick={handleMealButton} disabled={true} />
+                </div>
+                {showSelectFoods &&
+                    <SelectFood2 foods={foods} textLabel={"Seleccione un alimento"} handleSelectedFood={handleSelectedFood} onPlus={onPlusButtonAddFood} disabled={true} />
+                }
+                {showSelectMeals &&
+                    <SelectFood2 foods={meals} textLabel={"Seleccione un plato preparado"} handleSelectedFood={handleSelectedMeal} onPlus={onPlusButtonAddMeal} disabled={true} />
+                }
+                {combinedFoodsAndMeals.length > 0 &&
+                    <>
+                        <ComponentsSelected foods={combinedFoodsAndMeals} onHandle={handleSelectedCombinedFood} />
+                        <InfoDayNutritional
+                            portionValue={infoNutriDay.portion}
+                            proteinValue={infoNutriDay.protein}
+                            caloriesValue={infoNutriDay.calories}
+                            greaseValue={infoNutriDay.grease}
+                            saltValue={infoNutriDay.salt}
+                        />
+                    </>
+                }
             </div>
 
         </>
@@ -60,7 +155,7 @@ const Calendar = (data: ServerProps) => {
 }
 
 
-export default Calendar;
+export default DatePage;
 
 type ServerProps = {
     date: string; // Defina o tipo da prop "date" como string
@@ -87,3 +182,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
     }
 }
+
+
+//const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>([...data.foods, ...data.meals]);

@@ -12,6 +12,7 @@ import RightArrow from './rightArrow.svg'
 import BlankBox from './blank24x24.svg'
 import Plus from './plus.svg'
 import Minus from './minus.svg'
+import Minus2 from './minus2.svg'
 
 type Props = {
     svg: string;
@@ -37,6 +38,7 @@ export const Icon = ({ svg, color, width, height }: Props) => {
             {svg === 'blank' && <BlankBox color={color} />}
             {svg === 'plus' && <Plus color={color} />}
             {svg === 'minus' && <Minus color={color} />}
+            {svg === 'minus2' && <Minus2 color={color} />}
         </div>
     )
 }

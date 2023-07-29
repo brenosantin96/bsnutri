@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { User } from '@/types/User'
 import { useApi } from '@/libs/useApi'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 
 const Register = () => {
@@ -21,7 +22,7 @@ const Register = () => {
     const router = useRouter();
 
     const handleRegister = async () => {
-        api.createUser({id: 1, email, name, password, isAdmin : false});
+        api.createUser({ id: 1, email, name, password, isAdmin: false });
         router.push('/')
     }
 
@@ -51,6 +52,9 @@ const Register = () => {
                         <InputMain onChange={e => setPassword(e)} fontSizeLabel={12} name={`passwordInput`} textLabel={'Password'} widthInput={262} typeInput="password" />
                     </div>
                     <ButtonSecondary onClick={handleRegister} textButton='Inscríbete' />
+                    <div className={styles.registerAreaText}>
+                        <Link legacyBehavior href={`/`}><a>¿Ya tiene una cuenta? Acceder</a></Link>
+                    </div>
                 </div>
             </main>
         </>
