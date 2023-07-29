@@ -8,36 +8,38 @@ import styles from '../../styles/Date.module.css'
 import { AuthContext } from '../../contexts/Auth/AuthContext'
 import { GetServerSideProps } from 'next';
 import { useApi } from '@/libs/useApi';
-import { parse, toDate } from 'date-fns';
-import { es } from 'date-fns/locale';
-import {capitalizeFourthLetter, replaceDashWithSlash} from '../../helpers/Formatters';
-
-
-// Importe o componente usando dynamic
-const CalendarComponent = dynamic(() => import('../../components/CalendarComponent/index'), {
-    ssr: false, // Desativar o carregamento no lado do servidor (Server-Side Rendering)
-});
+import { parse } from 'date-fns';
+import { replaceDashWithSlash } from '../../helpers/Formatters';
+import SelectFood2 from '@/components/SelectFood2';
+import { Food } from '@/types/Food';
+import { Meal } from '@/types/Meal';
 
 
 const Calendar = (data: ServerProps) => {
 
-    const api = useApi();
-    const auth = useContext(AuthContext);
     const router = useRouter();
+    const api = useApi();
 
     const [menuOpened, setMenuOpened] = useState(false);
 
-    //managing the Date
+    //handling the Date to use later
     const selectedDateString = replaceDashWithSlash(data.date);
     const formatString = 'dd/MMM/yyyy';
-
-    // Utilize a função parse para converter a string em um objeto Date
     const parsedDate = parse(selectedDateString, formatString, new Date());
 
-    useEffect(() => {
-        console.log("Data.date: ", data.date);
-        console.log("Selected Date String: ", selectedDateString);
-    }, []);
+    //select
+    const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>([...data.foods, ...data.meals]);
+    const [selectedFoodId, setSelectedFoodID] = useState<number>(0);
+
+    const handleSelectedFood = (selectedFoodId: number) => {
+        setSelectedFoodID(selectedFoodId)
+    }
+
+    const onPlusButtonAddFood = async () => {
+
+
+
+    }
 
     return (
         <>
@@ -49,9 +51,8 @@ const Calendar = (data: ServerProps) => {
 
             <Header leftIcon='back' title={data.date} rightIcon='menu' onClickLeftIcon={() => router.push('/calendar')} onClickRightIcon={() => setMenuOpened(!menuOpened)} />
             <Sidebar menuOpened={menuOpened} onClose={() => setMenuOpened(false)} />
-            <div>{parsedDate.toString()}</div>
             <div className={styles.container}>
-
+                <SelectFood2 foods={combinedFoodsAndMeals} textLabel={"Seleccione un alimento/plato"} handleSelectedFood={handleSelectedFood} onPlus={onPlusButtonAddFood} disabled={true} />
             </div>
 
         </>
@@ -63,6 +64,8 @@ export default Calendar;
 
 type ServerProps = {
     date: string; // Defina o tipo da prop "date" como string
+    foods: Food[];
+    meals: Meal[];
 }
 
 
@@ -71,9 +74,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // Extrair o ID da URL usando o objeto context
     const { date } = context.query;
 
+    const api = useApi();
+    const foods = await api.getFoods();
+    const meals = await api.getMeals();
+
+
     return {
         props: {
             date: date as string,
+            foods,
+            meals
         }
     }
 }

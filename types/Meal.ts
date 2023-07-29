@@ -2,6 +2,7 @@ import { Food } from '../types/Food'
 
 export type Meal = {
     id: number,
+    isMeal: boolean;
     name: string;
     portion: number;
     protein: number;

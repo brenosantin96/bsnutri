@@ -103,6 +103,7 @@ const MealId = (data: ServerProps) => {
         if (foodsSelected) {
             let meal: Meal = {
                 id: updatedMeal.id,
+                isMeal: true,
                 name: updatedMeal.name,
                 portion: sumProperty(foodsSelected, 'portion'),
                 protein: sumProperty(foodsSelected, 'protein'),

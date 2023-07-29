@@ -140,6 +140,7 @@ const RegisterMealPage = (data: ServerProps) => {
         if (foodsSelected) {
             let meal: Meal = {
                 id: 1,
+                isMeal: true,
                 name: nameInput,
                 portion: sumProperty(foodsSelected, 'portion'),
                 protein: sumProperty(foodsSelected, 'protein'),
