@@ -2,10 +2,38 @@
     margin: 58px 12px 24px 12px;
 }
 
-.topButtonArea{
+.topButtonArea {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 25px;
     margin-bottom: 20px;
+}
+
+.BottomButtonArea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.invisible {
+    display: none;
+    justify-content: center;
+    opacity: 0;
+    /* Inicialmente, deixe a opacidade como 0 para a animação de fade-in */
+    transform: translateX(-100%);
+    /* Inicialmente, mova a área para a esquerda, fora da tela */
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+/* Quando a classe showBottomButtonArea estiver presente, a BottomButtonArea vai para o centro da tela */
+.foodsAndNutriArea {
+    opacity: 1;
+    /* Opacidade máxima para tornar a área visível */
+    transform: translateX(0);
+    /* Mover a área para o centro da tela */
+    background-color: red;
 }

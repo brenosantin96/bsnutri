@@ -1,32 +1,53 @@
-import styles from '../styles/test.module.css'
-import { Header } from "@/components/Header";
-import { useRouter } from 'next/router';
-import { InputTest } from '@/components/InputTest';
-import { useState } from 'react';
+import { useApi } from "@/libs/useApi";
+import { Food } from "@/types/Food";
+import { InfoNutritionalDay } from "@/types/InfoNutritionalDay";
+import { Meal } from "@/types/Meal";
+import { GetServerSideProps } from "next";
+import { useEffect } from "react";
 
-const Test = () => {
+const DatePage = ({ data }: { data: ServerProps; }) => {
 
-    const router = useRouter();
 
-    const [texto, setTexto] = useState('');
 
-    const handleInputChange = (text: string) => {
-        setTexto(text); // Atualiza o estado do texto no componente pai
-    };
+    useEffect(() => {
+        console.log(data.infoDay);
+    }, [])
 
+   
     return (
         <>
-            <Header leftIcon='back' title="Página de Testes" onClickLeftIcon={() => router.push('/')} />
-            <div className={styles.container}>
-                {/* Renderiza o componente Input passando o texto e a função de callback */}
-                <InputTest value={texto} onChange={handleInputChange} />
+            
+            
 
-                {/* Exibe o texto atualizado pelo componente pai */}
-                <p>Texto atual: {texto}</p>
-            </div>
         </>
     )
 }
 
+type ServerProps = {
+    date: string; // Defina o tipo da prop "date" como string
+    foods: Food[];
+    meals: Meal[];
+    infoDay: InfoNutritionalDay | null;
+}
 
-export default Test;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+
+    // Extrair o ID da URL usando o objeto context
+    const { date } = context.query;
+
+    const api = useApi();
+    const foods = await api.getFoods();
+    const meals = await api.getMeals();
+    let infoDay = await api.getInfoDay(date as string);
+
+    console.log(infoDay);
+
+
+    return {
+        props: {
+            date: date as string,
+            foods,
+            meals,
+        }
+    }
+}

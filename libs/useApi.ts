@@ -1,9 +1,11 @@
 import { User } from '../types/User'
 import { foods } from '../data/food'
 import { meals } from '@/data/meal';
+import { infoDayData } from '@/data/InfoNutritionalDay';
 import { Food } from '@/types/Food';
 import axios from 'axios';
 import { Meal } from '@/types/Meal';
+import { InfoNutritionalDay } from '@/types/InfoNutritionalDay';
 
 const baseURL = process.env.NEXT_PUBLIC_BASEURL;
 
@@ -103,7 +105,7 @@ export const useApi = () => ({
     },
 
     saveEditedMeal: async (meal: Meal) => {
-        
+
         if (meal) {
             console.log(meal);
             //let request = await axios.put("https://api/foods", meal);
@@ -115,6 +117,18 @@ export const useApi = () => ({
         return true;
 
     },
+
+    getInfoDay: async (id: string) => {
+        let infoDay = await infoDayData.find(item => item.id === id);
+        if (infoDay) {
+            return infoDay;
+        } else {
+            return null;
+            
+        }
+    },
+
+
 
 
 

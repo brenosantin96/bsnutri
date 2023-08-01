@@ -1,5 +1,4 @@
 import { Header } from '@/components/Header';
-import dynamic from 'next/dynamic';
 import { Sidebar } from '@/components/Sidebar';
 import Head from 'next/head'
 import { useRouter } from 'next/router';
@@ -31,6 +30,10 @@ const DatePage = (data: ServerProps) => {
     const selectedDateString = replaceDashWithSlash(data.date);
     const formatString = 'dd/MMM/yyyy';
     const parsedDate = parse(selectedDateString, formatString, new Date());
+    const [dateSelected, setDateSelected] = useState<Date>(parsedDate);
+
+    //InfoDay
+    const [infoNutriDay, setInfoNutriDay] = useState<InfoNutritionalDay | null>(data.infoDay);
 
     //select
     const [foods, setFoods] = useState<Food[]>(data.foods);
@@ -40,12 +43,9 @@ const DatePage = (data: ServerProps) => {
 
     const [selectedFoodId, setSelectedFoodID] = useState<number>(0);
     const [selectedMealId, setSelectedMealID] = useState<number>(0);
-    const [selectedCombinedFoodID, setSelectedCombinedFoodID] = useState<number>(0);
 
-    const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>([]);
+    const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>(infoNutriDay !== null ? infoNutriDay.combinedFoods : []);
 
-    //InfoDay
-    const [infoNutriDay, setInfoNutriDay] = useState<InfoNutritionalDay>({ calories: 0, grease: 0, portion: 0, protein: 0, salt: 0 });
 
     useEffect(() => {
         handleUpdateInfoNutritionalDay();
@@ -104,15 +104,24 @@ const DatePage = (data: ServerProps) => {
 
         if (combinedFoodsAndMeals.length > 0) {
             let info: InfoNutritionalDay = {
+                id: data.date.toString(),
+                date: parsedDate.toString(),
                 portion: sumProperty(combinedFoodsAndMeals, 'portion'),
                 protein: sumProperty(combinedFoodsAndMeals, 'protein'),
                 calories: sumProperty(combinedFoodsAndMeals, 'calories'),
                 grease: sumProperty(combinedFoodsAndMeals, 'grease'),
                 salt: sumProperty(combinedFoodsAndMeals, 'salt'),
+                combinedFoods: combinedFoodsAndMeals
             }
+
+            console.log("INFO ID: ", info);
 
             setInfoNutriDay(info);
         }
+    }
+
+    const handleSaveDay = () => {
+        console.log("Guardando el dia", infoNutriDay);
     }
 
     return (
@@ -139,14 +148,22 @@ const DatePage = (data: ServerProps) => {
                 {combinedFoodsAndMeals.length > 0 &&
                     <>
                         <ComponentsSelected foods={combinedFoodsAndMeals} onHandle={handleSelectedCombinedFood} />
-                        <InfoDayNutritional
-                            portionValue={infoNutriDay.portion}
-                            proteinValue={infoNutriDay.protein}
-                            caloriesValue={infoNutriDay.calories}
-                            greaseValue={infoNutriDay.grease}
-                            saltValue={infoNutriDay.salt}
-                        />
+                        {infoNutriDay !== null &&
+                            <InfoDayNutritional
+                                portionValue={infoNutriDay.portion}
+                                proteinValue={infoNutriDay.protein}
+                                caloriesValue={infoNutriDay.calories}
+                                greaseValue={infoNutriDay.grease}
+                                saltValue={infoNutriDay.salt}
+                            />
+                        }
+
+                        <div className={styles.BottomButtonArea}>
+                            <ButtonMain textButton='Volver' fill={false} onClick={() => router.push('/calendar')} disabled={true} />
+                            <ButtonMain textButton='Guardar' fill={true} onClick={handleSaveDay} disabled={true} />
+                        </div>
                     </>
+
                 }
             </div>
 
@@ -161,6 +178,7 @@ type ServerProps = {
     date: string; // Defina o tipo da prop "date" como string
     foods: Food[];
     meals: Meal[];
+    infoDay: InfoNutritionalDay | null;
 }
 
 
@@ -172,13 +190,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const api = useApi();
     const foods = await api.getFoods();
     const meals = await api.getMeals();
+    let infoDay = await api.getInfoDay(date as string);
+
+    console.log(infoDay);
 
 
     return {
         props: {
             date: date as string,
             foods,
-            meals
+            meals,
+            infoDay
         }
     }
 }
