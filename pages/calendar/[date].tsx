@@ -35,6 +35,22 @@ const DatePage = (data: ServerProps) => {
     //InfoDay
     const [infoNutriDay, setInfoNutriDay] = useState<InfoNutritionalDay | null>(data.infoDay);
 
+    //check Finalized day
+    const [finalizedDay, setFinalizedDay] = useState(false);
+
+    // Função para alternar o estado quando o checkbox for clicado
+    const handleCheckboxChange = () => {
+        setFinalizedDay(!finalizedDay);
+        if (infoNutriDay) {
+            setInfoNutriDay({ ...infoNutriDay, finalizedDay: !finalizedDay })
+        }
+    };
+
+    useEffect(()=>{
+        console.log("InfoNutriDay: ", infoNutriDay)
+    }, [infoNutriDay])
+
+
     //select
     const [foods, setFoods] = useState<Food[]>(data.foods);
     const [meals, setMeals] = useState<Meal[]>(data.meals);
@@ -111,10 +127,10 @@ const DatePage = (data: ServerProps) => {
                 calories: sumProperty(combinedFoodsAndMeals, 'calories'),
                 grease: sumProperty(combinedFoodsAndMeals, 'grease'),
                 salt: sumProperty(combinedFoodsAndMeals, 'salt'),
+                finalizedDay: finalizedDay,
                 combinedFoods: combinedFoodsAndMeals
             }
 
-            console.log("INFO ID: ", info);
 
             setInfoNutriDay(info);
         }
@@ -140,14 +156,22 @@ const DatePage = (data: ServerProps) => {
                     <ButtonMain textButton='Plato' fill={showSelectMeals ? true : false} onClick={handleMealButton} disabled={true} />
                 </div>
                 {showSelectFoods &&
-                    <SelectFood2 foods={foods} textLabel={"Seleccione un alimento"} handleSelectedFood={handleSelectedFood} onPlus={onPlusButtonAddFood} disabled={true} />
+                    <SelectFood2 foods={foods} textLabel={"Seleccione un alimento"} handleSelectedFood={handleSelectedFood} onPlus={onPlusButtonAddFood} disabled={!finalizedDay} />
                 }
                 {showSelectMeals &&
-                    <SelectFood2 foods={meals} textLabel={"Seleccione un plato preparado"} handleSelectedFood={handleSelectedMeal} onPlus={onPlusButtonAddMeal} disabled={true} />
+                    <SelectFood2 foods={meals} textLabel={"Seleccione un plato preparado"} handleSelectedFood={handleSelectedMeal} onPlus={onPlusButtonAddMeal} disabled={!finalizedDay} />
                 }
+                <div className={styles.finalizedDayArea}>
+                    <input
+                        type="checkbox"
+                        checked={finalizedDay}
+                        onChange={handleCheckboxChange}
+                    />
+                    <span>Dia terminado?</span>
+                </div>
                 {combinedFoodsAndMeals.length > 0 &&
                     <>
-                        <ComponentsSelected foods={combinedFoodsAndMeals} onHandle={handleSelectedCombinedFood} />
+                        <ComponentsSelected foods={combinedFoodsAndMeals} onHandle={handleSelectedCombinedFood} disabled={!finalizedDay} />
                         {infoNutriDay !== null &&
                             <InfoDayNutritional
                                 portionValue={infoNutriDay.portion}

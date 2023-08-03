@@ -9,6 +9,7 @@ export type InfoNutritionalDay = {
     calories: number;
     grease: number;
     salt: number;
+    finalizedDay: boolean;
     combinedFoods: (Food | Meal)[];
     
 }

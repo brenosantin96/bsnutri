@@ -37,3 +37,11 @@
     /* Mover a área para o centro da tela */
     background-color: red;
 }
+
+.finalizedDayArea{
+    margin-bottom: 10px;
+}
+
+.finalizedDayArea span{
+    margin-left: 10px;
+}

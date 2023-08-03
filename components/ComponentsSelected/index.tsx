@@ -5,10 +5,11 @@ import styles from './styles.module.css';
 
 type Props = {
     foods: (Food | Meal)[];
-    onHandle: (selectedIndex : number) => void;
+    onHandle: (selectedIndex: number) => void;
+    disabled: boolean;
 }
 
-export const ComponentsSelected = ({ foods, onHandle }: Props) => {
+export const ComponentsSelected = ({ foods, onHandle, disabled }: Props) => {
 
     const onHandleMinusFunction = (selectedIndex: number) => {
         onHandle(selectedIndex);
@@ -16,7 +17,11 @@ export const ComponentsSelected = ({ foods, onHandle }: Props) => {
 
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container}
+            style={{
+                pointerEvents: !disabled ? 'none' : 'all',
+                opacity: !disabled ? '0.4' : 'initial'
+            }}>
             {foods.map((item, index) =>
                 <div className={styles.item} key={index}>
                     <div className={styles.itemName}>

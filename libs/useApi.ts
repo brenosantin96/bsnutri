@@ -118,6 +118,11 @@ export const useApi = () => ({
 
     },
 
+    getAllInfoDay: async () => {
+        //enviar ID do usuario para pegar de todos os dias.
+        return infoDayData;
+    },
+
     getInfoDay: async (id: string) => {
         let infoDay = await infoDayData.find(item => item.id === id);
         if (infoDay) {

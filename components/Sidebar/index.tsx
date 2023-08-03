@@ -54,7 +54,7 @@ export const Sidebar = ({ menuOpened, onClose }: Props) => {
                                 <Icon svg='book' width={24} height={24} />
                             </div>
                             <div className={styles.menuItemText}>
-                                <Link legacyBehavior href={`/calendar`}><a>Historial</a></Link>
+                                <Link legacyBehavior href={`/historial`}><a>Historial</a></Link>
                             </div>
                         </div>
                         <div className={styles.menuItem}>
