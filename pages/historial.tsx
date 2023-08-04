@@ -35,7 +35,7 @@ const HistorialPage = (data: ServerProps) => {
 
                 <div className={styles.historialArea}>
                     {infoNutriDays.map((item, index) => (
-                        <HistorialComponent infoNutriDay={item} light={index % 2 === 0} />
+                        <HistorialComponent infoNutriDay={item} light={index % 2 === 0} key={index} />
                     ))}
                 </div>
 

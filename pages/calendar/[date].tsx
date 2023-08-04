@@ -148,7 +148,7 @@ const DatePage = (data: ServerProps) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Header leftIcon='back' title={data.date} rightIcon='menu' onClickLeftIcon={() => router.push('/calendar')} onClickRightIcon={() => setMenuOpened(!menuOpened)} />
+            <Header leftIcon='back' title={data.date} rightIcon='menu' onClickLeftIcon={() => router.back()} onClickRightIcon={() => setMenuOpened(!menuOpened)} />
             <Sidebar menuOpened={menuOpened} onClose={() => setMenuOpened(false)} />
             <div className={styles.container}>
                 <div className={styles.topButtonArea}>
