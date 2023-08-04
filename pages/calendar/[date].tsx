@@ -8,6 +8,7 @@ import { AuthContext } from '../../contexts/Auth/AuthContext'
 import { GetServerSideProps } from 'next';
 import { useApi } from '@/libs/useApi';
 import { parse } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { replaceDashWithSlash } from '../../helpers/Formatters';
 import SelectFood2 from '@/components/SelectFood2';
 import { Food } from '@/types/Food';
@@ -27,9 +28,10 @@ const DatePage = (data: ServerProps) => {
     const [menuOpened, setMenuOpened] = useState(false);
 
     //handling the Date to use later
-    const selectedDateString = replaceDashWithSlash(data.date);
+    //const selectedDateString = "20/aug/2023"
+    const selectedDateString = replaceDashWithSlash(data.id);
     const formatString = 'dd/MMM/yyyy';
-    const parsedDate = parse(selectedDateString, formatString, new Date());
+    const parsedDate = parse(selectedDateString, formatString, new Date(), { locale: es });
     const [dateSelected, setDateSelected] = useState<Date>(parsedDate);
 
     //InfoDay
@@ -46,9 +48,12 @@ const DatePage = (data: ServerProps) => {
         }
     };
 
-    useEffect(()=>{
-        console.log("InfoNutriDay: ", infoNutriDay)
-    }, [infoNutriDay])
+    useEffect(() => {
+        console.log("selectedDateString", selectedDateString)
+        console.log("DATA.ID: ", data.id)
+        console.log("parsedDate: ", parsedDate)
+        console.log("dateSelectedState: ",dateSelected)
+    }, [])
 
 
     //select
@@ -120,8 +125,8 @@ const DatePage = (data: ServerProps) => {
 
         if (combinedFoodsAndMeals.length > 0) {
             let info: InfoNutritionalDay = {
-                id: data.date.toString(),
-                date: parsedDate.toString(),
+                id: data.id,
+                date: dateSelected.toString(),
                 portion: sumProperty(combinedFoodsAndMeals, 'portion'),
                 protein: sumProperty(combinedFoodsAndMeals, 'protein'),
                 calories: sumProperty(combinedFoodsAndMeals, 'calories'),
@@ -132,6 +137,7 @@ const DatePage = (data: ServerProps) => {
             }
 
 
+            console.log("Parsed Date: ", parsedDate)
             setInfoNutriDay(info);
         }
     }
@@ -148,7 +154,7 @@ const DatePage = (data: ServerProps) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Header leftIcon='back' title={data.date} rightIcon='menu' onClickLeftIcon={() => router.back()} onClickRightIcon={() => setMenuOpened(!menuOpened)} />
+            <Header leftIcon='back' title={data.id} rightIcon='menu' onClickLeftIcon={() => router.back()} onClickRightIcon={() => setMenuOpened(!menuOpened)} />
             <Sidebar menuOpened={menuOpened} onClose={() => setMenuOpened(false)} />
             <div className={styles.container}>
                 <div className={styles.topButtonArea}>
@@ -199,7 +205,7 @@ const DatePage = (data: ServerProps) => {
 export default DatePage;
 
 type ServerProps = {
-    date: string; // Defina o tipo da prop "date" como string
+    id: string; // Defina o tipo da prop "date" como string
     foods: Food[];
     meals: Meal[];
     infoDay: InfoNutritionalDay | null;
@@ -209,19 +215,20 @@ type ServerProps = {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
     // Extrair o ID da URL usando o objeto context
-    const { date } = context.query;
+    let { date } = context.query;
 
     const api = useApi();
     const foods = await api.getFoods();
     const meals = await api.getMeals();
     let infoDay = await api.getInfoDay(date as string);
 
-    console.log(infoDay);
+    let id = date?.toString();
+    console.log("ID pegado: ", id);
 
 
     return {
         props: {
-            date: date as string,
+            id: id as string,
             foods,
             meals,
             infoDay

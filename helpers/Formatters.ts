@@ -16,6 +16,7 @@ export const capitalizeFourthLetter = (str: string): string => {
     return result;
   }
   
+  
   export const replaceDashWithSlash = (inputString: string): string => {
     // Utilizamos o método replace com uma expressão regular (regex) para substituir todas as ocorrências do símbolo "-" pelo símbolo "/"
     const modifiedString = inputString.replace(/-/g, '/');
