@@ -85,9 +85,10 @@ const DatePage = (data: ServerProps) => {
     }
 
     const handleSelectedCombinedFood = (selectedCombinedFoodIndex: number) => {
-
-        //remover food de selectedCombinedFoodID que contenha o indice selectedCombinedFoodIndex
+        //minus function
+        //funcao de remover food de selectedCombinedFoodID que contenha o indice selectedCombinedFoodIndex
         //fazendo um novo array onde tiramos os que possuem o indice indicado na funcao
+        console.log("Select: ", selectedCombinedFoodIndex)
         setCombinedFoodsAndMeals((prevFoodsAndMeals) => {
             return prevFoodsAndMeals.filter((item, index) => index !== selectedCombinedFoodIndex);
         });
