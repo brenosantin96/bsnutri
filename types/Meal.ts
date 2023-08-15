@@ -13,4 +13,16 @@ export type Meal = {
     image? : string;
 }
 
+export type MealWithOnlyId = {
+    id: number,
+    isMeal: boolean;
+    name: string;
+    portion: number;
+    protein: number;
+    calories: number;
+    grease: number;
+    salt: number;
+    foods: number[];
+}
+
 

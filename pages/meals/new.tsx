@@ -8,7 +8,7 @@ import { InputMain } from '../../components/InputMain'
 import { useEffect, useState } from 'react';
 import { ButtonMain } from '@/components/ButtonMain';
 import { Food } from '@/types/Food';
-import { Meal } from '@/types/Meal';
+import { Meal, MealWithOnlyId } from '@/types/Meal';
 import { Icon } from '@/components/Icon';
 import { SelectFood } from '@/components/SelectFood';
 import { sumProperty } from '../../helpers/sumProperty'
@@ -138,7 +138,7 @@ const RegisterMealPage = (data: ServerProps) => {
         }
 
         if (foodsSelected) {
-            let meal: Meal = {
+            let meal: MealWithOnlyId = {
                 id: 1,
                 isMeal: true,
                 name: nameInput,
@@ -147,7 +147,7 @@ const RegisterMealPage = (data: ServerProps) => {
                 calories: sumProperty(foodsSelected, 'calories'),
                 grease: sumProperty(foodsSelected, 'grease'),
                 salt: sumProperty(foodsSelected, 'salt'),
-                foods: foodsSelected
+                foods: selectedFoodIds
             }
             console.log(meal);
             router.push('/meals')

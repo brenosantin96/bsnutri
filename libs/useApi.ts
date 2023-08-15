@@ -65,9 +65,11 @@ export const useApi = () => ({
 
     createFood: async (newFood: Food) => {
         if (newFood) {
-            let request = await axios.post("https://api/foods", newFood);
+            let request = await axios.post(`${baseURL}/foods`, newFood);
             return request.data;
         }
+
+
     },
 
     saveEditedFood: async (food: Food) => {
@@ -129,7 +131,7 @@ export const useApi = () => ({
             return infoDay;
         } else {
             return null;
-            
+
         }
     },
 
