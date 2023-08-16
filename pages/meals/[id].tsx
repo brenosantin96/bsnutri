@@ -6,7 +6,7 @@ import { Food } from '@/types/Food';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import styles from '../../styles/Meal-id.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ModalExclude } from '@/components/ModalExclude';
 import { Meal } from '@/types/Meal';
 import { InputMain } from '@/components/InputMain';
@@ -22,7 +22,21 @@ const MealId = (data: ServerProps) => {
     const api = useApi();
 
     const [meal, setMeal] = useState(data.meal);
+
     const [foods, setFoods] = useState(data.foods);
+    const [availableFoods, setAvaiableFoods] = useState<Food[]>(foods.filter(food => !meal.foods.some(mealFood => mealFood.id === food.id)));
+    /*  !meal.foods.some(...) nega o resultado do some, ou seja, verifica se o alimento atual NÃO está presente em meal.foods.
+ Portanto, o filter incluirá o alimento atual em availableFoods somente se ele NÃO estiver em meal.foods. */
+
+
+    useEffect(() => {
+        // Filtrar os alimentos disponíveis sempre que o estado meal for alterado
+        const updatedAvailableFoods = foods.filter(food => !meal.foods.some(mealFood => mealFood.id === food.id));
+        setAvaiableFoods(updatedAvailableFoods);
+    }, [meal])
+
+
+
     const [selectedFoodId, setSelectedFoodID] = useState(0);
 
     //booleans
@@ -37,13 +51,13 @@ const MealId = (data: ServerProps) => {
 
     const handleDeleteMeal = async (id: number) => {
         let deleted = await api.deleteMeal(id);
- 
-        if(deleted){
-         console.log("deletado com sucesso o Meal: ", id)
-         //router.push('/foods');
+
+        if (deleted) {
+            console.log("deletado com sucesso o Meal: ", id)
+            //router.push('/foods');
         }
- 
-     }
+
+    }
 
 
     const handleEditButton = () => {
@@ -56,7 +70,7 @@ const MealId = (data: ServerProps) => {
 
     const handleSelectedFood = (selectedFoodId: number) => {
         setSelectedFoodID(selectedFoodId)
-        return 'food'; 
+        return 'food';
     }
 
     const onPlusButtonAddFood = async () => {
@@ -133,14 +147,14 @@ const MealId = (data: ServerProps) => {
 
                 {isModalOpen &&
                     <div>
-                        <ModalExclude id={meal.id} valueToRemove={meal.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onDelete={handleDeleteMeal}  />
+                        <ModalExclude id={meal.id} valueToRemove={meal.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onDelete={handleDeleteMeal} />
                         <div className={styles.backdrop} />
                     </div>
                 }
 
                 <div className={styles.addFoodEditArea}>
                     <SelectFood2
-                        foods={foods}
+                        foods={availableFoods}
                         textLabel={"Alimento"}
                         disabled={disabled}
                         handleSelectedFood={handleSelectedFood}
