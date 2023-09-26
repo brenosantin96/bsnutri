@@ -17,8 +17,8 @@ export const useApi = () => ({
         return response.data;
     },
 
-    signin: async (email: string, password: string) => {
-        const response = await axios.post(`${baseURL}/login`, { email, password });
+    signin: async (email: string, passwordReq: string) => {
+        const response = await axios.post(`${baseURL}/login`, { email, passwordReq });
         return response.data;
     },
 

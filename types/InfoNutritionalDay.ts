@@ -10,6 +10,10 @@ export type InfoNutritionalDay = {
     grease: number;
     salt: number;
     finalizedDay: boolean;
+    selectedMeals: Meal[];
+    selectedFoods: Food[];
     combinedFoods: (Food | Meal)[];
+    idFoods?: number[];
+    idMeals?: number[];
     
 }

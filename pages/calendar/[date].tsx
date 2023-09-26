@@ -18,7 +18,7 @@ import { ComponentsSelected } from '@/components/ComponentsSelected';
 import { InfoDayNutritional } from '@/components/InfoDayNutritional';
 import { sumProperty } from '@/helpers/sumProperty';
 import { InfoNutritionalDay } from '../../types/InfoNutritionalDay';
-
+import { extractIds } from '../../helpers/getIds';
 
 const DatePage = (data: ServerProps) => {
 
@@ -52,7 +52,7 @@ const DatePage = (data: ServerProps) => {
         console.log("selectedDateString", selectedDateString)
         console.log("DATA.ID: ", data.id)
         console.log("parsedDate: ", parsedDate)
-        console.log("dateSelectedState: ",dateSelected)
+        console.log("dateSelectedState: ", dateSelected)
     }, [])
 
 
@@ -67,10 +67,13 @@ const DatePage = (data: ServerProps) => {
 
     const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>(infoNutriDay !== null ? infoNutriDay.combinedFoods : []);
 
+    const [selectedMeals, setSelectedMeals] = useState<Meal[]>(infoNutriDay !== null ? infoNutriDay.selectedMeals : []);
+    const [selectedFoods, setSelectedFoods] = useState<Food[]>(infoNutriDay !== null ? infoNutriDay.selectedFoods : []);
+
 
     useEffect(() => {
         handleUpdateInfoNutritionalDay();
-    }, [combinedFoodsAndMeals])
+    }, [selectedMeals, selectedFoods])
 
     const handleSelectedFood = (selectedFoodId: number) => {
 
@@ -98,6 +101,7 @@ const DatePage = (data: ServerProps) => {
     const onPlusButtonAddFood = async () => {
         const foodSelected = await api.getOneFood(selectedFoodId);
         if (foodSelected) {
+            setSelectedFoods([...selectedFoods, foodSelected]);
             setCombinedFoodsAndMeals([...combinedFoodsAndMeals, foodSelected]);
         }
 
@@ -106,6 +110,7 @@ const DatePage = (data: ServerProps) => {
     const onPlusButtonAddMeal = async () => {
         const mealSelected = await api.getOneMeal(selectedMealId);
         if (mealSelected) {
+            setSelectedMeals([...selectedMeals, mealSelected]);
             setCombinedFoodsAndMeals([...combinedFoodsAndMeals, mealSelected]);
         }
     }
@@ -124,17 +129,26 @@ const DatePage = (data: ServerProps) => {
     const handleUpdateInfoNutritionalDay = () => {
         // Atualiza o estado do alimento com os novos dados vindo do componente filho.
 
+        console.log("DATA: ", dateSelected);
+
+        let idFoods = extractIds(selectedFoods);
+        let idMeals = extractIds(selectedMeals);
+
         if (combinedFoodsAndMeals.length > 0) {
             let info: InfoNutritionalDay = {
                 id: data.id,
-                date: dateSelected.toString(),
+                date: dateSelected.toISOString(),
                 portion: sumProperty(combinedFoodsAndMeals, 'portion'),
                 protein: sumProperty(combinedFoodsAndMeals, 'protein'),
                 calories: sumProperty(combinedFoodsAndMeals, 'calories'),
                 grease: sumProperty(combinedFoodsAndMeals, 'grease'),
                 salt: sumProperty(combinedFoodsAndMeals, 'salt'),
                 finalizedDay: finalizedDay,
-                combinedFoods: combinedFoodsAndMeals
+                combinedFoods: combinedFoodsAndMeals,
+                selectedFoods: selectedFoods,
+                selectedMeals: selectedMeals,
+                idFoods,
+                idMeals
             }
 
 
