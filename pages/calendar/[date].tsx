@@ -29,9 +29,11 @@ const DatePage = (data: ServerProps) => {
 
     //handling the Date to use later
     //const selectedDateString = "20/aug/2023"
-    const selectedDateString = replaceDashWithSlash(data.id);
+    const txtID = data.id.split("+");
+    const selectedDateString = txtID[0];
+    const selectedDateStringFormatted = replaceDashWithSlash(selectedDateString);
     const formatString = 'dd/MMM/yyyy';
-    const parsedDate = parse(selectedDateString, formatString, new Date(), { locale: es });
+    const parsedDate = parse(selectedDateStringFormatted, formatString, new Date(), { locale: es });
     const [dateSelected, setDateSelected] = useState<Date>(parsedDate);
 
     //InfoDay
@@ -49,7 +51,7 @@ const DatePage = (data: ServerProps) => {
     };
 
     useEffect(() => {
-        console.log("selectedDateString", selectedDateString)
+        console.log("selectedDateStringFormatted", selectedDateStringFormatted)
         console.log("DATA.ID: ", data.id)
         console.log("parsedDate: ", parsedDate)
         console.log("dateSelectedState: ", dateSelected)
@@ -169,7 +171,7 @@ const DatePage = (data: ServerProps) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Header leftIcon='back' title={data.id} rightIcon='menu' onClickLeftIcon={() => router.back()} onClickRightIcon={() => setMenuOpened(!menuOpened)} />
+            <Header leftIcon='back' title={selectedDateStringFormatted} rightIcon='menu' onClickLeftIcon={() => router.back()} onClickRightIcon={() => setMenuOpened(!menuOpened)} />
             <Sidebar menuOpened={menuOpened} onClose={() => setMenuOpened(false)} />
             <div className={styles.container}>
                 <div className={styles.topButtonArea}>
