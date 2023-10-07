@@ -18,7 +18,7 @@ import { ComponentsSelected } from '@/components/ComponentsSelected';
 import { InfoDayNutritional } from '@/components/InfoDayNutritional';
 import { sumProperty } from '@/helpers/sumProperty';
 import { InfoNutritionalDay } from '../../types/InfoNutritionalDay';
-import { extractIds } from '../../helpers/getIds';
+import { extractIds, removeDuplicatesFromArray } from '../../helpers/getIds';
 
 const DatePage = (data: ServerProps) => {
 
@@ -51,10 +51,7 @@ const DatePage = (data: ServerProps) => {
     };
 
     useEffect(() => {
-        console.log("selectedDateStringFormatted", selectedDateStringFormatted)
-        console.log("DATA.ID: ", data.id)
-        console.log("parsedDate: ", parsedDate)
-        console.log("dateSelectedState: ", dateSelected)
+        
     }, [])
 
 
@@ -94,6 +91,7 @@ const DatePage = (data: ServerProps) => {
         //funcao de remover food de selectedCombinedFoodID que contenha o indice selectedCombinedFoodIndex
         //fazendo um novo array onde tiramos os que possuem o indice indicado na funcao
         console.log("Select: ", selectedCombinedFoodIndex)
+        console.log("FOODS AND MEALS:", combinedFoodsAndMeals);
         setCombinedFoodsAndMeals((prevFoodsAndMeals) => {
             return prevFoodsAndMeals.filter((item, index) => index !== selectedCombinedFoodIndex);
         });
@@ -133,8 +131,12 @@ const DatePage = (data: ServerProps) => {
 
         console.log("DATA: ", dateSelected);
 
-        let idFoods = extractIds(selectedFoods);
-        let idMeals = extractIds(selectedMeals);
+        let idFoodsUnformatted = extractIds(selectedFoods);
+        let idMealsUnformatted = extractIds(selectedMeals);
+
+        let idFoods = removeDuplicatesFromArray(idFoodsUnformatted);
+        let idMeals  = removeDuplicatesFromArray(idMealsUnformatted)
+
 
         if (combinedFoodsAndMeals.length > 0) {
             let info: InfoNutritionalDay = {

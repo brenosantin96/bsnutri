@@ -22,5 +22,9 @@
 }
 
 .minusIcon{
+    display: flex;
+}
 
+.qtMinusIcon{
+    padding-right: 10px;
 }
