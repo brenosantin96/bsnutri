@@ -50,10 +50,6 @@ const DatePage = (data: ServerProps) => {
         }
     };
 
-    useEffect(() => {
-        
-    }, [])
-
 
     //select
     const [foods, setFoods] = useState<Food[]>(data.foods);
@@ -72,7 +68,7 @@ const DatePage = (data: ServerProps) => {
 
     useEffect(() => {
         handleUpdateInfoNutritionalDay();
-    }, [selectedMeals, selectedFoods])
+    }, [selectedMeals, selectedFoods, combinedFoodsAndMeals])
 
     const handleSelectedFood = (selectedFoodId: number) => {
 
@@ -90,11 +86,13 @@ const DatePage = (data: ServerProps) => {
         //minus function
         //funcao de remover food de selectedCombinedFoodID que contenha o indice selectedCombinedFoodIndex
         //fazendo um novo array onde tiramos os que possuem o indice indicado na funcao
-        console.log("Select: ", selectedCombinedFoodIndex)
-        console.log("FOODS AND MEALS:", combinedFoodsAndMeals);
-        setCombinedFoodsAndMeals((prevFoodsAndMeals) => {
-            return prevFoodsAndMeals.filter((item, index) => index !== selectedCombinedFoodIndex);
-        });
+
+        const updatedFoodsAndMeals = [...combinedFoodsAndMeals];
+        updatedFoodsAndMeals.splice(selectedCombinedFoodIndex, 1);
+
+        console.log("UPDATED FOODS AND MEALS: ", updatedFoodsAndMeals)
+
+        setCombinedFoodsAndMeals(updatedFoodsAndMeals);
 
     }
 
@@ -135,7 +133,7 @@ const DatePage = (data: ServerProps) => {
         let idMealsUnformatted = extractIds(selectedMeals);
 
         let idFoods = removeDuplicatesFromArray(idFoodsUnformatted);
-        let idMeals  = removeDuplicatesFromArray(idMealsUnformatted)
+        let idMeals = removeDuplicatesFromArray(idMealsUnformatted)
 
 
         if (combinedFoodsAndMeals.length > 0) {
