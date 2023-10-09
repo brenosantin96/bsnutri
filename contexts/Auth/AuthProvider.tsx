@@ -1,5 +1,5 @@
 import { User } from "@/types/User";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { AuthContext } from "./AuthContext";
 import { ProviderType } from "./Types";
 import { useApi } from "../../libs/useApi";
@@ -40,6 +40,8 @@ export const AuthProvider = ({ children }: ProviderType) => {
     return token ? true : false;
   };
 
+
+  
   return (
     <AuthContext.Provider
       value={{ user, signIn, signOut, token, handleToken, isLogged }}

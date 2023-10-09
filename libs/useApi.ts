@@ -6,8 +6,17 @@ import { Food } from '@/types/Food';
 import axios from 'axios';
 import { Meal } from '@/types/Meal';
 import { InfoNutritionalDay } from '@/types/InfoNutritionalDay';
+import { getCookie, setCookie } from 'cookies-next';
 
 const baseURL = process.env.NEXT_PUBLIC_BASEURL;
+const token = getCookie("token");
+
+const apiWithToken = axios.create({
+    baseURL,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
 
 export const useApi = () => ({
@@ -16,6 +25,7 @@ export const useApi = () => ({
         const response = await axios.post(`${baseURL}/validate`, { token });
         return response.data;
     },
+
 
     signin: async (email: string, passwordReq: string) => {
         const response = await axios.post(`${baseURL}/login`, { email, passwordReq });
@@ -27,7 +37,7 @@ export const useApi = () => ({
         return response.data;
     },
 
-    createUser: async (user: User) => {
+    signUp: async (user: User) => {
         const response = await axios.post(`${baseURL}/register`, user);
         return response.data;
     },
@@ -38,8 +48,8 @@ export const useApi = () => ({
     },
 
     getFoods: async () => {
-
-        return foods;
+        const response = await apiWithToken.get(`${baseURL}/foodsByUser`);
+        return response.data;
     },
 
     getOneFood: async (id: number) => {
@@ -63,9 +73,12 @@ export const useApi = () => ({
 
     },
 
-    createFood: async (newFood: Food) => {
-        if (newFood) {
-            let request = await axios.post(`${baseURL}/foods`, newFood);
+    createFood: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, image: string = 'default.png') => {
+        if (name !== "" || !portion || !protein || !calories || !grease || !salt) {
+            let request = await apiWithToken.post(`${baseURL}/foodsByUser`, {
+                name, portion, protein, calories, grease, salt, image
+            });
+
             return request.data;
         }
 

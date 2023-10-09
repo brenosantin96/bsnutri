@@ -25,7 +25,7 @@ const RegisterFoodPage = () => {
     const [saltInput, setSaltInput] = useState("");
 
     
-    const handleSaveFood = () => {
+    const handleSaveFood = async () => {
         let newFood : Food = {
             id: 1,
             name: nameInput,
@@ -36,7 +36,7 @@ const RegisterFoodPage = () => {
             salt: parseInt(saltInput)
         };
 
-        api.createFood(newFood);
+        await api.createFood(newFood.name, newFood.portion, newFood.protein, newFood.calories, newFood.grease, newFood.salt);
     }
 
 

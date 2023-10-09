@@ -34,9 +34,9 @@ const Login = () => {
     }
   }
 
-
+ 
   useEffect(() => {
-    if (auth.token !== "") { setCookie("token", auth.token); }
+    if (auth.token !== "" ) { setCookie("token", auth.token); }
   }, [auth.token])
 
   return (
