@@ -1,8 +1,9 @@
 import { User } from "@/types/User";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 import { ProviderType } from "./Types";
 import { useApi } from "../../libs/useApi";
+import { setCookie } from 'cookies-next';
 
 export const AuthProvider = ({ children }: ProviderType) => {
   //O authcontext.provider reclama se nao passamos os valores defininidos no type do contexto.
@@ -11,21 +12,12 @@ export const AuthProvider = ({ children }: ProviderType) => {
   const [token, setToken] = useState("");
   const api = useApi();
 
-  const signIn = async (email: string, passwordReq: string) => {
-    const data = await api.signin(email, passwordReq);
 
-    console.log("VALOR DATA: ", data);
-    //value retornado: VALOR DATA:  {msg: 'Unable to log in', status: false}
 
-    if (data.status === true && data.token) {
-      setUser(data.user);
-      setToken(data.token);
-      console.log("TOKEN: ", data.token);
-      return true;
-    }
+  const putTokenInCookies = (token: string) => {
+    setCookie("token", token);
 
-    return false;
-  };
+  }
 
   const signOut = async () => {
     await api.logout();
@@ -40,8 +32,25 @@ export const AuthProvider = ({ children }: ProviderType) => {
     return token ? true : false;
   };
 
+  const signIn = async (email: string, passwordReq: string) => {
+    const data = await api.signin(email, passwordReq);
+
+    console.log("VALOR DATA: ", data);
+    //value retornado: VALOR DATA:  {msg: 'Unable to log in', status: false}
+
+    if (data.status === true && data.token) {
+      setUser(data.user);
+      setToken(data.token);
+      putTokenInCookies(token);
+      console.log("TOKEN: ", data.token);
+      return true;
+    }
+
+    return false;
+  };
 
   
+
   return (
     <AuthContext.Provider
       value={{ user, signIn, signOut, token, handleToken, isLogged }}
