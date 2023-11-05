@@ -55,25 +55,37 @@ export const useApi = () => ({
     getFoods: async () => {
 
         let token = getCookie('token'); // => 'value'
-        console.log(token);          
+        console.log("TOKEN PEGADO GETFOODS: ", token);
 
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
 
-        const response = await axios.post(`${baseURL}/foodsByUser`, {
+        const response = await axios.get(`${baseURL}/foodsByUser`, {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJicmVub0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRncVZFQVM5Mm81S21SU3lGZ2ZPLmkuazd1Q05xLnR3cU04cnRZOXcvNnI5d1VIVjVMSmtELiIsImlhdCI6MTY5OTIxNzI3MywiZXhwIjoxNzAxODA5MjczfQ.F98pGoznpVaVVwnTp70B61LwadTApVYPv6getmAZReI`
             }
         });
-        return response;
+
+        return response.data;
 
     },
 
     getOneFood: async (id: number) => {
-        let food = await foods.find(item => item.id === id);
-        if (food) {
-            return food;
-        } else {
+
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
             return;
         }
+
+        const response = await axios.get(`${baseURL}/foodsByUser/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token} `
+            }
+        });
+
+        return response.data;
     },
 
     getManyFood: async (ids: number[]) => {
@@ -88,10 +100,22 @@ export const useApi = () => ({
 
     },
 
-    createFood: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, image: string = 'default.png') => {
+    createFood: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, image: string = '/default.png') => {
+
+        let token = getCookie('token'); // => 'value'
+        console.log("TOKEN PEGADO: ", token);
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
         if (name !== "" || !portion || !protein || !calories || !grease || !salt) {
-            let request = await API.post(`${baseURL}/foodsByUser`, {
+            let request = await axios.post(`${baseURL}/foodsByUser`, {
                 name, portion, protein, calories, grease, salt, image
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
 
             return request.data;

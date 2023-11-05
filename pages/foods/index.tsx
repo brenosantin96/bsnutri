@@ -74,7 +74,7 @@ const FoodsPage = (data: ServerProps) => {
                         {filteredFoods.length > 0 &&
                             <div>
                                 {filteredFoods.map((item, index) => (
-                                    <FoodComponent key={index} data={item} light={index % 2 === 0} url={"foods"} link={true}  />
+                                    <FoodComponent key={index} data={item} light={index % 2 === 0} url={"foods"} link={true} />
                                 ))}
                             </div>
                         }
@@ -119,6 +119,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     //Get products
     const foods = await api.getFoods();
+    console.log("FOODS", foods)
+    console.log("FOODS TYPEOF", typeof (foods))
 
 
     return {
