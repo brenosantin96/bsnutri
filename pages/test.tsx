@@ -1,53 +1,46 @@
-import { useApi } from "@/libs/useApi";
-import { Food } from "@/types/Food";
-import { InfoNutritionalDay } from "@/types/InfoNutritionalDay";
-import { Meal } from "@/types/Meal";
-import { GetServerSideProps } from "next";
-import { useEffect } from "react";
+import { useApi } from '@/libs/useApi'
+import { User } from '@/types/User'
+import { GetServerSideProps } from 'next'
+import React, { useState } from 'react'
 
-const DatePage = ({ data }: { data: ServerProps; }) => {
+const TestPage = (data: ServerProps) => {
+
+    const [users, setUsers] = useState<User[]>(data.users);
 
 
 
-    useEffect(() => {
-        console.log(data.infoDay);
-    }, [])
 
-   
     return (
-        <>
-            
-            
 
-        </>
+        <div>
+            {users.map((item, index) => (
+                <div key={index}>
+                    {item.name} - {item.email}
+                </div>
+            ))}
+
+        </div>
     )
 }
 
+export default TestPage
+
+
 type ServerProps = {
-    date: string; // Defina o tipo da prop "date" como string
-    foods: Food[];
-    meals: Meal[];
-    infoDay: InfoNutritionalDay | null;
+    users: User[];
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
-    // Extrair o ID da URL usando o objeto context
-    const { date } = context.query;
-
     const api = useApi();
-    const foods = await api.getFoods();
-    const meals = await api.getMeals();
-    let infoDay = await api.getInfoDay(date as string);
 
-    console.log(infoDay);
+    //Get products
+    const users = await api.getUsers();
 
 
     return {
         props: {
-            date: date as string,
-            foods,
-            meals,
+            users
         }
     }
 }

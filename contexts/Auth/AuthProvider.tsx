@@ -4,6 +4,11 @@ import { AuthContext } from "./AuthContext";
 import { ProviderType } from "./Types";
 import { useApi } from "../../libs/useApi";
 import { setCookie } from 'cookies-next';
+import axios, { AxiosInstance } from "axios";
+
+const baseURL = process.env.NEXT_PUBLIC_BASEURL;
+
+
 
 export const AuthProvider = ({ children }: ProviderType) => {
   //O authcontext.provider reclama se nao passamos os valores defininidos no type do contexto.
@@ -12,13 +17,13 @@ export const AuthProvider = ({ children }: ProviderType) => {
   const [token, setToken] = useState("");
   const api = useApi();
 
+  const [apiAxiosInstance, setApiAxiosInstance] = useState<AxiosInstance | undefined>();
 
 
-  const putTokenInCookies = (token: string) => {
-    setCookie("token", token);
 
-  }
+  const baseURL = process.env.NEXT_PUBLIC_BASEURL;
 
+ 
   const signOut = async () => {
     await api.logout();
     setUser(null);
@@ -26,6 +31,7 @@ export const AuthProvider = ({ children }: ProviderType) => {
 
   const handleToken = async (tokenString: string) => {
     setToken(tokenString);
+    setCookie("token", tokenString);
   };
 
   const isLogged = () => {
@@ -33,6 +39,7 @@ export const AuthProvider = ({ children }: ProviderType) => {
   };
 
   const signIn = async (email: string, passwordReq: string) => {
+
     const data = await api.signin(email, passwordReq);
 
     console.log("VALOR DATA: ", data);
@@ -40,20 +47,18 @@ export const AuthProvider = ({ children }: ProviderType) => {
 
     if (data.status === true && data.token) {
       setUser(data.user);
-      setToken(data.token);
-      putTokenInCookies(token);
-      console.log("TOKEN: ", data.token);
+      handleToken(data.token);
       return true;
     }
 
     return false;
   };
 
-  
+
 
   return (
     <AuthContext.Provider
-      value={{ user, signIn, signOut, token, handleToken, isLogged }}
+      value={{ user, signIn, signOut, token, handleToken, isLogged, apiAxiosInstance  }}
     >
       {children}
     </AuthContext.Provider>

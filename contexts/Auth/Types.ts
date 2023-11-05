@@ -1,14 +1,16 @@
+import { AxiosInstance } from 'axios';
 import { User } from '../../types/User';
 
 export type AuthContextType = {
     user: User | null;
-    signIn: (email: string, password: string) => Promise<boolean>; 
+    apiAxiosInstance: AxiosInstance | undefined;
+    signIn: (email: string, password: string) => Promise<boolean>;
     signOut: () => void;
-    handleToken: (token : string) => void;
+    handleToken: (token: string) => void;
     token: string | null;
     isLogged: () => boolean;
 }
 
 export type ProviderType = {
-    children : React.ReactNode;
+    children: React.ReactNode;
 }

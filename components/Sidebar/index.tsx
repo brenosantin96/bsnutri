@@ -20,7 +20,7 @@ export const Sidebar = ({ menuOpened, onClose }: Props) => {
 
     const logout = () => {
         auth.handleToken("noToken");
-        setCookie("token", auth.token);
+        auth.signOut();
     }
 
     return (

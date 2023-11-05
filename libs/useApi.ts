@@ -7,19 +7,24 @@ import axios from 'axios';
 import { Meal } from '@/types/Meal';
 import { InfoNutritionalDay } from '@/types/InfoNutritionalDay';
 import { getCookie, setCookie } from 'cookies-next';
+import API from './API';
+import useAxiosAuth from './useAxiosAuth';
+import { config } from 'process';
+import { useContext } from 'react';
+import { AuthContext } from '@/contexts/Auth/AuthContext';
 
 const baseURL = process.env.NEXT_PUBLIC_BASEURL;
-const token = getCookie("token");
-
-const apiWithToken = axios.create({
-    baseURL,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
 
 
 export const useApi = () => ({
+
+
+
+    getUsers: async () => {
+        const response = await axios.get(`${baseURL}/users`);
+        return response.data;
+
+    },
 
     validateToken: async (token: string) => {
         const response = await axios.post(`${baseURL}/validate`, { token });
@@ -48,8 +53,18 @@ export const useApi = () => ({
     },
 
     getFoods: async () => {
-        const response = await apiWithToken.get(`${baseURL}/foodsByUser`);
-        return response.data;
+
+        let token = getCookie('token'); // => 'value'
+        console.log(token);          
+
+
+        const response = await axios.post(`${baseURL}/foodsByUser`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return response;
+
     },
 
     getOneFood: async (id: number) => {
@@ -75,7 +90,7 @@ export const useApi = () => ({
 
     createFood: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, image: string = 'default.png') => {
         if (name !== "" || !portion || !protein || !calories || !grease || !salt) {
-            let request = await apiWithToken.post(`${baseURL}/foodsByUser`, {
+            let request = await API.post(`${baseURL}/foodsByUser`, {
                 name, portion, protein, calories, grease, salt, image
             });
 
