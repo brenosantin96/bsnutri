@@ -6,20 +6,31 @@ import { Food } from '@/types/Food';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import styles from '../../styles/Food-id.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ModalExclude } from '@/components/ModalExclude';
 
 
-const FoodId = (data: ServerProps) => {
+const FoodId = () => {
 
     const router = useRouter();
+    const { id } = router.query;
     const api = useApi();
 
     const [isEdditing, setIsEdditing] = useState(false);
     const [cancelled, setIsCancelled] = useState(true);
     const [saved, setIsSaved] = useState(false);
 
-    const [food, setFood] = useState<Food>(data.food)
+    const [food, setFood] = useState<Food>()
+
+    useEffect(() => {
+        getFood();
+    }, [])
+
+    const getFood = async () => {
+        const food = await api.getOneFood(parseInt(id as string));
+        setFood(food);
+    }
+
 
     //removeItem Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,12 +59,12 @@ const FoodId = (data: ServerProps) => {
     }
 
     const handleDeleteFood = async (id: number) => {
-       let deleted = await api.deleteFood(id);
+        let deleted = await api.deleteFood(id);
 
-       if(deleted){
-        console.log("deletado com sucesso o food: ", id)
-        //router.push('/foods');
-       }
+        if (deleted) {
+            console.log("deletado com sucesso o food: ", id)
+            //router.push('/foods');
+        }
 
     }
 
@@ -71,19 +82,25 @@ const FoodId = (data: ServerProps) => {
 
 
     return (
+
         <>
-            <Header title={data.food.name} leftIcon='back' onClickLeftIcon={() => router.push('/foods')} />
+            {food &&
+                <Header title={food.name} leftIcon='back' onClickLeftIcon={() => router.push('/foods')} />
+            }
             <div className={styles.container}>
 
                 <div className={styles.areaEditButton}>
                     <ButtonMain onClick={startEdditing} textButton={"Editar"} fill={false} disabled={true} />
                     <ButtonMain onClick={removeFood} textButton={"Remover"} fill={false} disabled={true} />
                 </div>
-                <FoodComponent2 light={true} data={data.food} isEdditing={isEdditing} cancelled={cancelled} saved={saved} onSave={handleUpdateFood} />
 
-                {isModalOpen &&
+                {food &&
+                    <FoodComponent2 light={true} data={food} isEdditing={isEdditing} cancelled={cancelled} saved={saved} onSave={handleUpdateFood} />
+                }
+                
+                {isModalOpen && food &&
                     <div>
-                        <ModalExclude id={food.id} valueToRemove={food.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onDelete={handleDeleteFood}  />
+                        <ModalExclude id={food.id} valueToRemove={food.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onDelete={handleDeleteFood} />
                         <div className={styles.backdrop} />
                     </div>
                 }
@@ -100,7 +117,7 @@ const FoodId = (data: ServerProps) => {
 
 export default FoodId;
 
-type ServerProps = {
+/* type ServerProps = {
     food: Food;
 }
 
@@ -120,4 +137,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             food
         }
     }
-}
+} */

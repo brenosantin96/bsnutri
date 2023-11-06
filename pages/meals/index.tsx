@@ -13,12 +13,23 @@ import { useEffect, useState } from 'react';
 import { Meal } from '@/types/Meal';
 
 
-const MealsPage = (data: ServerProps) => {
+const MealsPage = () => {
 
-
+    const api = useApi();
     const router = useRouter();
 
-    const [meals, setMeals] = useState<Meal[]>(data.meals)
+    const [meals, setMeals] = useState<Meal[]>()
+
+    useEffect(() => {
+
+        getMeals();
+
+    }, [])
+
+    const getMeals = async () => {
+        const meals = await api.getMeals();
+        setMeals(meals);
+    }
 
 
     //SearchArea
@@ -28,12 +39,15 @@ const MealsPage = (data: ServerProps) => {
     useEffect(() => {
         let newFilteredMeals: Meal[] = [];
 
-        for (let meal of data.meals) {
-            if (meal.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
-                newFilteredMeals.push(meal);
+        if (meals) {
+            for (let meal of meals) {
+                if (meal.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
+                    newFilteredMeals.push(meal);
+                }
             }
+            setFilteredMeals(newFilteredMeals);
         }
-        setFilteredMeals(newFilteredMeals);
+
     }, [searchText])
 
     const handleSearchText = (value: string) => {
@@ -75,7 +89,7 @@ const MealsPage = (data: ServerProps) => {
                         {filteredMeals.length > 0 &&
                             <div>
                                 {filteredMeals.map((item, index) => (
-                                    <FoodComponent key={index} data={item} light={index % 2 === 0} url={"meals"} link={true}/>
+                                    <FoodComponent key={index} data={item} light={index % 2 === 0} url={"meals"} link={true} />
                                 ))}
                             </div>
                         }
@@ -88,10 +102,10 @@ const MealsPage = (data: ServerProps) => {
                 }
 
 
-                {!searchText &&
+                {!searchText && meals &&
                     <div className={styles.foodArea}>
                         {meals.map((item, index) => (
-                            <FoodComponent key={index} data={item} light={index % 2 === 0} url={"meals"} link={true}  />
+                            <FoodComponent key={index} data={item} light={index % 2 === 0} url={"meals"} link={true} />
                         ))}
                     </div>
                 }
@@ -110,21 +124,3 @@ const MealsPage = (data: ServerProps) => {
 export default MealsPage;
 
 
-type ServerProps = {
-    meals: Meal[];
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-
-    const api = useApi();
-
-    //Get products
-    const meals = await api.getMeals();
-
-
-    return {
-        props: {
-            meals
-        }
-    }
-}

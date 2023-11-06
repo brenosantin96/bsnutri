@@ -5,10 +5,11 @@ import Head from 'next/head'
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import styles from '../../styles/Calendar.module.css'
-import { setCookie } from 'cookies-next';
+import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { AuthContext } from '../../contexts/Auth/AuthContext'
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { GetServerSideProps } from 'next';
 
 // Importe o componente usando dynamic
 const CalendarComponent = dynamic(() => import('../../components/CalendarComponent/index'), {
@@ -39,13 +40,6 @@ const Calendar = () => {
 
 
 
-  //Managing Cookie
-
-  useEffect(() => {
-    //if (auth.token === "") router.push('/')
-  }, [])
-
-
   return (
     <>
       <Head>
@@ -68,5 +62,5 @@ const Calendar = () => {
   )
 }
 
-
 export default Calendar;
+

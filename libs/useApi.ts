@@ -54,16 +54,13 @@ export const useApi = () => ({
 
     getFoods: async () => {
 
+        //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJicmVub0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRncVZFQVM5Mm81S21SU3lGZ2ZPLmkuazd1Q05xLnR3cU04cnRZOXcvNnI5d1VIVjVMSmtELiIsImlhdCI6MTY5OTIxNzI3MywiZXhwIjoxNzAxODA5MjczfQ.F98pGoznpVaVVwnTp70B61LwadTApVYPv6getmAZReI
+
         let token = getCookie('token'); // => 'value'
-        console.log("TOKEN PEGADO GETFOODS: ", token);
 
-        if (token === "" || !token || token === "noToken") {
-            return;
-        }
-
-        const response = await axios.get(`${baseURL}/foodsByUser`, {
+              const response = await axios.get(`${baseURL}/foodsByUser`, {
             headers: {
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJicmVub0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRncVZFQVM5Mm81S21SU3lGZ2ZPLmkuazd1Q05xLnR3cU04cnRZOXcvNnI5d1VIVjVMSmtELiIsImlhdCI6MTY5OTIxNzI3MywiZXhwIjoxNzAxODA5MjczfQ.F98pGoznpVaVVwnTp70B61LwadTApVYPv6getmAZReI`
+                Authorization: `Bearer ${token}`
             }
         });
 
@@ -139,7 +136,15 @@ export const useApi = () => ({
 
     getMeals: async () => {
 
-        return meals;
+        let token = getCookie('token'); // => 'value'
+
+              const response = await axios.get(`${baseURL}/mealsByUser`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
     },
 
     getOneMeal: async (id: number) => {
@@ -186,8 +191,6 @@ export const useApi = () => ({
 
         }
     },
-
-
 
 
 

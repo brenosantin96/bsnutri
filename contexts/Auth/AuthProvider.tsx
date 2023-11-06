@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: ProviderType) => {
 
   const handleToken = async (tokenString: string) => {
     setToken(tokenString);
+    localStorage.setItem("token", tokenString)
     setCookie("token", tokenString);
   };
 

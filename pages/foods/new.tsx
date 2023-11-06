@@ -120,17 +120,3 @@ const RegisterFoodPage = () => {
 export default RegisterFoodPage;
 
 
-type ServerProps = {
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-
-    const api = useApi();
-
-
-    return {
-        props: {
-
-        }
-    }
-}

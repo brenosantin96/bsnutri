@@ -12,12 +12,22 @@ import { Food } from '@/types/Food';
 import { useEffect, useState } from 'react';
 
 
-const FoodsPage = (data: ServerProps) => {
+const FoodsPage = () => {
 
 
+    const api = useApi();
     const router = useRouter();
 
-    const [foods, setFoods] = useState<Food[]>(data.foods);
+    const [foods, setFoods] = useState<Food[]>();
+
+    useEffect(() => {
+        getFoods();
+    }, [])
+
+    const getFoods = async () => {
+        const foods = await api.getFoods();
+        setFoods(foods);
+    }
 
 
     //SearchArea
@@ -27,12 +37,14 @@ const FoodsPage = (data: ServerProps) => {
     useEffect(() => {
         let newFilteredFoods: Food[] = [];
 
-        for (let food of data.foods) {
-            if (food.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
-                newFilteredFoods.push(food);
+        if (foods) {
+            for (let food of foods) {
+                if (food.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1) {
+                    newFilteredFoods.push(food);
+                }
             }
+            setFilteredFoods(newFilteredFoods);
         }
-        setFilteredFoods(newFilteredFoods);
     }, [searchText])
 
     const handleSearchText = (value: string) => {
@@ -87,7 +99,7 @@ const FoodsPage = (data: ServerProps) => {
                 }
 
 
-                {!searchText &&
+                {!searchText && foods &&
                     <div className={styles.foodArea}>
                         {foods.map((item, index) => (
                             <FoodComponent key={index} data={item} light={index % 2 === 0} url={"foods"} link={true} />
@@ -108,24 +120,3 @@ const FoodsPage = (data: ServerProps) => {
 
 export default FoodsPage;
 
-
-type ServerProps = {
-    foods: Food[];
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-
-    const api = useApi();
-
-    //Get products
-    const foods = await api.getFoods();
-    console.log("FOODS", foods)
-    console.log("FOODS TYPEOF", typeof (foods))
-
-
-    return {
-        props: {
-            foods
-        }
-    }
-}
