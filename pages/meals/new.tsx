@@ -15,7 +15,7 @@ import { sumProperty } from '../../helpers/sumProperty'
 import { InfoItemNutritional } from '@/components/InfoItemNutritional';
 
 
-const RegisterMealPage = (data: ServerProps) => {
+const RegisterMealPage = () => {
 
 
     const router = useRouter();
@@ -24,7 +24,16 @@ const RegisterMealPage = (data: ServerProps) => {
     //inputs
     const [nameInput, setNameInput] = useState("");
 
-    const [foods, setFoods] = useState(data.foods);
+    const [foods, setFoods] = useState<Food[]>();
+
+    useEffect(() => {
+        getFoods();
+    }, [])
+
+    const getFoods = async () => {
+        const foods = await api.getFoods();
+        setFoods(foods);
+    }
 
     //selects
     const [selectedFoodIds, setSelectedFoodIds] = useState<number[]>([]);
@@ -84,21 +93,25 @@ const RegisterMealPage = (data: ServerProps) => {
 
 
     const addSelectFoodComponent = () => {
-        setSelectComponents([...selectComponents,
-        <SelectFood
-            index={selectComponents.length}
-            key={selectComponents.length}
-            foods={foods}
-            onChange={handleSelectedItem}
-            onClick={handleOnClickMinus}
-            selectedFoodsId={selectedFoodIds}
-            deleteSelectedItem={handleDeletedItem}
-            handleSummedPortion={handleSummedPortion}
-            handleSummedProtein={handleSummedProtein}
-            handleSummedCalories={handleSummedCalories}
-            handleSummedGrease={handleSummedGrease}
-            handleSummedSalt={handleSummedSalt}
-        />])
+
+        if (foods && foods.length > 0) {
+
+            setSelectComponents([...selectComponents,
+            <SelectFood
+                index={selectComponents.length}
+                key={selectComponents.length}
+                foods={foods}
+                onChange={handleSelectedItem}
+                onClick={handleOnClickMinus}
+                selectedFoodsId={selectedFoodIds}
+                deleteSelectedItem={handleDeletedItem}
+                handleSummedPortion={handleSummedPortion}
+                handleSummedProtein={handleSummedProtein}
+                handleSummedCalories={handleSummedCalories}
+                handleSummedGrease={handleSummedGrease}
+                handleSummedSalt={handleSummedSalt}
+            />])
+        }
     }
 
     const handleSelectedItem = (id: number) => {
@@ -106,7 +119,9 @@ const RegisterMealPage = (data: ServerProps) => {
         //pegando o id do item selecionado e retornando pro nosso state de itens
         setSelectedFoodIds([...selectedFoodIds, id]);
         //removendo valor da opcao ja selecionada.
-        setFoods(foods.filter((foodId) => foodId.id !== id));
+
+        if (foods)
+            setFoods(foods.filter((foodId) => foodId.id !== id));
 
     }
 
@@ -117,7 +132,7 @@ const RegisterMealPage = (data: ServerProps) => {
         //adicionar novamente o elemento eliminado previamente no LIST:
         let food = await api.getOneFood(id);
         if (food) {
-            setFoods([...foods, food]);
+            setFoods([...foods as Food[], food]);
         }
     }
 
@@ -151,9 +166,13 @@ const RegisterMealPage = (data: ServerProps) => {
             }
             console.log(meal);
             router.push('/meals')
+            let save = await api.createMeal(meal.name, meal.portion, meal.protein, meal.calories, meal.grease, meal.salt, meal.foods);
+            console.log(save);
             //chamada api para salvar a meal
-            //let save = await api.createMeal(meal);
-            //console.log(save);
+
+
+            //consertar essa chamada, esta quebrando o servidor!
+
         }
 
     }
@@ -187,24 +206,26 @@ const RegisterMealPage = (data: ServerProps) => {
                             <Icon svg='plus' height={27} width={27} />
                         </div>
                     </div>
-                    <div className={styles.foodsArea}>
-                        {selectComponents.map(
-                            (selectComponent, index) => <SelectFood
-                                key={index}
-                                foods={foods}
-                                index={index}
-                                onChange={handleSelectedItem}
-                                onClick={handleOnClickMinus}
-                                deleteSelectedItem={handleDeletedItem}
-                                selectedFoodsId={selectedFoodIds}
-                                handleSummedPortion={handleSummedPortion}
-                                handleSummedProtein={handleSummedProtein}
-                                handleSummedCalories={handleSummedCalories}
-                                handleSummedGrease={handleSummedGrease}
-                                handleSummedSalt={handleSummedSalt}
-                            />
-                        )}
-                    </div>
+                    {foods &&
+                        <div className={styles.foodsArea}>
+                            {selectComponents.map(
+                                (selectComponent, index) => <SelectFood
+                                    key={index}
+                                    foods={foods}
+                                    index={index}
+                                    onChange={handleSelectedItem}
+                                    onClick={handleOnClickMinus}
+                                    deleteSelectedItem={handleDeletedItem}
+                                    selectedFoodsId={selectedFoodIds}
+                                    handleSummedPortion={handleSummedPortion}
+                                    handleSummedProtein={handleSummedProtein}
+                                    handleSummedCalories={handleSummedCalories}
+                                    handleSummedGrease={handleSummedGrease}
+                                    handleSummedSalt={handleSummedSalt}
+                                />
+                            )}
+                        </div>
+                    }
                 </div>
 
                 <div className={styles.buttonsRegisterArea}>
@@ -233,21 +254,4 @@ const RegisterMealPage = (data: ServerProps) => {
 export default RegisterMealPage;
 
 
-type ServerProps = {
-    foods: Food[];
-}
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-
-    const api = useApi();
-
-    //get Foods to populate fields
-    const foods = await api.getFoods();
-
-
-    return {
-        props: {
-            foods
-        }
-    }
-}

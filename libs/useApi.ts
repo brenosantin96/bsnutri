@@ -58,7 +58,7 @@ export const useApi = () => ({
 
         let token = getCookie('token'); // => 'value'
 
-              const response = await axios.get(`${baseURL}/foodsByUser`, {
+        const response = await axios.get(`${baseURL}/foodsByUser`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -100,7 +100,6 @@ export const useApi = () => ({
     createFood: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, image: string = '/default.png') => {
 
         let token = getCookie('token'); // => 'value'
-        console.log("TOKEN PEGADO: ", token);
 
         if (token === "" || !token || token === "noToken") {
             return;
@@ -138,7 +137,7 @@ export const useApi = () => ({
 
         let token = getCookie('token'); // => 'value'
 
-              const response = await axios.get(`${baseURL}/mealsByUser`, {
+        const response = await axios.get(`${baseURL}/mealsByUser`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -156,10 +155,24 @@ export const useApi = () => ({
         }
     },
 
-    createMeal: async (newMeal: Meal) => {
-        if (newMeal) {
-            let request = await axios.post("https://api/meals", newMeal);
-            return request.data;
+    createMeal: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, foods: number[], image: string = "/default.png") => {
+
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        if (name !== "" || !portion || !protein || !calories || !grease || !salt || foods.length !== 0) {
+            let response = await axios.post(`${baseURL}/mealsByUser`, {
+                name, portion, protein, calories, grease, salt, image, foods
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            return response.data;
         }
     },
 

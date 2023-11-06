@@ -26,7 +26,7 @@ export const SelectFood = ({ foods, onChange, onClick, index, selectedFoodsId, d
 
     useEffect(() => {
         getCloneFoods();
-    })
+    }, [])
 
     const getCloneFoods = async () => {
         let clone = await api.getFoods();
