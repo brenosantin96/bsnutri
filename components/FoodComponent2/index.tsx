@@ -49,10 +49,10 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled, saved, onSa
                 id: data.id,
                 name: data.name,
                 portion: data.portion,
-                protein: parseInt(inputProteinValue),
-                calories: parseInt(inputKcalValue),
-                grease: parseInt(inputGreaseValue),
-                salt: parseInt(inputSaltValue),
+                protein: parseFloat(inputProteinValue),
+                calories: parseFloat(inputKcalValue),
+                grease: parseFloat(inputGreaseValue),
+                salt: parseFloat(inputSaltValue),
             }
             onSave(food);
         }
@@ -64,7 +64,7 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled, saved, onSa
 
     useEffect(() => {
         handleIsSaved()
-    }, [saved])
+    }, [saved, inputProteinValue, inputKcalValue, inputGreaseValue, inputSaltValue])
 
     return (
         <div className={styles.container}>

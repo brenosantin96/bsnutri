@@ -22,7 +22,7 @@ export type MealWithOnlyId = {
     calories: number;
     grease: number;
     salt: number;
-    foods: number[];
+    foods_id: number[];
 }
 
 

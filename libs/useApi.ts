@@ -106,7 +106,7 @@ export const useApi = () => ({
         }
 
         if (name !== "" || !portion || !protein || !calories || !grease || !salt) {
-            let request = await axios.post(`${baseURL}/foodsByUser`, {
+            let response = await axios.post(`${baseURL}/foodsByUser`, {
                 name, portion, protein, calories, grease, salt, image
             }, {
                 headers: {
@@ -114,22 +114,49 @@ export const useApi = () => ({
                 }
             });
 
-            return request.data;
+            return response.data;
         }
 
 
     },
 
-    saveEditedFood: async (food: Food) => {
+    saveEditedFood: async (id: number, portion?: number, protein?: number, calories?: number, grease?: number, salt?: number, image: string = '/default.png') => {
 
-        if (food) {
-            let request = await axios.put("https://api/foods", food);
-            return request.data;
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
+            return;
         }
+
+        let response = await axios.put(`${baseURL}/foodsByUser/${id}`, {
+            portion, protein, calories, grease, salt, image
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
+
+
+
     },
 
     deleteFood: async (id: number) => {
-        return true;
+
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        let response = await axios.delete(`${baseURL}/foodsByUser/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
 
     },
 
@@ -143,7 +170,7 @@ export const useApi = () => ({
             }
         });
 
-        return response.data;
+        return response;
     },
 
     getOneMeal: async (id: number) => {
@@ -155,7 +182,7 @@ export const useApi = () => ({
         }
     },
 
-    createMeal: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, foods: number[], image: string = "/default.png") => {
+    createMeal: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, foods_id: number[], image: string = "/default.png") => {
 
         let token = getCookie('token'); // => 'value'
 
@@ -165,7 +192,7 @@ export const useApi = () => ({
 
         if (name !== "" || !portion || !protein || !calories || !grease || !salt || foods.length !== 0) {
             let response = await axios.post(`${baseURL}/mealsByUser`, {
-                name, portion, protein, calories, grease, salt, image, foods
+                name, portion, protein, calories, grease, salt, image, foods_id
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`

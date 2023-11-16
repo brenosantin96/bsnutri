@@ -38,20 +38,27 @@ const FoodId = () => {
     const startEdditing = () => {
         setIsEdditing(true);
         setIsCancelled(false);
-        setIsSaved(false);
+        setIsSaved(true);
     }
 
 
-    const saveEdittedFood = () => {
+    const saveEdittedFood = async () => {
+
+        if (food) {
+            let response = await api.saveEditedFood(food.id, food.portion, food.protein, food.calories, food.grease, food.salt, food.image);
+            console.log(response)
+        }
+
         console.log("Salvado o food: ", food)
-        setIsSaved(true);
+        setIsSaved(false);
 
     }
 
     const handleUpdateFood = (updatedFood: Food) => {
+
         // Atualiza o estado do alimento com os novos dados vindo do componente filho.
         setFood(updatedFood);
-        console.log(updatedFood);
+        
     };
 
     const removeFood = () => {
@@ -59,13 +66,19 @@ const FoodId = () => {
     }
 
     const handleDeleteFood = async (id: number) => {
-        let deleted = await api.deleteFood(id);
 
-        if (deleted) {
-            console.log("deletado com sucesso o food: ", id)
-            //router.push('/foods');
+
+        let deletedResponse = await api.deleteFood(id);
+
+        if (deletedResponse.error) {
+            console.log(deletedResponse);
+            alert("Food is associated with meals. Cannot delete")
         }
 
+        if (deletedResponse.msg === "Food removed with success") {
+            router.push('/foods');
+        }
+        
     }
 
 
@@ -97,7 +110,7 @@ const FoodId = () => {
                 {food &&
                     <FoodComponent2 light={true} data={food} isEdditing={isEdditing} cancelled={cancelled} saved={saved} onSave={handleUpdateFood} />
                 }
-                
+
                 {isModalOpen && food &&
                     <div>
                         <ModalExclude id={food.id} valueToRemove={food.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onDelete={handleDeleteFood} />
@@ -116,6 +129,8 @@ const FoodId = () => {
 }
 
 export default FoodId;
+
+
 
 /* type ServerProps = {
     food: Food;

@@ -37,6 +37,7 @@ const RegisterFoodPage = () => {
         };
 
         await api.createFood(newFood.name, newFood.portion, newFood.protein, newFood.calories, newFood.grease, newFood.salt);
+        router.push("/foods");
     }
 
 

@@ -162,13 +162,12 @@ const RegisterMealPage = () => {
                 calories: sumProperty(foodsSelected, 'calories'),
                 grease: sumProperty(foodsSelected, 'grease'),
                 salt: sumProperty(foodsSelected, 'salt'),
-                foods: selectedFoodIds
+                foods_id: selectedFoodIds
             }
             console.log(meal);
-            router.push('/meals')
-            let save = await api.createMeal(meal.name, meal.portion, meal.protein, meal.calories, meal.grease, meal.salt, meal.foods);
+            let save = await api.createMeal(meal.name, meal.portion, meal.protein, meal.calories, meal.grease, meal.salt, meal.foods_id);
             console.log(save);
-            //chamada api para salvar a meal
+            router.push('/meals')
 
 
             //consertar essa chamada, esta quebrando o servidor!
