@@ -14,6 +14,7 @@ import SelectFood2 from '@/components/SelectFood2';
 import { FoodComponent } from '@/components/FoodComponent';
 import { Icon } from '@/components/Icon';
 import { sumProperty } from '@/helpers/sumProperty';
+import { useApi2 } from '@/libs/useapi2';
 
 
 const MealId = (data: ServerProps) => {
@@ -24,10 +25,15 @@ const MealId = (data: ServerProps) => {
     const [meal, setMeal] = useState(data.meal);
 
     const [foods, setFoods] = useState(data.foods);
-    const [availableFoods, setAvaiableFoods] = useState<Food[]>(foods.filter(food => !meal.foods.some(mealFood => mealFood.id === food.id)));
+    const [availableFoods, setAvaiableFoods] = useState<Food[]>(foods ? foods.filter(food => !meal.foods.some(mealFood => mealFood.id === food.id)) : []);
     /*  !meal.foods.some(...) nega o resultado do some, ou seja, verifica se o alimento atual NÃO está presente em meal.foods.
  Portanto, o filter incluirá o alimento atual em availableFoods somente se ele NÃO estiver em meal.foods. */
 
+
+ useEffect(() => {
+    console.log("TOKEN,", data.token)
+    
+}, [])
 
     useEffect(() => {
         // Filtrar os alimentos disponíveis sempre que o estado meal for alterado
@@ -187,6 +193,7 @@ export default MealId;
 type ServerProps = {
     meal: Meal;
     foods: Food[];
+    token: any;
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -194,15 +201,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // Extrair o ID da URL usando o objeto context
     const { id } = context.query;
 
-    const api = useApi();
+    //const api = useApi();
+    
+    
+    
+    const token = context.req.headers.cookie?.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1] || '';
+    const api2 = useApi2(token);
 
     //Get meal
-    const meal = await api.getOneMeal(parseInt(id as string));
-    const foods = await api.getFoods();
+    const meal = await api2.getOneMeal(parseInt(id as string));
+    const foods = await api2.getFoods();
+
+    console.log("MEAL ",meal);
+    console.log("FOODS", foods);
+
+//ESTOU QUASE LA, A INFORMACAO ESTA SENDO ENVIADA CORRETAMENTE MAS A RENDERIZACAO ESTA COM ERRO
 
 
     return {
         props: {
+            token,
             meal,
             foods
         }

@@ -54,8 +54,6 @@ export const useApi = () => ({
 
     getFoods: async () => {
 
-        //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJicmVub0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRncVZFQVM5Mm81S21SU3lGZ2ZPLmkuazd1Q05xLnR3cU04cnRZOXcvNnI5d1VIVjVMSmtELiIsImlhdCI6MTY5OTIxNzI3MywiZXhwIjoxNzAxODA5MjczfQ.F98pGoznpVaVVwnTp70B61LwadTApVYPv6getmAZReI
-
         let token = getCookie('token'); // => 'value'
 
         const response = await axios.get(`${baseURL}/foodsByUser`, {
@@ -170,16 +168,25 @@ export const useApi = () => ({
             }
         });
 
-        return response;
+        return response.data;
     },
 
     getOneMeal: async (id: number) => {
-        let meal = await meals.find(item => item.id === id);
-        if (meal) {
-            return meal;
-        } else {
+        
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
             return;
         }
+
+        const response = await axios.get(`${baseURL}/mealsByUser/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
+
     },
 
     createMeal: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, foods_id: number[], image: string = "/default.png") => {

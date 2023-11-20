@@ -79,7 +79,7 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled, saved, onSa
                 <div className={styles.foodContainer} style={{ backgroundColor: light ? '#FAA846' : '#FA881E', border: light ? '2px solid #FA881E' : '2px solid #FAA846' }}>
                     <div className={styles.topSideFoodContainer}>
                         <div className={styles.spaceImage}>
-                            <Image src={data.image as string} alt="Food1" width={64} height={60} />
+                            <Image src={data.image ? data.image : "/default.png"} alt="Food1" width={64} height={60} />
                         </div>
                     </div>
                     <div className={styles.downSideContainer}>

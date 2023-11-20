@@ -47,6 +47,7 @@ const FoodId = () => {
         if (food) {
             let response = await api.saveEditedFood(food.id, food.portion, food.protein, food.calories, food.grease, food.salt, food.image);
             console.log(response)
+            router.push("/foods");
         }
 
         console.log("Salvado o food: ", food)
