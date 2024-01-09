@@ -13,6 +13,12 @@ export type Meal = {
     image? : string;
 }
 
+type mealsFoods = {
+    meals_id: number,
+    foods_id: number,
+    foods: Food
+}
+
 export type MealWithOnlyId = {
     id: number,
     isMeal: boolean;
@@ -22,7 +28,6 @@ export type MealWithOnlyId = {
     calories: number;
     grease: number;
     salt: number;
-    foods_id: number[];
+    meals_has_foods: mealsFoods[];
 }
-
 

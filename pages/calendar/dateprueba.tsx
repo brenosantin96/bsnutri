@@ -27,23 +27,9 @@ const DatePage = (data: ServerProps) => {
     const api = useApi2(data.token);
     console.log("DATA TOKEN LINHA 28", data.token)
 
- /*    const [infoDayTest, setInfoDayTest] = useState<InfoNutritionalDay>();
-
     useEffect(()=>{
-        callApi()
-        console.log(infoDayTest)
+        console.log("DATA TOKEN NO LADO CLIENT", data.token)
     }, [])
-
-    const callApi = async () => {
-
-        let infoDay = await api.getInfoDay("02-ago-2023+1699868795455");
-
-        if(infoDay){
-            setInfoDayTest(infoDay)
-            console.log(infoDay)
-        }
-
-    } */
 
     const [menuOpened, setMenuOpened] = useState(false);
 
@@ -72,18 +58,18 @@ const DatePage = (data: ServerProps) => {
 
 
     //select
-    const [foods, setFoods] = useState<Food[]>([]);
-    const [meals, setMeals] = useState<Meal[]>([]);
+    const [foods, setFoods] = useState<Food[]>(data.foods);
+    const [meals, setMeals] = useState<Meal[]>(data.meals);
     const [showSelectFoods, setShowSelectFoods] = useState(true);
     const [showSelectMeals, setShowSelectMeals] = useState(false);
 
     const [selectedFoodId, setSelectedFoodID] = useState<number>(0);
     const [selectedMealId, setSelectedMealID] = useState<number>(0);
 
-    const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>([]);
+    const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>(infoNutriDay !== null ? infoNutriDay.combinedFoods : []);
 
-    const [selectedMeals, setSelectedMeals] = useState<Meal[]>([]);
-    const [selectedFoods, setSelectedFoods] = useState<Food[]>([]);
+    const [selectedMeals, setSelectedMeals] = useState<Meal[]>(infoNutriDay !== null ? infoNutriDay.selectedMeals : []);
+    const [selectedFoods, setSelectedFoods] = useState<Food[]>(infoNutriDay !== null ? infoNutriDay.selectedFoods : []);
 
 
     useEffect(() => {
@@ -258,13 +244,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const token = context.req.headers.cookie?.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1] || '';
     
     console.log(token)
-    console.log("Date:")
-    console.log(date)
 
     const api = useApi2(token);
 
     const foods = await api.getFoods();
-    //const meals = await api.getMeals();
+    const meals = await api.getMeals();
 
     let infoDay = await api.getInfoDay(date as string);
 
@@ -276,7 +260,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: {
             id: id as string,
             foods,
-            //meals,
+            meals,
             infoDay,
             token
         }

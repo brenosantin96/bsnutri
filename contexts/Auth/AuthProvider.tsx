@@ -17,9 +17,6 @@ export const AuthProvider = ({ children }: ProviderType) => {
   const [token, setToken] = useState("");
   const api = useApi();
 
-  const [apiAxiosInstance, setApiAxiosInstance] = useState<AxiosInstance | undefined>();
-
-
 
   const baseURL = process.env.NEXT_PUBLIC_BASEURL;
 
@@ -59,7 +56,7 @@ export const AuthProvider = ({ children }: ProviderType) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, signIn, signOut, token, handleToken, isLogged, apiAxiosInstance  }}
+      value={{ user, signIn, signOut, token, handleToken, isLogged  }}
     >
       {children}
     </AuthContext.Provider>

@@ -32,8 +32,8 @@ export const FoodComponent = ({ data, light, url, minusButton, link, disabled, o
     return (
         <div className={styles.container}>
             <div className={styles.headerFoodContainer}>
-                <div className={styles.headerName}>{data.name}</div>
-                <div className={styles.headerPortion}>{data.portion}</div>
+                <div className={styles.headerName}>{data.name ? data.name : ""}</div>
+                <div className={styles.headerPortion}>{data.portion ? data.portion : 1}</div>
             </div>
 
             <div className={styles.foodArea}>
@@ -43,25 +43,25 @@ export const FoodComponent = ({ data, light, url, minusButton, link, disabled, o
                             <div className={styles.boxFoodContainer}>
                                 <div className={styles.leftSideFoodContainer}>
                                     <div className={styles.spaceImage}>
-                                        <Image src={data.image as string} alt="Food1" width={64} height={60} />
+                                        <Image src={data.image ? data.image as string : '/default.png'} alt="Food1" width={64} height={60} />
                                     </div>
                                 </div>
                                 <div className={styles.rightSideFoodContainer}>
                                     <div className={styles.infoItem}>
                                         <div className={styles.descriptionItem}>Proteína:</div>
-                                        <div className={styles.valueItem}>{data.protein}</div>
+                                        <div className={styles.valueItem}>{data.protein ? data.protein : 1}</div>
                                     </div>
                                     <div className={styles.infoItem}>
                                         <div className={styles.descriptionItem}>Kcal:</div>
-                                        <div className={styles.valueItem}>{data.calories}</div>
+                                        <div className={styles.valueItem}>{data.calories ? data.calories : 1}</div>
                                     </div>
                                     <div className={styles.infoItem}>
                                         <div className={styles.descriptionItem}>Grasa:</div>
-                                        <div className={styles.valueItem}>{data.grease}</div>
+                                        <div className={styles.valueItem}>{data.grease ? data.grease : 1}</div>
                                     </div>
                                     <div className={styles.infoItem}>
                                         <div className={styles.descriptionItem}>Sal:</div>
-                                        <div className={styles.valueItem}>{data.salt}</div>
+                                        <div className={styles.valueItem}>{data.salt ? data.salt : 1}</div>
                                     </div>
 
                                 </div>
@@ -73,25 +73,25 @@ export const FoodComponent = ({ data, light, url, minusButton, link, disabled, o
                         <>
                             <div className={styles.leftSideFoodContainer}>
                                 <div className={styles.spaceImage}>
-                                    <Image src={data.image as string} alt="Food1" width={64} height={60} />
+                                    <Image src={data.image ? data.image as string : '/default.png'} alt="Food1" width={64} height={60} />
                                 </div>
                             </div>
                             <div className={styles.rightSideFoodContainer}>
                                 <div className={styles.infoItem}>
                                     <div className={styles.descriptionItem}>Proteína:</div>
-                                    <div className={styles.valueItem}>{data.protein}</div>
+                                    <div className={styles.valueItem}>{data.protein ? data.protein : 1}</div>
                                 </div>
                                 <div className={styles.infoItem}>
                                     <div className={styles.descriptionItem}>Kcal:</div>
-                                    <div className={styles.valueItem}>{data.calories}</div>
+                                    <div className={styles.valueItem}>{data.calories ? data.calories : 1}</div>
                                 </div>
                                 <div className={styles.infoItem}>
                                     <div className={styles.descriptionItem}>Grasa:</div>
-                                    <div className={styles.valueItem}>{data.grease}</div>
+                                    <div className={styles.valueItem}>{data.grease ? data.grease : 1}</div>
                                 </div>
                                 <div className={styles.infoItem}>
                                     <div className={styles.descriptionItem}>Sal:</div>
-                                    <div className={styles.valueItem}>{data.salt}</div>
+                                    <div className={styles.valueItem}>{data.salt ? data.salt : 1}</div>
                                 </div>
 
                             </div>

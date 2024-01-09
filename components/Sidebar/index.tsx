@@ -6,7 +6,6 @@ import { Icon } from '../Icon/index'
 import Link from 'next/link'
 import Elipse5 from '../../public/Elipse5.png'
 import { AuthContext } from '@/contexts/Auth/AuthContext'
-import { setCookie } from 'cookies-next'
 
 type Props = {
     menuOpened: boolean;

@@ -172,7 +172,7 @@ export const useApi = () => ({
     },
 
     getOneMeal: async (id: number) => {
-        
+
         let token = getCookie('token'); // => 'value'
 
         if (token === "" || !token || token === "noToken") {
@@ -210,17 +210,41 @@ export const useApi = () => ({
         }
     },
 
-    saveEditedMeal: async (meal: Meal) => {
+    saveEditedMeal: async (id: number, name: string, portion: number, protein: number, calories: number, grease: number, salt: number, foods_id: number[], image: string = "/default.png") => {
 
-        if (meal) {
-            console.log(meal);
-            //let request = await axios.put("https://api/foods", meal);
-            //return request.data;
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
+            return;
         }
+
+        let response = await axios.put(`${baseURL}/mealsByUser/${id}`, {
+            name, portion, protein, calories, grease, salt, image, foods_id
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
+
     },
 
     deleteMeal: async (id: number) => {
-        return true;
+       
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        let response = await axios.delete(`${baseURL}/mealsByUser/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
 
     },
 

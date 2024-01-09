@@ -31,9 +31,27 @@ export const useApi2 = (token?: string) => ({
 
     },
 
+    getOneFood: async (id: number) => {
+
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        const response = await axios.get(`${baseURL}/foodsByUser/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token} `
+            }
+        });
+
+        return response.data;
+    },
+
+
     getOneMeal: async (id: number) => {
-        
-            if (token === "" || !token || token === "noToken") {
+
+        if (token === "" || !token || token === "noToken") {
             return;
         }
 
@@ -42,6 +60,38 @@ export const useApi2 = (token?: string) => ({
                 Authorization: `Bearer ${token}`
             }
         });
+
+        return response.data;
+
+    },
+
+    getMeals: async () => {
+
+        let token = getCookie('token'); // => 'value'
+
+        const response = await axios.get(`${baseURL}/mealsByUser`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
+    },
+
+
+    getInfoDay: async (id: string) => {
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        const response = await axios.get(`${baseURL}/infoNutriDay/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        console.log("RESPONSE:", response)
 
         return response.data;
 

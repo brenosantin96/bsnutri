@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import styles from '../../styles/Meal-id.module.css';
 import { useEffect, useState } from 'react';
 import { ModalExclude } from '@/components/ModalExclude';
-import { Meal } from '@/types/Meal';
+import { Meal, MealWithOnlyId } from '@/types/Meal';
 import { InputMain } from '@/components/InputMain';
 import SelectFood2 from '@/components/SelectFood2';
 import { FoodComponent } from '@/components/FoodComponent';
@@ -22,23 +22,26 @@ const MealId = (data: ServerProps) => {
     const router = useRouter();
     const api = useApi();
 
-    const [meal, setMeal] = useState(data.meal);
+    const [meal, setMeal] = useState<MealWithOnlyId>(data.meal);
 
     const [foods, setFoods] = useState(data.foods);
-    const [availableFoods, setAvaiableFoods] = useState<Food[]>(foods ? foods.filter(food => !meal.foods.some(mealFood => mealFood.id === food.id)) : []);
+
+    const [availableFoods, setAvaiableFoods] = useState<Food[]>(foods.filter(food => !meal.meals_has_foods || !meal.meals_has_foods.some(mealFood => mealFood.foods_id === food.id)));
     /*  !meal.foods.some(...) nega o resultado do some, ou seja, verifica se o alimento atual NÃO está presente em meal.foods.
  Portanto, o filter incluirá o alimento atual em availableFoods somente se ele NÃO estiver em meal.foods. */
 
 
- useEffect(() => {
-    console.log("TOKEN,", data.token)
-    
-}, [])
 
     useEffect(() => {
+
+        console.log("MEAL FOODS ID", meal)
+
         // Filtrar os alimentos disponíveis sempre que o estado meal for alterado
-        const updatedAvailableFoods = foods.filter(food => !meal.foods.some(mealFood => mealFood.id === food.id));
+        console.log("availableFoods FOODS", availableFoods)
+        const updatedAvailableFoods = foods.filter(food => !meal.meals_has_foods || !meal.meals_has_foods.some(mealFood => mealFood.foods_id === food.id));
+        console.log("updatedAvailableFoods FOODS", availableFoods)
         setAvaiableFoods(updatedAvailableFoods);
+        setSelectedFoodID(updatedAvailableFoods[0].id);
     }, [meal])
 
 
@@ -58,9 +61,10 @@ const MealId = (data: ServerProps) => {
     const handleDeleteMeal = async (id: number) => {
         let deleted = await api.deleteMeal(id);
 
-        if (deleted) {
+        if (deleted.msg) {
             console.log("deletado com sucesso o Meal: ", id)
-            //router.push('/foods');
+            console.log(deleted)
+            router.push('/meals');
         }
 
     }
@@ -80,6 +84,7 @@ const MealId = (data: ServerProps) => {
     }
 
     const onPlusButtonAddFood = async () => {
+
         let foodSelected = await api.getOneFood(selectedFoodId);
 
         if (foodSelected) {
@@ -87,7 +92,7 @@ const MealId = (data: ServerProps) => {
             const updatedMeal = { ...meal };
 
             // Adicione o 'foodSelected' à nova cópia do estado 'meal'
-            updatedMeal.foods = [...updatedMeal.foods, foodSelected];
+            updatedMeal.meals_has_foods = [...updatedMeal.meals_has_foods, { foods_id: foodSelected.id, meals_id: meal.id, foods: foodSelected }];
 
             // Atualize o estado 'meal' com a nova cópia contendo o 'foodSelected'
             setMeal(updatedMeal);
@@ -101,40 +106,58 @@ const MealId = (data: ServerProps) => {
 
         //encontrar o primeiro elemento que possua o ID, e remover esse elemento do array
 
-        const foundFoodIndex = updatedMeal.foods.findIndex((food) => food.id === idFood);
+        const foundFoodIndex = updatedMeal.meals_has_foods.findIndex((food) => food.foods_id === idFood);
 
         if (foundFoodIndex !== -1) {
-            updatedMeal.foods.splice(foundFoodIndex, 1);
+            updatedMeal.meals_has_foods.splice(foundFoodIndex, 1);
             setMeal(updatedMeal);
         }
 
     }
 
 
-    const handleUpdateMeal = (updatedMeal: Meal) => {
+    const handleUpdateMeal = async (updatedMeal: MealWithOnlyId) => {
         // Atualiza o estado do alimento com os novos dados vindo do componente filho.
 
-        const foodsSelected = updatedMeal.foods;
+        const mealsHasFoods = updatedMeal.meals_has_foods;
 
-        if (foodsSelected.length === 0) {
+        // Extrai apenas os números da propriedade foods_id
+        const foodsSelected = mealsHasFoods.map((mealFood) => mealFood.foods_id);
+
+        console.log("IDS SELECIONADOS", foodsSelected);
+
+        let foodsComplete: Food[] = await api.getFoods();
+        let selectedFoods = foodsComplete.filter(food => foodsSelected.includes(food.id));
+
+        console.log("SELECTED FOODS", selectedFoods)
+
+        //TENHO QUE FAZER UMA FUNCAO QUE VAI ME RETORNAR UM ARRAY COM TODOS FOODS SELECIONADOS!
+
+        // Flatten o array, pois map cria um array de arrays
+        const flattenedFoodsSelected = foodsSelected.flat();
+
+
+        if (flattenedFoodsSelected.length === 0) {
             alert("Selecione pelo menos 1 alimento");
             return;
         }
 
         if (foodsSelected) {
-            let meal: Meal = {
+            let meal: MealWithOnlyId = {
                 id: updatedMeal.id,
                 isMeal: true,
                 name: updatedMeal.name,
-                portion: sumProperty(foodsSelected, 'portion'),
-                protein: sumProperty(foodsSelected, 'protein'),
-                calories: sumProperty(foodsSelected, 'calories'),
-                grease: sumProperty(foodsSelected, 'grease'),
-                salt: sumProperty(foodsSelected, 'salt'),
-                foods: foodsSelected
+                portion: sumProperty(selectedFoods, 'portion'),
+                protein: sumProperty(selectedFoods, 'protein'),
+                calories: sumProperty(selectedFoods, 'calories'),
+                grease: sumProperty(selectedFoods, 'grease'),
+                salt: sumProperty(selectedFoods, 'salt'),
+                meals_has_foods: mealsHasFoods
             }
 
             setMeal(meal);
+            let responseUpdateMeal = await api.saveEditedMeal(meal.id, meal.name, meal.portion, meal.protein, meal.calories, meal.grease, meal.salt, foodsSelected)
+            console.log(responseUpdateMeal);
             console.log(meal);
         }
     }
@@ -172,8 +195,8 @@ const MealId = (data: ServerProps) => {
 
                 <div className={styles.containerFoods}>
                     <div className={styles.item}>
-                        {meal.foods.map((item, index) => (
-                            <FoodComponent data={item} url='foods' key={index} minusButton={true} link={false} disabled={disabled} onMinusHandle={onMinusButtonRemoveFood} />
+                        {meal.meals_has_foods && meal.meals_has_foods.map((item, index) => (
+                            <FoodComponent data={item.foods} url='foods' key={index} minusButton={true} link={false} disabled={disabled} onMinusHandle={onMinusButtonRemoveFood} />
                         ))}
                     </div>
                 </div>
@@ -191,7 +214,7 @@ const MealId = (data: ServerProps) => {
 export default MealId;
 
 type ServerProps = {
-    meal: Meal;
+    meal: MealWithOnlyId;
     foods: Food[];
     token: any;
 }
@@ -202,9 +225,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { id } = context.query;
 
     //const api = useApi();
-    
-    
-    
+
+
     const token = context.req.headers.cookie?.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1] || '';
     const api2 = useApi2(token);
 
@@ -212,10 +234,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const meal = await api2.getOneMeal(parseInt(id as string));
     const foods = await api2.getFoods();
 
-    console.log("MEAL ",meal);
+    console.log("MEAL ", meal);
     console.log("FOODS", foods);
 
-//ESTOU QUASE LA, A INFORMACAO ESTA SENDO ENVIADA CORRETAMENTE MAS A RENDERIZACAO ESTA COM ERRO
 
 
     return {

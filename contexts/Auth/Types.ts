@@ -3,7 +3,6 @@ import { User } from '../../types/User';
 
 export type AuthContextType = {
     user: User | null;
-    apiAxiosInstance: AxiosInstance | undefined;
     signIn: (email: string, password: string) => Promise<boolean>;
     signOut: () => void;
     handleToken: (token: string) => void;
