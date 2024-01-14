@@ -25,25 +25,10 @@ const DatePage = (data: ServerProps) => {
 
     const router = useRouter();
     const api = useApi2(data.token);
-    console.log("DATA TOKEN LINHA 28", data.token)
 
- /*    const [infoDayTest, setInfoDayTest] = useState<InfoNutritionalDay>();
-
-    useEffect(()=>{
-        callApi()
-        console.log(infoDayTest)
+    useEffect(() => {
+        console.log("DATA INFO DAY", data.infoDay)
     }, [])
-
-    const callApi = async () => {
-
-        let infoDay = await api.getInfoDay("02-ago-2023+1699868795455");
-
-        if(infoDay){
-            setInfoDayTest(infoDay)
-            console.log(infoDay)
-        }
-
-    } */
 
     const [menuOpened, setMenuOpened] = useState(false);
 
@@ -62,33 +47,26 @@ const DatePage = (data: ServerProps) => {
     //check Finalized day
     const [finalizedDay, setFinalizedDay] = useState(false);
 
-    // Função para alternar o estado quando o checkbox for clicado
-    const handleCheckboxChange = () => {
-        setFinalizedDay(!finalizedDay);
-        if (infoNutriDay) {
-            setInfoNutriDay({ ...infoNutriDay, finalizedDay: !finalizedDay })
-        }
-    };
-
 
     //select
-    const [foods, setFoods] = useState<Food[]>([]);
-    const [meals, setMeals] = useState<Meal[]>([]);
+    const [foods, setFoods] = useState<Food[]>(data.foods);
+    const [meals, setMeals] = useState<Meal[]>(data.meals);
     const [showSelectFoods, setShowSelectFoods] = useState(true);
     const [showSelectMeals, setShowSelectMeals] = useState(false);
 
     const [selectedFoodId, setSelectedFoodID] = useState<number>(0);
     const [selectedMealId, setSelectedMealID] = useState<number>(0);
 
-    const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>([]);
+    const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>(infoNutriDay !== null ? infoNutriDay.combinedFoods : []);
 
-    const [selectedMeals, setSelectedMeals] = useState<Meal[]>([]);
-    const [selectedFoods, setSelectedFoods] = useState<Food[]>([]);
+    const [selectedMeals, setSelectedMeals] = useState<Meal[]>(infoNutriDay !== null ? infoNutriDay.selectedMeals : []);
+    const [selectedFoods, setSelectedFoods] = useState<Food[]>(infoNutriDay !== null ? infoNutriDay.selectedFoods : []);
 
 
     useEffect(() => {
         handleUpdateInfoNutritionalDay();
     }, [selectedMeals, selectedFoods, combinedFoodsAndMeals])
+
 
     const handleSelectedFood = (selectedFoodId: number) => {
 
@@ -147,8 +125,6 @@ const DatePage = (data: ServerProps) => {
     const handleUpdateInfoNutritionalDay = () => {
         // Atualiza o estado do alimento com os novos dados vindo do componente filho.
 
-        console.log("DATA: ", dateSelected);
-
         let idFoodsUnformatted = extractIds(selectedFoods);
         let idMealsUnformatted = extractIds(selectedMeals);
 
@@ -182,6 +158,14 @@ const DatePage = (data: ServerProps) => {
     const handleSaveDay = () => {
         console.log("Guardando el dia", infoNutriDay);
     }
+
+    // Função para alternar o estado quando o checkbox for clicado
+    const handleCheckboxChange = () => {
+        setFinalizedDay(!finalizedDay);
+        if (infoNutriDay) {
+            setInfoNutriDay({ ...infoNutriDay, finalizedDay: !finalizedDay })
+        }
+    };
 
     return (
         <>
@@ -253,20 +237,61 @@ type ServerProps = {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
     // Extrair o ID da URL usando o objeto context
-    let { date } = context.query;
-
     const token = context.req.headers.cookie?.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1] || '';
-    
-    console.log(token)
-    console.log("Date:")
+
+
+    let { date } = context.query;
+    let idFoodsInfoNutriDayNumber: number[]
+    let idMealsInfoNutriDayNumber: number[]
+
+
+    console.log("TOKEN:", token)
     console.log(date)
 
     const api = useApi2(token);
 
-    const foods = await api.getFoods();
-    //const meals = await api.getMeals();
+    let infoDay: InfoNutritionalDay | null = null;
 
-    let infoDay = await api.getInfoDay(date as string);
+    const foods = await api.getFoods();
+    const meals = await api.getMeals();
+    let selectedFoods: Food[] = [];
+    let selectedMeals: Meal[] = [];
+    let combinedFoodsAndMeals: (Food | Meal)[] = [];
+
+
+    let infoDayRequisition = await api.getInfoDay(date as string);
+
+    if (infoDayRequisition.msgError) {
+        infoDay = null
+        infoDayRequisition = null
+    }
+
+    if (infoDayRequisition) {
+        idFoodsInfoNutriDayNumber = infoDayRequisition.infonutriday_has_foods.map((item: any) => item.foods_id)
+        idMealsInfoNutriDayNumber = infoDayRequisition.infonutriday_has_meals.map((item: any) => item.meals_id)
+        selectedFoods = foods.filter((food: Food) => idFoodsInfoNutriDayNumber.includes(food.id));
+        selectedMeals = foods.filter((meal: Meal) => idMealsInfoNutriDayNumber.includes(meal.id));
+        combinedFoodsAndMeals = selectedFoods.concat(selectedMeals)
+
+        infoDay = {
+            id: infoDayRequisition.id,
+            date: infoDayRequisition.date,
+            finalizedDay: infoDayRequisition.finalizedDay,
+            portion: infoDayRequisition.portion,
+            calories: infoDayRequisition.calories,
+            protein: infoDayRequisition.protein,
+            grease: infoDayRequisition.grease,
+            salt: infoDayRequisition.salt,
+            combinedFoods: combinedFoodsAndMeals,
+            selectedFoods: selectedFoods,
+            selectedMeals: selectedMeals,
+            idFoods: idFoodsInfoNutriDayNumber,
+            idMeals: idMealsInfoNutriDayNumber
+        }
+
+
+
+    }
 
     let id = date?.toString();
     console.log("ID pegado: ", id);
@@ -276,7 +301,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: {
             id: id as string,
             foods,
-            //meals,
+            meals,
             infoDay,
             token
         }

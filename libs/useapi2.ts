@@ -67,8 +67,6 @@ export const useApi2 = (token?: string) => ({
 
     getMeals: async () => {
 
-        let token = getCookie('token'); // => 'value'
-
         const response = await axios.get(`${baseURL}/mealsByUser`, {
             headers: {
                 Authorization: `Bearer ${token}`

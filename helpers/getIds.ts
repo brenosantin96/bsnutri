@@ -17,8 +17,8 @@ const users = [
 const foodIds = extractIds(foods);
 const userIds = extractIds(users);
 
-console.log(foodIds); // [1, 2]
-console.log(userIds); // [101, 102]
+//console.log(foodIds); // [1, 2]
+//console.log(userIds); // [101, 102]
 
 
 //Criar funcao para remover ids repetidos:
@@ -32,4 +32,4 @@ export function removeDuplicatesFromArray(arr: number[]): number[] {
 // Exemplo de uso:
 const inputArray = [1, 3, 3, 3];
 const uniqueArray = removeDuplicatesFromArray(inputArray);
-console.log(uniqueArray); // Saída: [1, 3]
+//console.log(uniqueArray); // Saída: [1, 3]
