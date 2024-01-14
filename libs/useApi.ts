@@ -84,7 +84,16 @@ export const useApi = () => ({
     },
 
     getManyFood: async (ids: number[]) => {
-        const foodsFound = foods.filter(item => ids.includes(item.id));
+
+        let token = getCookie('token'); // => 'value'
+
+        const foods = await axios.get(`${baseURL}/foodsByUser`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const foodsFound = foods.data.filter((item: Food) => ids.includes(item.id));
 
         if (foodsFound.length > 0) {
             return foodsFound;

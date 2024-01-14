@@ -8,7 +8,7 @@ import { InputMain } from '../../components/InputMain'
 import { useEffect, useState } from 'react';
 import { ButtonMain } from '@/components/ButtonMain';
 import { Food } from '@/types/Food';
-import { Meal, MealWithOnlyId } from '@/types/Meal';
+import { Meal, MealWithOnlyId, MealWithOnlyId2 } from '@/types/Meal';
 import { Icon } from '@/components/Icon';
 import { SelectFood } from '@/components/SelectFood';
 import { sumProperty } from '../../helpers/sumProperty'
@@ -30,14 +30,20 @@ const RegisterMealPage = () => {
         getFoods();
     }, [])
 
+
     const getFoods = async () => {
         const foods = await api.getFoods();
         setFoods(foods);
     }
 
+
     //selects
     const [selectedFoodIds, setSelectedFoodIds] = useState<number[]>([]);
     const [selectComponents, setSelectComponents] = useState<JSX.Element[]>([]);
+
+    useEffect(() => {
+        console.log(selectedFoodIds)
+    }, [selectedFoodIds])
 
 
     //valueSumedProperties
@@ -153,7 +159,7 @@ const RegisterMealPage = () => {
         }
 
         if (foodsSelected) {
-            let meal: MealWithOnlyId = {
+            let meal: MealWithOnlyId2 = {
                 id: 1,
                 isMeal: true,
                 name: nameInput,
@@ -164,6 +170,7 @@ const RegisterMealPage = () => {
                 salt: sumProperty(foodsSelected, 'salt'),
                 foods_id: selectedFoodIds
             }
+
             console.log(meal);
             let save = await api.createMeal(meal.name, meal.portion, meal.protein, meal.calories, meal.grease, meal.salt, meal.foods_id);
             console.log(save);

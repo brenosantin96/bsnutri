@@ -31,3 +31,15 @@ export type MealWithOnlyId = {
     meals_has_foods: mealsFoods[];
 }
 
+export type MealWithOnlyId2 = {
+    id: number,
+    isMeal: boolean;
+    name: string;
+    portion: number;
+    protein: number;
+    calories: number;
+    grease: number;
+    salt: number;
+    foods_id: number[];
+}
+

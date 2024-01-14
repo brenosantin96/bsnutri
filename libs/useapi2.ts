@@ -80,7 +80,7 @@ export const useApi2 = (token?: string) => ({
 
 
     getInfoDay: async (id: string) => {
-
+ 
         if (token === "" || !token || token === "noToken") {
             return;
         }
