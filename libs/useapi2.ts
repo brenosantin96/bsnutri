@@ -78,7 +78,7 @@ export const useApi2 = (token?: string) => ({
 
 
     getInfoDay: async (id: string) => {
- 
+
         if (token === "" || !token || token === "noToken") {
             return;
         }
@@ -90,6 +90,26 @@ export const useApi2 = (token?: string) => ({
         });
 
         console.log("RESPONSE:", response)
+
+        return response.data;
+
+    },
+
+    saveInfoNutriDay: async (id: string, date: Date, portion: number,
+        protein: number, calories: number, grease: number, salt: number, finalizedDay: 0 | 1,
+        foods_id?: number[], meals_id?: number[]) => {
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        let response = await axios.post(`${baseURL}/infoNutriDay`, {
+            id, date, portion, protein, calories, grease, salt, finalizedDay, foods_id, meals_id
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
         return response.data;
 

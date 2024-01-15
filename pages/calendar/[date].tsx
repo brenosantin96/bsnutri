@@ -27,7 +27,7 @@ const DatePage = (data: ServerProps) => {
     const api = useApi2(data.token);
 
     useEffect(() => {
-        console.log("DATA INFO DAY", data.infoDay)
+        console.log("DATA INFO DAY", data.id)
     }, [])
 
     const [menuOpened, setMenuOpened] = useState(false);
@@ -155,7 +155,17 @@ const DatePage = (data: ServerProps) => {
         }
     }
 
-    const handleSaveDay = () => {
+    const handleSaveDay = async () => {
+
+        if (infoNutriDay) {
+            let response = await api.saveInfoNutriDay(data.id, new Date(infoNutriDay?.date), infoNutriDay.portion, infoNutriDay.protein,
+                infoNutriDay.calories, infoNutriDay.grease, infoNutriDay.salt, infoNutriDay.finalizedDay === true ? 1 : 0,
+                infoNutriDay.idFoods, infoNutriDay.idMeals)
+
+            console.log(response);
+
+        }
+
         console.log("Guardando el dia", infoNutriDay);
     }
 
@@ -270,7 +280,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         idFoodsInfoNutriDayNumber = infoDayRequisition.infonutriday_has_foods.map((item: any) => item.foods_id)
         idMealsInfoNutriDayNumber = infoDayRequisition.infonutriday_has_meals.map((item: any) => item.meals_id)
         selectedFoods = foods.filter((food: Food) => idFoodsInfoNutriDayNumber.includes(food.id));
-        selectedMeals = foods.filter((meal: Meal) => idMealsInfoNutriDayNumber.includes(meal.id));
+        selectedMeals = meals.filter((meal: Meal) => idMealsInfoNutriDayNumber.includes(meal.id));
         combinedFoodsAndMeals = selectedFoods.concat(selectedMeals)
 
         infoDay = {
