@@ -20,14 +20,18 @@ import { sumProperty } from '@/helpers/sumProperty';
 import { InfoNutritionalDay } from '../../types/InfoNutritionalDay';
 import { extractIds, removeDuplicatesFromArray } from '../../helpers/getIds';
 import { useApi2 } from '@/libs/useapi2';
+import { foodsInfoNutriDay, mealsInfoNutriDay } from '@/types/foodsInfoNutriDay';
 
 const DatePage = (data: ServerProps) => {
+
 
     const router = useRouter();
     const api = useApi2(data.token);
 
     useEffect(() => {
-        console.log("DATA INFO DAY", data.id)
+        console.log("DATA INFO DAY", data.infoDay)
+        console.log("FOODS INFO DAY COM QUANTIDADE", data.allFoodsInfoNutriDay)
+        console.log("MEALS INFO DAY COM QUANTIDADE", data.allMealsInfoNutriDay)
     }, [])
 
     const [menuOpened, setMenuOpened] = useState(false);
@@ -145,8 +149,8 @@ const DatePage = (data: ServerProps) => {
                 combinedFoods: combinedFoodsAndMeals,
                 selectedFoods: selectedFoods,
                 selectedMeals: selectedMeals,
-                idFoods,
-                idMeals
+                idFoods: idFoodsUnformatted,
+                idMeals: idMealsUnformatted
             }
 
 
@@ -240,6 +244,8 @@ type ServerProps = {
     foods: Food[];
     meals: Meal[];
     infoDay: InfoNutritionalDay | null;
+    allFoodsInfoNutriDay: foodsInfoNutriDay[] | null;
+    allMealsInfoNutriDay: mealsInfoNutriDay[] | null;
     token: string;
 }
 
@@ -270,6 +276,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 
     let infoDayRequisition = await api.getInfoDay(date as string);
+    let allFoodsInfoNutriDay: foodsInfoNutriDay[] = []
+    let allMealsInfoNutriDay: mealsInfoNutriDay[] = []
 
     if (infoDayRequisition.msgError) {
         infoDay = null
@@ -277,27 +285,35 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     if (infoDayRequisition) {
-        idFoodsInfoNutriDayNumber = infoDayRequisition.infonutriday_has_foods.map((item: any) => item.foods_id)
-        idMealsInfoNutriDayNumber = infoDayRequisition.infonutriday_has_meals.map((item: any) => item.meals_id)
-        selectedFoods = foods.filter((food: Food) => idFoodsInfoNutriDayNumber.includes(food.id));
-        selectedMeals = meals.filter((meal: Meal) => idMealsInfoNutriDayNumber.includes(meal.id));
+
+
+
+        idFoodsInfoNutriDayNumber = infoDayRequisition.infoNutriDay.infonutriday_has_foods.map((item: any) => item.foods_id)
+        idMealsInfoNutriDayNumber = infoDayRequisition.infoNutriDay.infonutriday_has_meals.map((item: any) => item.meals_id)
+
+        selectedFoods = foods.filter((food: Food) => idFoodsInfoNutriDayNumber.includes(food.id)); //desses selectedFoods, devo pegar a quantidade
+        selectedMeals = meals.filter((meal: Meal) => idMealsInfoNutriDayNumber.includes(meal.id)); //desses selectedMeals, devo pegar a quantidade
         combinedFoodsAndMeals = selectedFoods.concat(selectedMeals)
 
         infoDay = {
-            id: infoDayRequisition.id,
-            date: infoDayRequisition.date,
-            finalizedDay: infoDayRequisition.finalizedDay,
-            portion: infoDayRequisition.portion,
-            calories: infoDayRequisition.calories,
-            protein: infoDayRequisition.protein,
-            grease: infoDayRequisition.grease,
-            salt: infoDayRequisition.salt,
+            id: infoDayRequisition.infoNutriDay.id,
+            date: infoDayRequisition.infoNutriDay.date,
+            finalizedDay: infoDayRequisition.infoNutriDay.finalizedDay,
+            portion: infoDayRequisition.infoNutriDay.portion,
+            calories: infoDayRequisition.infoNutriDay.calories,
+            protein: infoDayRequisition.infoNutriDay.protein,
+            grease: infoDayRequisition.infoNutriDay.grease,
+            salt: infoDayRequisition.infoNutriDay.salt,
             combinedFoods: combinedFoodsAndMeals,
             selectedFoods: selectedFoods,
             selectedMeals: selectedMeals,
             idFoods: idFoodsInfoNutriDayNumber,
             idMeals: idMealsInfoNutriDayNumber
         }
+
+
+        allFoodsInfoNutriDay = infoDayRequisition.foodsInfoNutriDay
+        allMealsInfoNutriDay = infoDayRequisition.mealsInfoNutriDay
 
 
 
@@ -313,10 +329,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             foods,
             meals,
             infoDay,
+            allFoodsInfoNutriDay,
+            allMealsInfoNutriDay,
             token
         }
     }
 }
+
+
+/*
+NOTA DO DIA 18 de janeiro de 2024
+COM A INFORMACAO CAPTURADA DA QUANTIDADE, AGORA POSSO ATUALIZAR A QUANTIDADE CORRETAMENTE
+UTILIZAR A INFORMACAO TRAZIDA DO CARRINHO
+
+*/
 
 
 //const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>([...data.foods, ...data.meals]);

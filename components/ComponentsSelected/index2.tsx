@@ -12,6 +12,14 @@ type Props = {
 
 export const ComponentsSelected = ({ foods, onHandle, disabled }: Props) => {
 
+    const itemQuantities: Record<string, number> = foods.reduce((quantities, item) => {
+        if (item.name in quantities) {
+            quantities[item.name]++;
+        } else {
+            quantities[item.name] = 1;
+        }
+        return quantities;
+    }, {} as Record<string, number>); // Tipo inicial explícito aqui
 
 
     // Criar um array de itens únicos
@@ -39,7 +47,7 @@ export const ComponentsSelected = ({ foods, onHandle, disabled }: Props) => {
                         {item}
                     </div>
                     <div className={styles.minusIcon} onClick={() => onHandleMinusFunction(index)}>
-                        <div className={styles.qtMinusIcon}> qt - X </div>
+                        <div className={styles.qtMinusIcon}> ({itemQuantities[item]}x) </div>
                         <Icon svg='minus2' width={24} height={24} />
                     </div>
                 </div>
