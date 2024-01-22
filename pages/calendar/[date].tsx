@@ -29,9 +29,9 @@ const DatePage = (data: ServerProps) => {
     const api = useApi2(data.token);
 
     useEffect(() => {
-        console.log("DATA INFO DAY", data.infoDay)
-        console.log("FOODS INFO DAY COM QUANTIDADE", data.allFoodsInfoNutriDay)
-        console.log("MEALS INFO DAY COM QUANTIDADE", data.allMealsInfoNutriDay)
+        console.log("[DATE] DATA INFO DAY", data.infoDay)
+        console.log("[DATE] FOODS INFO DAY COM QUANTIDADE", data.allFoodsInfoNutriDay)
+        console.log("[DATE] MEALS INFO DAY COM QUANTIDADE", data.allMealsInfoNutriDay)
     }, [])
 
     const [menuOpened, setMenuOpened] = useState(false);
@@ -63,8 +63,21 @@ const DatePage = (data: ServerProps) => {
 
     const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>(infoNutriDay !== null ? infoNutriDay.combinedFoods : []);
 
+    //foods and meals of infoNutriDay
+    const [selectedFoodsOfInfoDay, setSelectedFoodsOfInfoDay] = useState<foodsInfoNutriDay[] | null>(infoNutriDay !== null ? data.allFoodsInfoNutriDay : [])
+    const [selectedMealsOfInfoDay, setSelectedMealsOfInfoDay] = useState<mealsInfoNutriDay[] | null>(infoNutriDay !== null ? data.allMealsInfoNutriDay : [])
+
     const [selectedMeals, setSelectedMeals] = useState<Meal[]>(infoNutriDay !== null ? infoNutriDay.selectedMeals : []);
     const [selectedFoods, setSelectedFoods] = useState<Food[]>(infoNutriDay !== null ? infoNutriDay.selectedFoods : []);
+
+    const [onHandleMinusFunctionSelectedFoodIsMeal, setOnHandleMinusFunctionSelectedFoodIsMeal] = useState<boolean>(false)
+
+
+    useEffect(() => {
+        console.log("[DATE] SelectedMeals Ao cargar a pagina:", selectedMeals)
+        console.log("[DATE] SelectedFoods Ao cargar a pagina:", selectedFoods)
+        console.log("[DATE] Combined Meals And Foods", combinedFoodsAndMeals)
+    }, [])
 
 
     useEffect(() => {
@@ -84,17 +97,29 @@ const DatePage = (data: ServerProps) => {
         console.log("ID selecionado: ", selectedMealId);
     }
 
-    const handleSelectedCombinedFood = (selectedCombinedFoodIndex: number) => {
+    const handleSelectedCombinedFood = (selectedCombinedFoodIndex: number, isMeal: boolean) => {
         //minus function
         //funcao de remover food de selectedCombinedFoodID que contenha o indice selectedCombinedFoodIndex
         //fazendo um novo array onde tiramos os que possuem o indice indicado na funcao
 
         const updatedFoodsAndMeals = [...combinedFoodsAndMeals];
         updatedFoodsAndMeals.splice(selectedCombinedFoodIndex, 1);
-
-        console.log("UPDATED FOODS AND MEALS: ", updatedFoodsAndMeals)
-
         setCombinedFoodsAndMeals(updatedFoodsAndMeals);
+
+        if (isMeal) {
+            const updatedMeals = [...selectedMeals];
+            updatedMeals.splice(selectedCombinedFoodIndex, 1);
+            setSelectedMeals(updatedMeals)
+        }
+
+        if (!isMeal) {
+            const updatedFoods = [...selectedFoods];
+            updatedFoods.splice(selectedCombinedFoodIndex, 1);
+            setSelectedFoods(updatedFoods)
+        }
+
+
+
 
     }
 
@@ -136,21 +161,23 @@ const DatePage = (data: ServerProps) => {
         let idMeals = removeDuplicatesFromArray(idMealsUnformatted)
 
 
-        if (combinedFoodsAndMeals.length > 0) {
+        if (selectedMeals.length > 0 || selectedFoods.length > 0) {
+
             let info: InfoNutritionalDay = {
                 id: data.id,
                 date: dateSelected.toISOString(),
-                portion: sumProperty(combinedFoodsAndMeals, 'portion'),
-                protein: sumProperty(combinedFoodsAndMeals, 'protein'),
-                calories: sumProperty(combinedFoodsAndMeals, 'calories'),
-                grease: sumProperty(combinedFoodsAndMeals, 'grease'),
-                salt: sumProperty(combinedFoodsAndMeals, 'salt'),
+                portion: sumProperty(selectedFoods, 'portion') + sumProperty(selectedMeals, 'portion'),
+                protein: sumProperty(selectedFoods, 'protein') + sumProperty(selectedMeals, 'protein'),
+                calories: sumProperty(selectedFoods, 'calories') + sumProperty(selectedMeals, 'calories'),
+                grease: sumProperty(selectedFoods, 'grease') + sumProperty(selectedMeals, 'grease'),
+                salt: sumProperty(selectedFoods, 'salt') + sumProperty(selectedMeals, 'salt'),
                 finalizedDay: finalizedDay,
                 combinedFoods: combinedFoodsAndMeals,
                 selectedFoods: selectedFoods,
                 selectedMeals: selectedMeals,
                 idFoods: idFoodsUnformatted,
                 idMeals: idMealsUnformatted
+
             }
 
 
@@ -210,9 +237,17 @@ const DatePage = (data: ServerProps) => {
                     />
                     <span>Dia terminado?</span>
                 </div>
-                {combinedFoodsAndMeals.length > 0 &&
+                {(selectedMeals.length > 0 || selectedFoods.length > 0) &&
                     <>
-                        <ComponentsSelected foods={combinedFoodsAndMeals} onHandle={handleSelectedCombinedFood} disabled={!finalizedDay} />
+                        <ComponentsSelected
+                            foods={combinedFoodsAndMeals}
+                            selectedFoods={selectedFoods}
+                            selectedMeals={selectedMeals}
+                            onHandle={handleSelectedCombinedFood}
+                            disabled={!finalizedDay}
+                            selectedFoodsOfInfoDay={selectedFoodsOfInfoDay}
+                            selectedMealsOfInfoDay={selectedMealsOfInfoDay}
+                        />
                         {infoNutriDay !== null &&
                             <InfoDayNutritional
                                 portionValue={infoNutriDay.portion}
@@ -260,9 +295,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     let idFoodsInfoNutriDayNumber: number[]
     let idMealsInfoNutriDayNumber: number[]
 
-
-    console.log("TOKEN:", token)
-    console.log(date)
 
     const api = useApi2(token);
 
@@ -320,8 +352,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     let id = date?.toString();
-    console.log("ID pegado: ", id);
-
 
     return {
         props: {
@@ -346,3 +376,7 @@ UTILIZAR A INFORMACAO TRAZIDA DO CARRINHO
 
 
 //const [combinedFoodsAndMeals, setCombinedFoodsAndMeals] = useState<Meal[] | Food[]>([...data.foods, ...data.meals]);
+
+/* NOTA DO DIA 22/01/2023 
+FOI CORRIGIDO A QUANTIDADE APRESENTADA, MAS AGORA FALTA CORRIGIR A FUNCAO DE RETIRAR O ITEM E FALTA CORRIGIR O AMOUNT DOS ITEMS
+*/
