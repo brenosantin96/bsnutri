@@ -8,3 +8,7 @@ export type Food = {
     salt: number;
     image?: string;
 }
+
+export type FoodInfoNutriDay = Food & {
+    qtde: number;
+};

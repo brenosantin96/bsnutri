@@ -10,8 +10,12 @@ export type Meal = {
     grease: number;
     salt: number;
     foods: Food[];
-    image? : string;
+    image?: string;
 }
+
+export type MealInfoNutriDay = Meal & {
+    qtde: number;
+};
 
 type mealsFoods = {
     meals_id: number,

@@ -11,8 +11,8 @@ import { parse } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { replaceDashWithSlash } from '../../helpers/Formatters';
 import SelectFood2 from '@/components/SelectFood2';
-import { Food } from '@/types/Food';
-import { Meal } from '@/types/Meal';
+import { Food, FoodInfoNutriDay } from '@/types/Food';
+import { Meal, MealInfoNutriDay } from '@/types/Meal';
 import { ButtonMain } from '../../components/ButtonMain';
 import { ComponentsSelected } from '@/components/ComponentsSelected';
 import { InfoDayNutritional } from '@/components/InfoDayNutritional';
@@ -21,6 +21,7 @@ import { InfoNutritionalDay } from '../../types/InfoNutritionalDay';
 import { extractIds, removeDuplicatesFromArray } from '../../helpers/getIds';
 import { useApi2 } from '@/libs/useapi2';
 import { foodsInfoNutriDay, mealsInfoNutriDay } from '@/types/foodsInfoNutriDay';
+import { createFoodArrayWithQnt, createFoodArrayWithQnt2, createMealArrayWithQnt, createMealArrayWithQnt2 } from '@/helpers/sumIdItems';
 
 const DatePage = (data: ServerProps) => {
 
@@ -70,13 +71,19 @@ const DatePage = (data: ServerProps) => {
     const [selectedMeals, setSelectedMeals] = useState<Meal[]>(infoNutriDay !== null ? infoNutriDay.selectedMeals : []);
     const [selectedFoods, setSelectedFoods] = useState<Food[]>(infoNutriDay !== null ? infoNutriDay.selectedFoods : []);
 
-    const [onHandleMinusFunctionSelectedFoodIsMeal, setOnHandleMinusFunctionSelectedFoodIsMeal] = useState<boolean>(false)
+    const [selectedMealsCounted, setSelectedMealsCounted] = useState<MealInfoNutriDay[]>(infoNutriDay !== null ? createMealArrayWithQnt2(selectedMeals, data.allMealsInfoNutriDay as mealsInfoNutriDay[]) : [])
+    const [selectedFoodsCounted, setSelectedFoodsCounted] = useState<FoodInfoNutriDay[]>(infoNutriDay !== null ? createFoodArrayWithQnt2(selectedFoods, data.allFoodsInfoNutriDay as foodsInfoNutriDay[]) : [])
+
+    //createFoodArrayWithQnt
+
 
 
     useEffect(() => {
         console.log("[DATE] SelectedMeals Ao cargar a pagina:", selectedMeals)
         console.log("[DATE] SelectedFoods Ao cargar a pagina:", selectedFoods)
         console.log("[DATE] Combined Meals And Foods", combinedFoodsAndMeals)
+        console.log("[DATE] selectedFoodsCounted", selectedFoodsCounted)
+        console.log("[DATE] selectedMealsCounted", selectedMealsCounted)
     }, [])
 
 
@@ -118,26 +125,68 @@ const DatePage = (data: ServerProps) => {
             setSelectedFoods(updatedFoods)
         }
 
-
-
-
     }
 
     const onPlusButtonAddFood = async () => {
         const foodSelected = await api.getOneFood(selectedFoodId);
+
         if (foodSelected) {
+
+            const existingFoodIndex = selectedFoodsCounted.findIndex(food => food.id === foodSelected.id);
+
+            if (existingFoodIndex !== -1) {
+                // O alimento já está na lista, incrementar a quantidade
+                const updatedFoods = [...selectedFoodsCounted];
+                updatedFoods[existingFoodIndex].qtde++;
+                setSelectedFoodsCounted(updatedFoods);
+            } else {
+                // Adicionar o alimento à lista
+                setSelectedFoodsCounted([...selectedFoodsCounted, { ...foodSelected, qtde: 1 }]);
+            }
+
+        }
+
+        setCombinedFoodsAndMeals([...combinedFoodsAndMeals, foodSelected]);
+
+
+    }
+
+    /* const onPlusButtonAddFood = async () => {
+        const foodSelected = await api.getOneFood(selectedFoodId);
+
+        if (foodSelected) {
+
+
             setSelectedFoods([...selectedFoods, foodSelected]);
             setCombinedFoodsAndMeals([...combinedFoodsAndMeals, foodSelected]);
         }
 
     }
+ */
+
 
     const onPlusButtonAddMeal = async () => {
         const mealSelected = await api.getOneMeal(selectedMealId);
+
         if (mealSelected) {
-            setSelectedMeals([...selectedMeals, mealSelected]);
-            setCombinedFoodsAndMeals([...combinedFoodsAndMeals, mealSelected]);
+
+            const existingMealIndex = selectedMealsCounted.findIndex(food => food.id === mealSelected.id);
+
+            if (existingMealIndex !== -1) {
+                // O alimento já está na lista, incrementar a quantidade
+                const updatedMeals = [...selectedMealsCounted];
+                updatedMeals[existingMealIndex].qtde++;
+                setSelectedMealsCounted(updatedMeals);
+            } else {
+                // Adicionar o alimento à lista
+                setSelectedMealsCounted([...selectedMealsCounted, { ...mealSelected, qtde: 1 }]);
+            }
+
         }
+
+        setCombinedFoodsAndMeals([...combinedFoodsAndMeals, mealSelected]);
+
+
     }
 
     const handleFoodButton = () => {
@@ -237,12 +286,14 @@ const DatePage = (data: ServerProps) => {
                     />
                     <span>Dia terminado?</span>
                 </div>
-                {(selectedMeals.length > 0 || selectedFoods.length > 0) &&
+                {(selectedMealsCounted.length > 0 || selectedFoodsCounted.length > 0) &&
                     <>
                         <ComponentsSelected
                             foods={combinedFoodsAndMeals}
                             selectedFoods={selectedFoods}
                             selectedMeals={selectedMeals}
+                            selectedFoodsWithCount={selectedFoodsCounted}
+                            selectedMealsWithCount={selectedMealsCounted}
                             onHandle={handleSelectedCombinedFood}
                             disabled={!finalizedDay}
                             selectedFoodsOfInfoDay={selectedFoodsOfInfoDay}
