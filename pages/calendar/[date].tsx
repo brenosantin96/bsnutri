@@ -18,7 +18,7 @@ import { ComponentsSelected } from '@/components/ComponentsSelected';
 import { InfoDayNutritional } from '@/components/InfoDayNutritional';
 import { sumProperty } from '@/helpers/sumProperty';
 import { InfoNutritionalDay } from '../../types/InfoNutritionalDay';
-import { extractIds, removeDuplicatesFromArray } from '../../helpers/getIds';
+import { extractIds, removeDuplicatesFromArray, transformFoodQuantityInNumberInArray, transformMealQuantityInNumberInArray } from '../../helpers/getIds';
 import { useApi2 } from '@/libs/useapi2';
 import { foodsInfoNutriDay, mealsInfoNutriDay } from '@/types/foodsInfoNutriDay';
 import { createFoodArrayWithQnt, createFoodArrayWithQnt2, createMealArrayWithQnt, createMealArrayWithQnt2 } from '@/helpers/sumIdItems';
@@ -79,11 +79,6 @@ const DatePage = (data: ServerProps) => {
 
 
     useEffect(() => {
-        console.log("[DATE] SelectedMeals Ao cargar a pagina:", selectedMeals)
-        console.log("[DATE] SelectedFoods Ao cargar a pagina:", selectedFoods)
-        console.log("[DATE] Combined Meals And Foods", combinedFoodsAndMeals)
-        console.log("[DATE] selectedFoodsCounted", selectedFoodsCounted)
-        console.log("[DATE] selectedMealsCounted", selectedMealsCounted)
     }, [])
 
 
@@ -104,31 +99,71 @@ const DatePage = (data: ServerProps) => {
         console.log("ID selecionado: ", selectedMealId);
     }
 
-    const handleSelectedCombinedFood = (selectedCombinedFoodIndex: number, isMeal: boolean) => {
-        //minus function
-        //funcao de remover food de selectedCombinedFoodID que contenha o indice selectedCombinedFoodIndex
-        //fazendo um novo array onde tiramos os que possuem o indice indicado na funcao
+    const handleMinusSelectedFood = (selectedCombinedFoodId: number, isMeal: boolean) => {
 
-        const updatedFoodsAndMeals = [...combinedFoodsAndMeals];
-        updatedFoodsAndMeals.splice(selectedCombinedFoodIndex, 1);
-        setCombinedFoodsAndMeals(updatedFoodsAndMeals);
-
-        if (isMeal) {
-            const updatedMeals = [...selectedMeals];
-            updatedMeals.splice(selectedCombinedFoodIndex, 1);
-            setSelectedMeals(updatedMeals)
-        }
 
         if (!isMeal) {
-            const updatedFoods = [...selectedFoods];
-            updatedFoods.splice(selectedCombinedFoodIndex, 1);
-            setSelectedFoods(updatedFoods)
-        }
+            const foodToRemove = selectedFoodsCounted.find((item) => item.id === selectedCombinedFoodId);
 
+            if (foodToRemove) {
+                const newCombinedFoodsAndMeals = combinedFoodsAndMeals.filter((item) => item.id !== foodToRemove.id && item.name !== foodToRemove.name)
+                setCombinedFoodsAndMeals(newCombinedFoodsAndMeals)
+
+                if (foodToRemove.qtde > 1) {
+                    const newSelectedFoodsCounted = selectedFoodsCounted.map((item) => {
+                        if (item.id === selectedCombinedFoodId) {
+                            return { ...item, qtde: item.qtde - 1 };
+                        }
+                    })
+                    setSelectedFoodsCounted(newSelectedFoodsCounted as FoodInfoNutriDay[])
+                }
+                if (foodToRemove.qtde === 1) {
+                    const updatedFoods = selectedFoodsCounted.filter((item) => item.id !== selectedCombinedFoodId)
+                    setSelectedFoodsCounted(updatedFoods)
+                }
+            }
+
+        }
     }
+
+
+
+    const handleMinusSelectedMeal = (selectedCombinedMealId: number, isMeal: boolean) => {
+
+
+        if (isMeal) {
+            const mealToRemove = selectedMealsCounted.find((item) => item.id === selectedCombinedMealId);
+
+            if (mealToRemove) {
+                const newCombinedFoodsAndMeals = combinedFoodsAndMeals.filter((item) => item.id !== mealToRemove.id && item.name !== mealToRemove.name)
+                setCombinedFoodsAndMeals(newCombinedFoodsAndMeals)
+
+                if (mealToRemove.qtde > 1) {
+                    const newSelectedMealsCounted = selectedMealsCounted.map((item) => {
+                        if (item.id === selectedCombinedMealId) {
+                            return { ...item, qtde: item.qtde - 1 };
+                        }
+                    })
+                    setSelectedMealsCounted(newSelectedMealsCounted as MealInfoNutriDay[])
+                }
+                if (mealToRemove.qtde === 1) {
+                    const updatedMeals = selectedMealsCounted.filter((item) => item.id !== selectedCombinedMealId)
+                    setSelectedMealsCounted(updatedMeals)
+                }
+            }
+
+        }
+    }
+
+
 
     const onPlusButtonAddFood = async () => {
         const foodSelected = await api.getOneFood(selectedFoodId);
+
+        if (!foodSelected) {
+            alert("Escolha uma refeicao")
+            return
+        }
 
         if (foodSelected) {
 
@@ -151,19 +186,6 @@ const DatePage = (data: ServerProps) => {
 
     }
 
-    /* const onPlusButtonAddFood = async () => {
-        const foodSelected = await api.getOneFood(selectedFoodId);
-
-        if (foodSelected) {
-
-
-            setSelectedFoods([...selectedFoods, foodSelected]);
-            setCombinedFoodsAndMeals([...combinedFoodsAndMeals, foodSelected]);
-        }
-
-    }
- */
-
 
     const onPlusButtonAddMeal = async () => {
         const mealSelected = await api.getOneMeal(selectedMealId);
@@ -182,6 +204,11 @@ const DatePage = (data: ServerProps) => {
                 setSelectedMealsCounted([...selectedMealsCounted, { ...mealSelected, qtde: 1 }]);
             }
 
+        }
+
+        if (!mealSelected) {
+            alert("Escolha uma refeicao")
+            return
         }
 
         setCombinedFoodsAndMeals([...combinedFoodsAndMeals, mealSelected]);
@@ -206,32 +233,44 @@ const DatePage = (data: ServerProps) => {
         let idFoodsUnformatted = extractIds(selectedFoods);
         let idMealsUnformatted = extractIds(selectedMeals);
 
+        let idFoodsUnformatted2 = transformFoodQuantityInNumberInArray(selectedFoodsCounted)
+        let idMealsUnformatted2 = transformMealQuantityInNumberInArray(selectedMealsCounted)
+
+        console.log("selectedFoodsCounted de handleUpdateInfoNutritionalDay", selectedFoodsCounted)
+        console.log("selectedMealsCounted de handleUpdateInfoNutritionalDay", selectedMealsCounted)
+
+        console.log("idFoodsUnformatted2", idFoodsUnformatted2)
+        console.log("idMealsUnformatted2", idMealsUnformatted2)
+
+        //criar funcao que faz com que o array de objetos com o mesmo id
+
         let idFoods = removeDuplicatesFromArray(idFoodsUnformatted);
-        let idMeals = removeDuplicatesFromArray(idMealsUnformatted)
+        let idMeals = removeDuplicatesFromArray(idMealsUnformatted);
 
 
-        if (selectedMeals.length > 0 || selectedFoods.length > 0) {
+
+        if (selectedMealsCounted.length > 0 || selectedFoodsCounted.length > 0) {
 
             let info: InfoNutritionalDay = {
                 id: data.id,
                 date: dateSelected.toISOString(),
-                portion: sumProperty(selectedFoods, 'portion') + sumProperty(selectedMeals, 'portion'),
-                protein: sumProperty(selectedFoods, 'protein') + sumProperty(selectedMeals, 'protein'),
-                calories: sumProperty(selectedFoods, 'calories') + sumProperty(selectedMeals, 'calories'),
-                grease: sumProperty(selectedFoods, 'grease') + sumProperty(selectedMeals, 'grease'),
-                salt: sumProperty(selectedFoods, 'salt') + sumProperty(selectedMeals, 'salt'),
+                portion: sumProperty(combinedFoodsAndMeals, 'portion'),
+                protein: sumProperty(combinedFoodsAndMeals, 'protein'),
+                calories: sumProperty(combinedFoodsAndMeals, 'calories'),
+                grease: sumProperty(combinedFoodsAndMeals, 'grease'),
+                salt: sumProperty(combinedFoodsAndMeals, 'salt'),
                 finalizedDay: finalizedDay,
                 combinedFoods: combinedFoodsAndMeals,
-                selectedFoods: selectedFoods,
-                selectedMeals: selectedMeals,
-                idFoods: idFoodsUnformatted,
-                idMeals: idMealsUnformatted
+                selectedFoods: selectedFoodsCounted,
+                selectedMeals: selectedMealsCounted,
+                idFoods: idFoodsUnformatted2,
+                idMeals: idMealsUnformatted2
 
             }
 
-
-            console.log("Parsed Date: ", parsedDate)
+            console.log(combinedFoodsAndMeals)
             setInfoNutriDay(info);
+            console.log("INFO NUTRI DAY SETADO: ", info)
         }
     }
 
@@ -294,7 +333,8 @@ const DatePage = (data: ServerProps) => {
                             selectedMeals={selectedMeals}
                             selectedFoodsWithCount={selectedFoodsCounted}
                             selectedMealsWithCount={selectedMealsCounted}
-                            onHandle={handleSelectedCombinedFood}
+                            onHandleMinusFood={handleMinusSelectedFood}
+                            onHandleMinusMeal={handleMinusSelectedMeal}
                             disabled={!finalizedDay}
                             selectedFoodsOfInfoDay={selectedFoodsOfInfoDay}
                             selectedMealsOfInfoDay={selectedMealsOfInfoDay}

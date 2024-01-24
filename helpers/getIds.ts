@@ -1,7 +1,59 @@
+import { FoodInfoNutriDay } from "@/types/Food";
+import { MealInfoNutriDay } from "@/types/Meal";
+
 // Função genérica para extrair IDs de um array de objetos
 export const extractIds = <T extends { id: number }>(objects: T[]): number[] => {
     return objects.map(obj => obj.id);
 }
+
+
+export const transformFoodQuantityInNumberInArray = (foodArray: FoodInfoNutriDay[]): number[] => {
+
+    let newArray: number[] = []
+
+    if (foodArray.length === 0) {
+        return [];
+    }
+
+    foodArray.forEach((item) => {
+
+        let qtde = item.qtde || 0; // Caso 'qtde' seja undefined, consideramos 0
+        let id = item.id || 0; // Caso 'id' seja undefined, consideramos 0
+        // Adiciona 'id' repetido 'qtde' vezes ao newArray
+        newArray = newArray.concat(Array(qtde).fill(id));
+    })
+
+    return newArray;
+
+
+}
+
+
+export const transformMealQuantityInNumberInArray = (mealArray:MealInfoNutriDay[]): number[] => {
+
+    let newArray: number[] = []
+
+    if (mealArray.length === 0) {
+        return [];
+    }
+
+    mealArray.forEach((meal) => {
+
+        let qtde = meal.qtde || 0; // Caso 'qtde' seja undefined, consideramos 0
+        let id = meal.id || 0; // Caso 'id' seja undefined, consideramos 0
+        // Adiciona 'id' repetido 'qtde' vezes ao newArray
+        newArray = newArray.concat(Array(qtde).fill(id));
+    })
+
+    return newArray;
+
+
+}
+
+
+
+
+
 
 // Exemplo de uso com objetos que têm uma propriedade "id"
 const foods = [

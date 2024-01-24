@@ -11,7 +11,8 @@ type Props = {
     selectedMeals: Meal[];
     selectedFoodsWithCount: FoodInfoNutriDay[]
     selectedMealsWithCount: MealInfoNutriDay[]
-    onHandle: (selectedIndex: number, isMeal: boolean) => void;
+    onHandleMinusFood: (selectedIndex: number, isMeal: boolean) => void;
+    onHandleMinusMeal: (selectedIndex: number, isMeal: boolean) => void;
     disabled: boolean;
     selectedFoodsOfInfoDay: foodsInfoNutriDay[] | null;
     selectedMealsOfInfoDay: mealsInfoNutriDay[] | null;
@@ -24,12 +25,11 @@ type uniqueItemsFoodOrMeal = {
     isMeal: boolean
 }
 
-export const ComponentsSelected = ({ foods, selectedFoods, selectedMeals, onHandle,
+export const ComponentsSelected = ({ foods, selectedFoods, selectedMeals, onHandleMinusFood, onHandleMinusMeal,
     disabled, selectedFoodsOfInfoDay, selectedMealsOfInfoDay, selectedFoodsWithCount, selectedMealsWithCount }: Props) => {
 
 
-
-    // Criar um array de itens únicos
+  /*   // Criar um array de itens únicos
     const uniqueItemsMeal: uniqueItemsFoodOrMeal[] = Array.from(new Set(selectedMealsWithCount.map(item =>
     ({
         id: item.id,
@@ -46,11 +46,14 @@ export const ComponentsSelected = ({ foods, selectedFoods, selectedMeals, onHand
         isMeal: false,
         qtde: selectedFoodsOfInfoDay?.filter((food) => item.id === food.food_id)[0]?.qtde || 0
 
-    }))));
+    })))); */
 
-    const onHandleMinusFunction = (selectedIndex: number, isMeal: boolean) => {
-        console.log(selectedIndex)
-        onHandle(selectedIndex, isMeal);
+    const onHandleMinusFoodFunction = (selectedId: number, isMeal: boolean) => {
+        onHandleMinusFood(selectedId, isMeal);
+    }
+
+    const onHandleMinusMealFunction = (selectedId: number, isMeal: boolean) => {
+        onHandleMinusMeal(selectedId, isMeal);
     }
 
     useEffect(() => {
@@ -59,8 +62,6 @@ export const ComponentsSelected = ({ foods, selectedFoods, selectedMeals, onHand
     useEffect(() => {
         console.log("[ComponentsSelected] SELECTED FOODS", selectedFoods)
         console.log("[ComponentsSelected] SELECTED MEALS", selectedMeals)
-        console.log("[ComponentsSelected] uniqueItemsFood", uniqueItemsFood)
-        console.log("[ComponentsSelected] uniqueItemsMeal", uniqueItemsMeal)
     }, [selectedFoods, selectedMeals])
 
 
@@ -75,7 +76,7 @@ export const ComponentsSelected = ({ foods, selectedFoods, selectedMeals, onHand
                     <div className={styles.itemName}>
                         {item.name}
                     </div>
-                    <div className={styles.minusIcon} onClick={() => onHandleMinusFunction(index, false)}>
+                    <div className={styles.minusIcon} onClick={() => onHandleMinusFoodFunction(item.id, false)}>
                         <div className={styles.qtMinusIcon}> {item.qtde}x </div>
                         <Icon svg='minus2' width={24} height={24} />
                     </div>
@@ -86,7 +87,7 @@ export const ComponentsSelected = ({ foods, selectedFoods, selectedMeals, onHand
                     <div className={styles.itemName}>
                         {item.name}
                     </div>
-                    <div className={styles.minusIcon} onClick={() => onHandleMinusFunction(index, item.isMeal)}>
+                    <div className={styles.minusIcon} onClick={() => onHandleMinusMealFunction(item.id, true)}>
                         <div className={styles.qtMinusIcon}> {item.qtde}x </div>
                         <Icon svg='minus2' width={24} height={24} />
                     </div>
