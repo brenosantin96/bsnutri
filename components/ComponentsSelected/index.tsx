@@ -60,8 +60,8 @@ export const ComponentsSelected = ({ foods, selectedFoods, selectedMeals, onHand
     }, [foods])
 
     useEffect(() => {
-        console.log("[ComponentsSelected] SELECTED FOODS", selectedFoods)
-        console.log("[ComponentsSelected] SELECTED MEALS", selectedMeals)
+        console.log("[ComponentsSelected] selectedFoodsWithCount", selectedFoodsWithCount)
+        console.log("[ComponentsSelected] selectedMealsWithCount", selectedMealsWithCount)
     }, [selectedFoods, selectedMeals])
 
 

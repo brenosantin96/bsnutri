@@ -12,3 +12,4 @@ export type Food = {
 export type FoodInfoNutriDay = Food & {
     qtde: number;
 };
+
