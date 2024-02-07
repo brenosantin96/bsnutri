@@ -302,7 +302,6 @@ const DatePage = (data: ServerProps) => {
                 infoNutriDay.idFoods, infoNutriDay.idMeals)
 
             console.log(response);
-
         }
 
         console.log("Guardando el dia", infoNutriDay);
@@ -315,6 +314,26 @@ const DatePage = (data: ServerProps) => {
             setInfoNutriDay({ ...infoNutriDay, finalizedDay: !finalizedDay })
         }
     };
+
+    const handleUpdateDay = async () => {
+
+        console.log("Actualizando el infoNutriDay")
+
+        console.log(data.fullId)
+
+        if (infoNutriDay) {
+
+            console.log("INFONUTRIDAY sendo enviado", infoNutriDay)
+
+            let response = await api.updateInfoNutriDay(data.fullId, new Date(infoNutriDay.date), infoNutriDay.portion, infoNutriDay.protein,
+                infoNutriDay.calories, infoNutriDay.grease, infoNutriDay.salt, infoNutriDay.finalizedDay === true ? 1 : 0,
+                infoNutriDay.idFoods, infoNutriDay.idMeals)
+
+            console.log(response);
+        }
+
+    }
+
 
     return (
         <>
@@ -371,7 +390,14 @@ const DatePage = (data: ServerProps) => {
 
                         <div className={styles.BottomButtonArea}>
                             <ButtonMain textButton='Volver' fill={false} onClick={() => router.push('/calendar')} disabled={true} />
-                            <ButtonMain textButton='Guardar' fill={true} onClick={handleSaveDay} disabled={true} />
+
+                            {!data.infoDay &&
+                                <ButtonMain textButton='Guardar' fill={true} onClick={handleSaveDay} disabled={true} />
+                            }
+
+                            {data.infoDay &&
+                                <ButtonMain textButton='Actualizar' fill={true} onClick={handleUpdateDay} disabled={true} />
+                            }
                         </div>
                     </>
 
@@ -387,6 +413,7 @@ export default DatePage;
 
 type ServerProps = {
     id: string; // Defina o tipo da prop "date" como string
+    fullId: string;
     foods: Food[];
     meals: Meal[];
     infoDay: InfoNutritionalDay | null;
@@ -405,7 +432,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     let { date } = context.query;
     let idFoodsInfoNutriDayNumber: number[]
     let idMealsInfoNutriDayNumber: number[]
-
+    let fullId = "";
 
     const api = useApi2(token);
 
@@ -431,7 +458,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (infoDayRequisition) {
 
-
+        fullId = infoDayRequisition.infoNutriDay.id;
 
         idFoodsInfoNutriDayNumber = infoDayRequisition.infoNutriDay.infonutriday_has_foods.map((item: any) => item.foods_id)
         idMealsInfoNutriDayNumber = infoDayRequisition.infoNutriDay.infonutriday_has_meals.map((item: any) => item.meals_id)
@@ -495,6 +522,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             id: id as string,
+            fullId,
             foods,
             meals,
             infoDay,
@@ -518,4 +546,10 @@ UTILIZAR A INFORMACAO TRAZIDA DO CARRINHO
 
 /* NOTA DO DIA 22/01/2023 
 FOI CORRIGIDO A QUANTIDADE APRESENTADA, MAS AGORA FALTA CORRIGIR A FUNCAO DE RETIRAR O ITEM E FALTA CORRIGIR O AMOUNT DOS ITEMS
+*/
+
+/* NOTA DO DIA 07/02/2023
+CORRIGIR QUANDO SE POSSUI 02 TIPOS DE FOOD E AO BORRAR O ULTIMO, AINDA ASSIM É ENVIADO NA REQUISICAO DE UPDATE
+MESMO BORRANDO O ELEMENTO 03, É ENVIADO OS DEMAIS TIPOS DE ELEMENTO
+idFoods: (5) [1, 1, 1, 1, 3]
 */

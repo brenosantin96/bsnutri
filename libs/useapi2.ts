@@ -115,6 +115,26 @@ export const useApi2 = (token?: string) => ({
 
     },
 
+    updateInfoNutriDay: async (id: string, date?: Date, portion?: number,
+        protein?: number, calories?: number, grease?: number, salt?: number, finalizedDay?: 0 | 1,
+        foods_id?: number[], meals_id?: number[]) => {
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        let response = await axios.put(`${baseURL}/infoNutriDay/${id}`, {
+            id, date, portion, protein, calories, grease, salt, finalizedDay, foods_id, meals_id
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
+
+    },
+
 
 
 
