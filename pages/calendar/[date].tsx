@@ -24,6 +24,7 @@ import { foodsInfoNutriDay, mealsInfoNutriDay } from '@/types/foodsInfoNutriDay'
 import { createFoodArrayWithQnt, createFoodArrayWithQnt2, createMealArrayWithQnt, createMealArrayWithQnt2 } from '@/helpers/sumIdItems';
 import { infoDayData } from '@/data/InfoNutritionalDay';
 import { getAllFoodsAndPutInACombinedArray, getAllMealsAndPutInACombinedArray, selectedFoodsForCombinedFoodsMinusFunction, selectedMealsForCombinedFoodsMinusFunction } from '@/helpers/functionsInfoNutriDay';
+import FastModal from '@/components/FastModal';
 
 const DatePage = (data: ServerProps) => {
 
@@ -56,6 +57,11 @@ const DatePage = (data: ServerProps) => {
     //check Finalized day
     const [finalizedDay, setFinalizedDay] = useState(false);
 
+    //check updatedDay
+    const [hasUpdated, setHasUpdated] = useState(false);
+    const [hasFinishedUpdate, setHasFinishedUpdate] = useState(false);
+    const [savedButton, setSavedButton] = useState(false);
+
 
     //select
     const [foods, setFoods] = useState<Food[]>(data.foods);
@@ -83,7 +89,12 @@ const DatePage = (data: ServerProps) => {
 
 
     useEffect(() => {
-    }, [])
+
+        if (hasFinishedUpdate === true) {
+            router.push('/calendar')
+        }
+
+    }, [hasFinishedUpdate])
 
 
     useEffect(() => {
@@ -113,7 +124,7 @@ const DatePage = (data: ServerProps) => {
 
             if (foodToRemove) {
 
-                if (foodToRemove.qtde > 1) {
+                if (foodToRemove.qtde >= 1) {
                     const newSelectedFoodsCounted = selectedFoodsCounted.map((item) => {
                         if (item.id === foodToRemove.id) {
                             return { ...item, qtde: item.qtde - 1 };
@@ -155,7 +166,7 @@ const DatePage = (data: ServerProps) => {
 
             if (mealToRemove) {
 
-                if (mealToRemove.qtde > 1) {
+                if (mealToRemove.qtde >= 1) {
                     const newSelectedMealsCounted = selectedMealsCounted.map((item) => {
                         if (item.id === selectedCombinedMealId) {
                             return { ...item, qtde: item.qtde - 1 };
@@ -304,6 +315,7 @@ const DatePage = (data: ServerProps) => {
             console.log(response);
         }
 
+        setSavedButton(true);
         console.log("Guardando el dia", infoNutriDay);
     }
 
@@ -330,13 +342,22 @@ const DatePage = (data: ServerProps) => {
                 infoNutriDay.idFoods, infoNutriDay.idMeals)
 
             console.log(response);
+
+            setHasUpdated(true)
         }
 
+    }
+
+    const hasUpdatedDay = (updatedDay : boolean) => {
+        setHasFinishedUpdate(updatedDay)
     }
 
 
     return (
         <>
+            {hasUpdated &&
+                <FastModal text='Guardado con éxito' timer={1000} hasUpdated={hasUpdatedDay} />
+            }
             <Head>
                 <title>Calendario | BSNutri</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -346,6 +367,7 @@ const DatePage = (data: ServerProps) => {
             <Header leftIcon='back' title={selectedDateStringFormatted} rightIcon='menu' onClickLeftIcon={() => router.back()} onClickRightIcon={() => setMenuOpened(!menuOpened)} />
             <Sidebar menuOpened={menuOpened} onClose={() => setMenuOpened(false)} />
             <div className={styles.container}>
+
                 <div className={styles.topButtonArea}>
                     <ButtonMain textButton='Alimento' fill={showSelectFoods ? true : false} onClick={handleFoodButton} disabled={true} />
                     <ButtonMain textButton='Plato' fill={showSelectMeals ? true : false} onClick={handleMealButton} disabled={true} />
@@ -392,7 +414,7 @@ const DatePage = (data: ServerProps) => {
                             <ButtonMain textButton='Volver' fill={false} onClick={() => router.push('/calendar')} disabled={true} />
 
                             {!data.infoDay &&
-                                <ButtonMain textButton='Guardar' fill={true} onClick={handleSaveDay} disabled={true} />
+                                <ButtonMain textButton='Guardar' fill={true} onClick={handleSaveDay} disabled={savedButton === false ? true : false} />
                             }
 
                             {data.infoDay &&
