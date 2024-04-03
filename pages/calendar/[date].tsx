@@ -25,6 +25,7 @@ import { createFoodArrayWithQnt, createFoodArrayWithQnt2, createMealArrayWithQnt
 import { infoDayData } from '@/data/InfoNutritionalDay';
 import { getAllFoodsAndPutInACombinedArray, getAllMealsAndPutInACombinedArray, selectedFoodsForCombinedFoodsMinusFunction, selectedMealsForCombinedFoodsMinusFunction } from '@/helpers/functionsInfoNutriDay';
 import FastModal from '@/components/FastModal';
+import { ModalExclude } from '@/components/ModalExclude';
 
 const DatePage = (data: ServerProps) => {
 
@@ -52,6 +53,8 @@ const DatePage = (data: ServerProps) => {
     //InfoDay
     const [infoNutriDay, setInfoNutriDay] = useState<InfoNutritionalDay | null>(data.infoDay);
 
+    //removeItem Modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
 
     //check Finalized day
@@ -348,15 +351,30 @@ const DatePage = (data: ServerProps) => {
 
     }
 
-    const hasUpdatedDay = (updatedDay : boolean) => {
+    const hasUpdatedDay = (updatedDay: boolean) => {
         setHasFinishedUpdate(updatedDay)
+    }
+
+    const openModalToRemoveInfoNutriDay = () => {
+        setIsModalOpen(true);
+    }
+
+    const handleDeleteDay = async (id: string) => {
+
+        //executar modal perguntando se quer realmente excluir
+
+        let response = await api.deleteInfoNutriDay(id)
+        if (response.msg) {
+            //executar m
+        }
+
     }
 
 
     return (
         <>
             {hasUpdated &&
-                <FastModal text='Guardado con éxito' timer={1000} hasUpdated={hasUpdatedDay} />
+                <FastModal text='Guardado con éxito' timer={1500} hasUpdated={hasUpdatedDay} />
             }
             <Head>
                 <title>Calendario | BSNutri</title>
@@ -411,7 +429,8 @@ const DatePage = (data: ServerProps) => {
                         }
 
                         <div className={styles.BottomButtonArea}>
-                            <ButtonMain textButton='Volver' fill={false} onClick={() => router.push('/calendar')} disabled={true} />
+
+                            <ButtonMain textButton='Eliminar' fill={true} onClick={openModalToRemoveInfoNutriDay} disabled={data.infoDay ? true : false} />
 
                             {!data.infoDay &&
                                 <ButtonMain textButton='Guardar' fill={true} onClick={handleSaveDay} disabled={savedButton === false ? true : false} />
@@ -421,6 +440,14 @@ const DatePage = (data: ServerProps) => {
                                 <ButtonMain textButton='Actualizar' fill={true} onClick={handleUpdateDay} disabled={true} />
                             }
                         </div>
+
+                    
+                        {isModalOpen && data.infoDay &&
+                            <div>
+                                <ModalExclude id={food.id} valueToRemove={food.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onDelete={handleDeleteFood} />
+                                <div className={styles.backdrop} />
+                            </div>
+                        }
                     </>
 
                 }
@@ -432,6 +459,10 @@ const DatePage = (data: ServerProps) => {
 
 
 export default DatePage;
+
+//botao de deletar feito, trabalhando no modal para confirmar
+//clicou em eliminar, vai saltar opcao perguntando se realmente quer eliminar o dia
+//assim que confirmado, executar a funcao handleDeleteDay
 
 type ServerProps = {
     id: string; // Defina o tipo da prop "date" como string
@@ -448,6 +479,9 @@ type ServerProps = {
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
     // Extrair o ID da URL usando o objeto context
+
+    console.log("HEADERS: ", context.req.headers)
+
     const token = context.req.headers.cookie?.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1] || '';
 
 
@@ -512,12 +546,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 
 
-        console.log("idFoodsInfoNutriDayNumber", idFoodsInfoNutriDayNumber)
-        console.log("selectedFoods", selectedFoods)
-        console.log("selectedMeals", selectedMeals)
-        console.log("combinedFoodsAndMeals", combinedFoodsAndMeals)
+        //console.log("idFoodsInfoNutriDayNumber", idFoodsInfoNutriDayNumber)
+        //console.log("selectedFoods", selectedFoods)
+        //console.log("selectedMeals", selectedMeals)
+        //console.log("combinedFoodsAndMeals", combinedFoodsAndMeals)
 
-        console.log("infoDayRequisition.infoNutriDay", infoDayRequisition.infoNutriDay)
+        //console.log("infoDayRequisition.infoNutriDay", infoDayRequisition.infoNutriDay)
 
         infoDay = {
             id: infoDayRequisition.infoNutriDay.id,

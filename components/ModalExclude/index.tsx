@@ -3,15 +3,17 @@ import styles from './styles.module.css'
 
 type Props = {
     valueToRemove: string;
-    id: number;
+    id: number ;
     menuOpened: boolean;
     onClose: () => void;
     onDelete: (id : number) => void;
+    idString? : string;
 }
 
-export const ModalExclude = ({ valueToRemove, id, menuOpened, onClose, onDelete }: Props) => {
+export const ModalExclude = ({ valueToRemove, id, menuOpened, onClose, onDelete, idString }: Props) => {
 
     const handleDelete = () => {
+        
         onDelete(id)
     }
 
@@ -19,7 +21,7 @@ export const ModalExclude = ({ valueToRemove, id, menuOpened, onClose, onDelete 
         <div className={styles.container} style={{ width: menuOpened ? '50vw' : '0' }}>
             <div className={styles.modal}>
                 <div className={styles.headerModal}>
-                    ¿Estás seguro de que quieres eliminar:
+                    ¿Estás seguro de que quieres eliminar?
                 </div>
                 <div className={styles.modalProduct}>
                     {`${id} - ${valueToRemove}`}

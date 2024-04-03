@@ -135,6 +135,22 @@ export const useApi2 = (token?: string) => ({
 
     },
 
+    deleteInfoNutriDay: async (id: string) => {
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        let response = await axios.delete(`${baseURL}/infoNutriDay/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return response.data;
+
+    },
+
 
 
 
