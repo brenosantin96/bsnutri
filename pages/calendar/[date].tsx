@@ -26,6 +26,7 @@ import { infoDayData } from '@/data/InfoNutritionalDay';
 import { getAllFoodsAndPutInACombinedArray, getAllMealsAndPutInACombinedArray, selectedFoodsForCombinedFoodsMinusFunction, selectedMealsForCombinedFoodsMinusFunction } from '@/helpers/functionsInfoNutriDay';
 import FastModal from '@/components/FastModal';
 import { ModalExclude } from '@/components/ModalExclude';
+import { ModalExclude2 } from '@/components/ModalExclude2';
 
 const DatePage = (data: ServerProps) => {
 
@@ -361,12 +362,14 @@ const DatePage = (data: ServerProps) => {
 
     const handleDeleteDay = async (id: string) => {
 
-        //executar modal perguntando se quer realmente excluir
-
+        console.log(id)
         let response = await api.deleteInfoNutriDay(id)
         if (response.msg) {
-            //executar m
-        }
+            router.back()
+        } else
+
+            alert("Ha ocurrido un error")
+
 
     }
 
@@ -441,10 +444,10 @@ const DatePage = (data: ServerProps) => {
                             }
                         </div>
 
-                    
-                        {isModalOpen && data.infoDay &&
+
+                        {isModalOpen && data.infoDay && infoNutriDay &&
                             <div>
-                                <ModalExclude id={food.id} valueToRemove={food.name} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onDelete={handleDeleteFood} />
+                                <ModalExclude2 id={data.infoDay.id} valueToRemove={infoNutriDay.id} menuOpened={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onDelete={handleDeleteDay} />
                                 <div className={styles.backdrop} />
                             </div>
                         }
@@ -551,7 +554,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         //console.log("selectedMeals", selectedMeals)
         //console.log("combinedFoodsAndMeals", combinedFoodsAndMeals)
 
-        //console.log("infoDayRequisition.infoNutriDay", infoDayRequisition.infoNutriDay)
+        console.log("infoDayRequisition.infoNutriDay", infoDayRequisition.infoNutriDay)
 
         infoDay = {
             id: infoDayRequisition.infoNutriDay.id,
