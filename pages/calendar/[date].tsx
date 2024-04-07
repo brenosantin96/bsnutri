@@ -341,6 +341,9 @@ const DatePage = (data: ServerProps) => {
 
             console.log("INFONUTRIDAY sendo enviado", infoNutriDay)
 
+
+            //ESTA ATUALIZANDO MAS ESTA ATUALIZANDO COM DADOS ANTIGOS. 
+            //corrigido os dados que estao sendo enviados, agora esta sendo enviado o id full
             let response = await api.updateInfoNutriDay(data.fullId, new Date(infoNutriDay.date), infoNutriDay.portion, infoNutriDay.protein,
                 infoNutriDay.calories, infoNutriDay.grease, infoNutriDay.salt, infoNutriDay.finalizedDay === true ? 1 : 0,
                 infoNutriDay.idFoods, infoNutriDay.idMeals)

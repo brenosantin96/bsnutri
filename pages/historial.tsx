@@ -11,6 +11,7 @@ import { Food } from '@/types/Food';
 import { InfoNutritionalDay } from '../types/InfoNutritionalDay';
 import { useEffect, useState } from 'react';
 import { HistorialComponent } from '@/components/HistorialComponent';
+import { useApi2 } from '@/libs/useapi2';
 
 
 const HistorialPage = (data: ServerProps) => {
@@ -55,10 +56,12 @@ type ServerProps = {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
-    const api = useApi();
+    const token = context.req.headers.cookie?.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1] || '';
+
+    const api = useApi2(token);
 
     //Get products
-    const allInfoDayOfUser = await api.getAllInfoDay();
+    const allInfoDayOfUser = await api.getAllInfoDay2();
 
 
     return {

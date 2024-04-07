@@ -10,11 +10,12 @@ type Props = {
 export const HistorialComponent = ({ light, infoNutriDay }: Props) => {
 
 
+    //let infoNutriDayCorrectDate = infoNutriDay.id.split("+")[0]
 
     return (
         <div className={styles.container}>
             <div className={styles.headerHistorialContainer}>
-                <div className={styles.headerDate}>{infoNutriDay.id}</div>
+                <div className={styles.headerDate}>{infoNutriDay.id.split("+")[0]}</div>
             </div>
 
             <div className={styles.historialArea}>

@@ -151,6 +151,23 @@ export const useApi2 = (token?: string) => ({
 
     },
 
+    getAllInfoDay2: async () => {
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        const response = await axios.get(`${baseURL}/infoNutriDay2`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        console.log("RESPONSE:", response)
+
+        return response.data;
+    },
+
 
 
 
