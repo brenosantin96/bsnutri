@@ -41,7 +41,9 @@ const MealId = (data: ServerProps) => {
         const updatedAvailableFoods = foods.filter(food => !meal.meals_has_foods || !meal.meals_has_foods.some(mealFood => mealFood.foods_id === food.id));
         console.log("updatedAvailableFoods FOODS", availableFoods)
         setAvaiableFoods(updatedAvailableFoods);
+        //CORRIGIR ESSA LINHA, PODE SER QUE DE BUG SE NAO TIVER ALIMENTOS
         setSelectedFoodID(updatedAvailableFoods[0].id);
+       console.log(updatedAvailableFoods)
     }, [meal])
 
 
