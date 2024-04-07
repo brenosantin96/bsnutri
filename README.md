@@ -26,7 +26,7 @@
     <img src="https://github.com/brenosantin96/bsnutri/blob/main/public/LogoPng.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">BSNutri - Frontend</h3>
+  <h3 align="center">BSNutri - Frontend (In Development 🔨)</h3>
 
   <p align="center">
     An awesome app to help you with your health, body and mind!
@@ -189,9 +189,6 @@ This is an example of how to list things you need to use the software and how to
 
 ![01 Login](https://github.com/brenosantin96/bsnutri/blob/main/public/05%20Historial.gif?raw=true)
 
-
-
-_For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
