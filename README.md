@@ -167,17 +167,27 @@ This is an example of how to list things you need to use the software and how to
 
 ### Registering and logging
 
+![01 Login](https://github.com/brenosantin96/bsnutri/blob/main/public/01%20Login.gif?raw=true)
+
 
 ### Creating new Food
+
+![01 Login](https://github.com/brenosantin96/bsnutri/blob/main/public/02%20Food.gif?raw=true)
 
 
 ### Creating new Meal
 
+![01 Login](https://github.com/brenosantin96/bsnutri/blob/main/public/03%20Meal.gif?raw=true)
 
-### Creating new Food
+
+### Creating a information nutrition day
+
+![01 Login](https://github.com/brenosantin96/bsnutri/blob/main/public/04%20InfoNutriDay.gif?raw=true)
 
 
 ### Checking all history
+
+![01 Login](https://github.com/brenosantin96/bsnutri/blob/main/public/05%20Historial.gif?raw=true)
 
 
 
