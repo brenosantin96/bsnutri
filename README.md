@@ -23,7 +23,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="/public/LogoPng.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/brenosantin96/bsnutri/blob/main/public/LogoPng.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">BSNutri - Frontend</h3>
