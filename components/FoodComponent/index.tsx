@@ -49,19 +49,19 @@ export const FoodComponent = ({ data, light, url, minusButton, link, disabled, o
                                 <div className={styles.rightSideFoodContainer}>
                                     <div className={styles.infoItem}>
                                         <div className={styles.descriptionItem}>Proteína:</div>
-                                        <div className={styles.valueItem}>{data.protein ? data.protein : 1}</div>
+                                        <div className={styles.valueItem}>{data.protein ? data.protein : 0}</div>
                                     </div>
                                     <div className={styles.infoItem}>
                                         <div className={styles.descriptionItem}>Kcal:</div>
-                                        <div className={styles.valueItem}>{data.calories ? data.calories : 1}</div>
+                                        <div className={styles.valueItem}>{data.calories ? data.calories : 0}</div>
                                     </div>
                                     <div className={styles.infoItem}>
                                         <div className={styles.descriptionItem}>Grasa:</div>
-                                        <div className={styles.valueItem}>{data.grease ? data.grease : 1}</div>
+                                        <div className={styles.valueItem}>{data.grease ? data.grease : 0}</div>
                                     </div>
                                     <div className={styles.infoItem}>
                                         <div className={styles.descriptionItem}>Sal:</div>
-                                        <div className={styles.valueItem}>{data.salt ? data.salt : 1}</div>
+                                        <div className={styles.valueItem}>{data.salt ? data.salt : 0}</div>
                                     </div>
 
                                 </div>
@@ -79,19 +79,19 @@ export const FoodComponent = ({ data, light, url, minusButton, link, disabled, o
                             <div className={styles.rightSideFoodContainer}>
                                 <div className={styles.infoItem}>
                                     <div className={styles.descriptionItem}>Proteína:</div>
-                                    <div className={styles.valueItem}>{data.protein ? data.protein : 1}</div>
+                                    <div className={styles.valueItem}>{data.protein ? data.protein : 0}</div>
                                 </div>
                                 <div className={styles.infoItem}>
                                     <div className={styles.descriptionItem}>Kcal:</div>
-                                    <div className={styles.valueItem}>{data.calories ? data.calories : 1}</div>
+                                    <div className={styles.valueItem}>{data.calories ? data.calories : 0}</div>
                                 </div>
                                 <div className={styles.infoItem}>
                                     <div className={styles.descriptionItem}>Grasa:</div>
-                                    <div className={styles.valueItem}>{data.grease ? data.grease : 1}</div>
+                                    <div className={styles.valueItem}>{data.grease ? data.grease : 0}</div>
                                 </div>
                                 <div className={styles.infoItem}>
                                     <div className={styles.descriptionItem}>Sal:</div>
-                                    <div className={styles.valueItem}>{data.salt ? data.salt : 1}</div>
+                                    <div className={styles.valueItem}>{data.salt ? data.salt : 0}</div>
                                 </div>
 
                             </div>
