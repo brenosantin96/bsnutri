@@ -201,7 +201,9 @@ const DatePage = (data: ServerProps) => {
 
 
     const onPlusButtonAddFood = async () => {
+        console.log("selectedFoodId", selectedFoodId)
         const foodSelected = await api.getOneFood(selectedFoodId);
+        console.log('foodSelected', foodSelected)
 
         if (!foodSelected) {
             alert("Escolha uma refeicao")
@@ -486,7 +488,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     // Extrair o ID da URL usando o objeto context
 
-    console.log("HEADERS: ", context.req.headers)
 
     const token = context.req.headers.cookie?.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1] || '';
 

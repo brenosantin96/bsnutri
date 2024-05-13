@@ -26,6 +26,13 @@ const RegisterMealPage = () => {
 
     const [foods, setFoods] = useState<Food[]>();
 
+    //enable buttons
+    const [isClickable, setIsClickable] = useState(true);
+
+    //countItems
+    const [numberElements, setNumberElements] = useState(0);
+
+
     useEffect(() => {
         getFoods();
     }, [])
@@ -43,6 +50,20 @@ const RegisterMealPage = () => {
 
     useEffect(() => {
         console.log(selectedFoodIds)
+    }, [selectedFoodIds])
+
+    useEffect(() => {
+
+        if(foods){
+            if (selectedFoodIds.length === foods.length) {
+                console.log("isClickable ",isClickable)
+                setIsClickable(false)
+            } else { 
+                console.log("isClickable ",isClickable)
+                setIsClickable(true);
+            }
+        }
+
     }, [selectedFoodIds])
 
 
@@ -100,7 +121,8 @@ const RegisterMealPage = () => {
 
     const addSelectFoodComponent = () => {
 
-        if (foods && foods.length > 0) {
+
+        if (foods && foods.length > 0 && isClickable) {
 
             setSelectComponents([...selectComponents,
             <SelectFood
@@ -208,7 +230,7 @@ const RegisterMealPage = () => {
 
                             />
                         </div>
-                        <div className={styles.iconArea} onClick={addSelectFoodComponent}>
+                        <div className={styles.iconArea} onClick={addSelectFoodComponent} >
                             <Icon svg='plus' height={27} width={27} />
                         </div>
                     </div>

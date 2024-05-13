@@ -21,13 +21,29 @@ export const useApi2 = (token?: string) => ({
 
     getFoods: async () => {
 
-        const response = await axios.get(`${baseURL}/foodsByUser`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        try {
 
-        return response.data;
+            const response = await axios.get(`${baseURL}/foodsByUser`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.status === 404) {
+                return null
+            }
+
+            else {
+                return response.data
+            }
+
+        } catch (error) {
+
+            console.log(error)
+
+        }
+
+       
+
 
     },
 
@@ -39,13 +55,29 @@ export const useApi2 = (token?: string) => ({
             return;
         }
 
-        const response = await axios.get(`${baseURL}/foodsByUser/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token} `
-            }
-        });
+        try {
 
-        return response.data;
+            const response = await axios.get(`${baseURL}/foodsByUser/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token} `
+                }
+            });
+
+            if (response.status === 404) {
+                return null
+            }
+
+            else {
+                return response.data
+            }
+
+        } catch (error) {
+
+            console.log(error)
+
+        }
+
+
     },
 
 
@@ -55,13 +87,22 @@ export const useApi2 = (token?: string) => ({
             return;
         }
 
-        const response = await axios.get(`${baseURL}/mealsByUser/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        try {
 
-        return response.data;
+            const response = await axios.get(`${baseURL}/mealsByUser/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.status === 404) {
+                return null
+            }
+            else {
+                return response.data
+            }
+        } catch (error) {
+            console.log(error)
+        }
 
     },
 
@@ -83,15 +124,28 @@ export const useApi2 = (token?: string) => ({
             return;
         }
 
-        const response = await axios.get(`${baseURL}/infoNutriDay/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
+        try {
+
+            const response = await axios.get(`${baseURL}/infoNutriDay/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+
+            if (response.status === 404) {
+                return null
             }
-        });
 
-        console.log("RESPONSE:", response)
+            else {
+                return response.data
+            }
 
-        return response.data;
+        } catch (error) {
+
+            console.log(error)
+
+        }
 
     },
 
@@ -157,19 +211,28 @@ export const useApi2 = (token?: string) => ({
             return;
         }
 
-        const response = await axios.get(`${baseURL}/infoNutriDay2`, {
-            headers: {
-                Authorization: `Bearer ${token}`
+        try {
+
+            const response = await axios.get(`${baseURL}/infoNutriDay2`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (response.status === 404) {
+                return null
             }
-        });
 
-        console.log("RESPONSE:", response)
+            else {
+                return response.data
+            }
 
-        return response.data;
+        } catch (error) {
+
+            console.log(error)
+
+        }
+
     },
-
-
-
-
 
 })
