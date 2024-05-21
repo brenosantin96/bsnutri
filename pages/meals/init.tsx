@@ -37,11 +37,11 @@ const RegisterMealPage = () => {
         getFoods();
     }, [])
 
-    //selects
-    const [selectComponents, setSelectComponents] = useState<JSX.Element[]>([]);
+     //selects
+     const [selectComponents, setSelectComponents] = useState<JSX.Element[]>([]);
 
 
-
+   
 
     useEffect(() => {
         console.log(selectedFoodIds)
@@ -117,15 +117,8 @@ const RegisterMealPage = () => {
 
 
 
+
     const addSelectFoodComponent = () => {
-        if (isClickable) {
-            setSelectedFoodIds([...selectedFoodIds, -1]); // Temporário, atualize ao selecionar um alimento
-        }
-    };
-
-
-
-    /* const addSelectFoodComponent = () => {
 
 
         if (foods && foods.length > 0 && isClickable) {
@@ -146,31 +139,37 @@ const RegisterMealPage = () => {
                 handleSummedSalt={handleSummedSalt}
             />])
         }
-    } */
+    }
 
-    const handleSelectedItem = (id: number, index: number) => {
-        const newSelectedFoodIds = [...selectedFoodIds];
-        newSelectedFoodIds[index] = id;
-        setSelectedFoodIds(newSelectedFoodIds);
+    const handleSelectedItem = (id: number) => {
 
-        if (foods) {
-            setFoods(foods.filter((food) => food.id !== id));
-        }
+        //pegando o id do item selecionado e retornando pro nosso state de itens
+        setSelectedFoodIds([...selectedFoodIds, id]);
+        //removendo valor da opcao ja selecionada.
+
+        if (foods)
+            setFoods(foods.filter((foodId) => foodId.id !== id));
 
     }
 
-    const handleDeletedItem = async (id: number, index: number) => {
-        const newSelectedFoodIds = selectedFoodIds.filter((_, idx) => idx !== index);
-        setSelectedFoodIds(newSelectedFoodIds);
+    const handleDeletedItem = async (id: number) => {
+        //ao clicar no -, remover dE selectedFoodIds o ID do item selecionado.
+        setSelectedFoodIds(selectedFoodIds.filter((foodId) => foodId !== id))
 
-        const food = await api.getOneFood(id);
-
+        //adicionar novamente o elemento eliminado previamente no LIST:
+        let food = await api.getOneFood(id);
         if (food) {
-            if (foods) {
-                setFoods([...foods, food]);
-            }
+            setFoods([...foods as Food[], food]);
         }
-    };
+    }
+
+    const handleOnClickMinus = (index: number) => {
+        console.log("index", index)
+        const updatedSelectComponents = [...selectComponents];
+        updatedSelectComponents.splice(index, 1); // Remove o componente pelo índice
+
+        setSelectComponents(updatedSelectComponents);
+    }
 
 
     const handleSaveMeal = async () => {
@@ -236,16 +235,16 @@ const RegisterMealPage = () => {
                             <Icon svg='plus' height={27} width={27} />
                         </div>
                     </div>
-                    {foods && foods.length > 0 &&
+                    {foods &&
                         <div className={styles.foodsArea}>
                             {selectComponents.map(
                                 (selectComponent, index) => <SelectFood
                                     key={index}
                                     foods={foods}
                                     index={index}
-                                    onChange={(id) => handleSelectedItem(id, index)}
-                                    onClick={() => { console.log("Nada") }}
-                                    deleteSelectedItem={(id) => handleDeletedItem(id, index)}
+                                    onChange={handleSelectedItem}
+                                    onClick={handleOnClickMinus}
+                                    deleteSelectedItem={handleDeletedItem}
                                     selectedFoodsId={selectedFoodIds}
                                     handleSummedPortion={handleSummedPortion}
                                     handleSummedProtein={handleSummedProtein}
