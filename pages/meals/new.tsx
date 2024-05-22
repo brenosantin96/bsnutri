@@ -1,3 +1,4 @@
+
 import { Header } from '@/components/Header';
 import Head from 'next/head'
 import { useRouter } from 'next/router';
@@ -13,47 +14,50 @@ import { Icon } from '@/components/Icon';
 import { SelectFood } from '@/components/SelectFood';
 import { sumProperty } from '../../helpers/sumProperty'
 import { InfoItemNutritional } from '@/components/InfoItemNutritional';
+import { useApi2 } from '@/libs/useapi2';
 
 
-const RegisterMealPage = () => {
+const RegisterMealPage = (data: ServerProps) => {
 
 
     const router = useRouter();
-    const api = useApi();
+    const api = useApi2(data.token);
+
+
 
     //inputs
     const [nameInput, setNameInput] = useState("");
 
     //foods
-    const [foods, setFoods] = useState<Food[]>();
+    const [foods, setFoods] = useState<Food[]>(data.foods ? data.foods : []);
     const [selectedFoodIds, setSelectedFoodIds] = useState<number[]>([]);
+    const [quantityTimesCanClickPlusButton, setQuantityTimesCanClickPlusButton] = useState<number>(data.foods.length > 0 ? data.foods.length : 0)
 
     //enable buttons
     const [isClickable, setIsClickable] = useState(true);
 
-
+    useEffect(() => {
+        console.log("Foods: ", foods)
+    }, [foods])
 
     useEffect(() => {
-        getFoods();
-    }, [])
-
-    //selects
-    const [selectComponents, setSelectComponents] = useState<JSX.Element[]>([]);
-
-
-
-
-    useEffect(() => {
-        console.log(selectedFoodIds)
+        console.log("selectedFoodIds: ", selectedFoodIds)
     }, [selectedFoodIds])
+
 
     useEffect(() => {
 
         if (foods) {
-            if (selectedFoodIds.length === foods.length) {
+            if (selectedFoodIds.length === quantityTimesCanClickPlusButton) {
+                console.log("foods: ", foods)
+                console.log("selectedFoodIds.length: ", selectedFoodIds.length)
+                console.log("foods.length: ", foods.length)
                 console.log("isClickable ", isClickable)
                 setIsClickable(false)
             } else {
+                console.log("foods: ", foods)
+                console.log("selectedFoodIds.length: ", selectedFoodIds.length)
+                console.log("foods.length: ", foods.length)
                 console.log("isClickable ", isClickable)
                 setIsClickable(true);
             }
@@ -70,10 +74,8 @@ const RegisterMealPage = () => {
     const [summedGrease, setSummedGrease] = useState(0);
     const [summedSalt, setSummedSalt] = useState(0);
 
-    const getFoods = async () => {
-        const foods = await api.getFoods();
-        setFoods(foods);
-    }
+
+
 
     const handleSummedPortion = (value: number, operation: 'plus' | 'minus') => {
         if (operation === 'plus') {
@@ -119,34 +121,11 @@ const RegisterMealPage = () => {
 
     const addSelectFoodComponent = () => {
         if (isClickable) {
-            setSelectedFoodIds([...selectedFoodIds, -1]); // Temporário, atualize ao selecionar um alimento
+            setSelectedFoodIds([...selectedFoodIds, -1]); // O id -1 é para quando usuario ainda nao selecionou o alimento em concreto
         }
     };
 
 
-
-    /* const addSelectFoodComponent = () => {
-
-
-        if (foods && foods.length > 0 && isClickable) {
-
-            setSelectComponents([...selectComponents,
-            <SelectFood
-                index={selectComponents.length}
-                key={selectComponents.length}
-                foods={foods}
-                onChange={handleSelectedItem}
-                onClick={handleOnClickMinus}
-                selectedFoodsId={selectedFoodIds}
-                deleteSelectedItem={handleDeletedItem}
-                handleSummedPortion={handleSummedPortion}
-                handleSummedProtein={handleSummedProtein}
-                handleSummedCalories={handleSummedCalories}
-                handleSummedGrease={handleSummedGrease}
-                handleSummedSalt={handleSummedSalt}
-            />])
-        }
-    } */
 
     const handleSelectedItem = (id: number, index: number) => {
         const newSelectedFoodIds = [...selectedFoodIds];
@@ -236,10 +215,10 @@ const RegisterMealPage = () => {
                             <Icon svg='plus' height={27} width={27} />
                         </div>
                     </div>
-                    {foods && foods.length > 0 &&
+                    {foods &&
                         <div className={styles.foodsArea}>
-                            {selectComponents.map(
-                                (selectComponent, index) => <SelectFood
+                            {selectedFoodIds.map(
+                                (id, index) => <SelectFood
                                     key={index}
                                     foods={foods}
                                     index={index}
@@ -284,4 +263,27 @@ const RegisterMealPage = () => {
 export default RegisterMealPage;
 
 
+type ServerProps = {
+
+    foods: Food[];
+    token: string;
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+
+    // Extrair o ID da URL usando o objeto context
+
+    const token = context.req.headers.cookie?.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1] || '';
+    const api = useApi2(token);
+
+    const allFoods = await api.getFoods();
+
+
+    return {
+        props: {
+            foods: allFoods,
+            token
+        }
+    }
+}
 

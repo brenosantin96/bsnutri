@@ -110,10 +110,7 @@ const MealsPage = () => {
                     </div>
                 }
 
-                <div className={styles.paginationArea}>
-                    <Icon svg='leftArrow' height={40} width={40} />
-                    <Icon svg='rightArrow' height={40} width={40} />
-                </div>
+
             </div>
 
         </>
@@ -122,5 +119,10 @@ const MealsPage = () => {
 
 
 export default MealsPage;
+
+{/* <div className={styles.paginationArea}>
+    <Icon svg='leftArrow' height={40} width={40} />
+    <Icon svg='rightArrow' height={40} width={40} />
+</div> */}
 
 

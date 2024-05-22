@@ -24,6 +24,8 @@ const FoodsPage = () => {
         getFoods();
     }, [])
 
+    
+
     const getFoods = async () => {
         const foods = await api.getFoods();
         setFoods(foods);
@@ -107,10 +109,6 @@ const FoodsPage = () => {
                     </div>
                 }
 
-                <div className={styles.paginationArea}>
-                    <Icon svg='leftArrow' height={40} width={40} />
-                    <Icon svg='rightArrow' height={40} width={40} />
-                </div>
             </div>
 
         </>
@@ -120,3 +118,9 @@ const FoodsPage = () => {
 
 export default FoodsPage;
 
+
+{/* <div className={styles.paginationArea}>
+    <Icon svg='leftArrow' height={40} width={40} />
+    <Icon svg='rightArrow' height={40} width={40} />
+</div>
+ */}

@@ -26,9 +26,22 @@ const MealId = (data: ServerProps) => {
 
     const [foods, setFoods] = useState(data.foods);
 
-    const [availableFoods, setAvaiableFoods] = useState<Food[]>(foods.filter(food => !meal.meals_has_foods || !meal.meals_has_foods.some(mealFood => mealFood.foods_id === food.id)));
+    const [availableFoods, setAvailableFoods] = useState<Food[]>(foods.filter(food => !meal.meals_has_foods || !meal.meals_has_foods.some(mealFood => mealFood.foods_id === food.id)));
     /*  !meal.foods.some(...) nega o resultado do some, ou seja, verifica se o alimento atual NÃO está presente em meal.foods.
  Portanto, o filter incluirá o alimento atual em availableFoods somente se ele NÃO estiver em meal.foods. */
+
+    //enable buttons
+    const [isClickable, setIsClickable] = useState(true);
+    const [quantityTimesCanClickPlusButton, setQuantityTimesCanClickPlusButton] = useState<number>(data.foods.length > 0 ? data.foods.length : 0)
+
+
+    const [selectedFoodId, setSelectedFoodID] = useState(0);
+
+    //booleans
+    const [disabled, setDisabled] = useState(false);
+
+    //modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
 
 
@@ -40,21 +53,29 @@ const MealId = (data: ServerProps) => {
         console.log("availableFoods FOODS", availableFoods)
         const updatedAvailableFoods = foods.filter(food => !meal.meals_has_foods || !meal.meals_has_foods.some(mealFood => mealFood.foods_id === food.id));
         console.log("updatedAvailableFoods FOODS", availableFoods)
-        setAvaiableFoods(updatedAvailableFoods);
-        //CORRIGIR ESSA LINHA, PODE SER QUE DE BUG SE NAO TIVER ALIMENTOS
-        setSelectedFoodID(updatedAvailableFoods[0].id);
-       console.log(updatedAvailableFoods)
+        setAvailableFoods(updatedAvailableFoods);
+        //CORRIGIR ESSA LINHA, VAI DAR BUG SE NAO TIVER ALIMENTOS
+        if (updatedAvailableFoods.length > 0) {
+            setSelectedFoodID(updatedAvailableFoods[0].id);
+        }
+        console.log(updatedAvailableFoods)
     }, [meal])
 
 
 
-    const [selectedFoodId, setSelectedFoodID] = useState(0);
+    useEffect(() => {
+        if (foods) {
+            if (availableFoods.length === quantityTimesCanClickPlusButton) {
+                setIsClickable(false)
+            } else {
+                setIsClickable(true);
+            }
+        }
+    }, [availableFoods])
 
-    //booleans
-    const [disabled, setDisabled] = useState(false);
 
-    //modal
-    const [isModalOpen, setIsModalOpen] = useState(false);
+
+
 
     const removeMeal = () => {
         setIsModalOpen(true);
@@ -89,16 +110,19 @@ const MealId = (data: ServerProps) => {
 
         let foodSelected = await api.getOneFood(selectedFoodId);
 
-        if (foodSelected) {
-            // Crie uma cópia do estado 'meal' usando o spread operator
-            const updatedMeal = { ...meal };
+        if (isClickable) {
+            if (foodSelected) {
+                // Crie uma cópia do estado 'meal' usando o spread operator
+                const updatedMeal = { ...meal };
 
-            // Adicione o 'foodSelected' à nova cópia do estado 'meal'
-            updatedMeal.meals_has_foods = [...updatedMeal.meals_has_foods, { foods_id: foodSelected.id, meals_id: meal.id, foods: foodSelected }];
+                // Adicione o 'foodSelected' à nova cópia do estado 'meal'
+                updatedMeal.meals_has_foods = [...updatedMeal.meals_has_foods, { foods_id: foodSelected.id, meals_id: meal.id, foods: foodSelected }];
 
-            // Atualize o estado 'meal' com a nova cópia contendo o 'foodSelected'
-            setMeal(updatedMeal);
+                // Atualize o estado 'meal' com a nova cópia contendo o 'foodSelected'
+                setMeal(updatedMeal);
+            }
         }
+
 
     }
 
@@ -225,8 +249,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     // Extrair o ID da URL usando o objeto context
     const { id } = context.query;
-
-    //const api = useApi();
 
 
     const token = context.req.headers.cookie?.split(';').find(c => c.trim().startsWith('token='))?.split('=')[1] || '';

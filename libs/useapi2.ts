@@ -42,7 +42,7 @@ export const useApi2 = (token?: string) => ({
 
         }
 
-       
+
 
 
     },
@@ -78,6 +78,58 @@ export const useApi2 = (token?: string) => ({
         }
 
 
+    },
+
+    getManyFood: async (ids: number[]) => {
+
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        try {
+            const foods = await axios.get(`${baseURL}/foodsByUser`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (foods) {
+                const foodsFound = foods.data.filter((item: Food) => ids.includes(item.id));
+                if (foodsFound.length > 0) {
+                    return foodsFound;
+                } else {
+                    alert("Não foi possível encontrar alimentos com os IDs fornecidos");
+                    return [];
+                }
+            }
+
+        } catch (error) {
+            console.log("An error has ocurried", error)
+        }
+
+    },
+
+    createMeal: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, foods_id: number[], image: string = "/default.png") => {
+
+        let token = getCookie('token'); // => 'value'
+
+        if (token === "" || !token || token === "noToken") {
+            return;
+        }
+
+        if (name !== "" || !portion || !protein || !calories || !grease || !salt || foods.length !== 0) {
+            let response = await axios.post(`${baseURL}/mealsByUser`, {
+                name, portion, protein, calories, grease, salt, image, foods_id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            return response.data;
+        }
     },
 
 
