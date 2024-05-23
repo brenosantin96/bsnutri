@@ -108,8 +108,8 @@ const RegisterFoodPage = () => {
                     />
                 </div>
                 <div className={styles.buttonsRegisterArea}>
-                        <ButtonMain onClick={() => {}} textButton={"Volver"} fill={false} disabled={true} />
-                        <ButtonMain onClick={handleSaveFood} textButton={"Guardar"} fill={true} disabled={true} />
+                        <ButtonMain onClick={() => {}} textButton={"Volver"} fill={false} disabled={false} />
+                        <ButtonMain onClick={handleSaveFood} textButton={"Guardar"} fill={true} disabled={false} />
                 </div>
             </div>
 

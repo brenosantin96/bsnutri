@@ -1,7 +1,6 @@
 import { User } from '../types/User'
 import { foods } from '../data/food'
 import { meals } from '@/data/meal';
-import { infoDayData } from '@/data/InfoNutritionalDay';
 import { Food } from '@/types/Food';
 import axios from 'axios';
 import { Meal } from '@/types/Meal';

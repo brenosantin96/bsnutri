@@ -22,7 +22,6 @@ import { extractIds, removeDuplicatesFromArray, transformFoodQuantityInNumberInA
 import { useApi2 } from '@/libs/useapi2';
 import { foodsInfoNutriDay, mealsInfoNutriDay } from '@/types/foodsInfoNutriDay';
 import { createFoodArrayWithQnt, createFoodArrayWithQnt2, createMealArrayWithQnt, createMealArrayWithQnt2 } from '@/helpers/sumIdItems';
-import { infoDayData } from '@/data/InfoNutritionalDay';
 import { getAllFoodsAndPutInACombinedArray, getAllMealsAndPutInACombinedArray, selectedFoodsForCombinedFoodsMinusFunction, selectedMealsForCombinedFoodsMinusFunction } from '@/helpers/functionsInfoNutriDay';
 import FastModal from '@/components/FastModal';
 import { ModalExclude } from '@/components/ModalExclude';
@@ -395,14 +394,14 @@ const DatePage = (data: ServerProps) => {
             <div className={styles.container}>
 
                 <div className={styles.topButtonArea}>
-                    <ButtonMain textButton='Alimento' fill={showSelectFoods ? true : false} onClick={handleFoodButton} disabled={true} />
-                    <ButtonMain textButton='Plato' fill={showSelectMeals ? true : false} onClick={handleMealButton} disabled={true} />
+                    <ButtonMain textButton='Alimento' fill={showSelectFoods ? true : false} onClick={handleFoodButton} disabled={false} />
+                    <ButtonMain textButton='Plato' fill={showSelectMeals ? true : false} onClick={handleMealButton} disabled={false} />
                 </div>
                 {showSelectFoods &&
-                    <SelectFood2 foods={foods} textLabel={"Seleccione un alimento"} handleSelectedFood={handleSelectedFood} onPlus={onPlusButtonAddFood} disabled={!finalizedDay} />
+                    <SelectFood2 foods={foods} textLabel={"Seleccione un alimento"} handleSelectedFood={handleSelectedFood} onPlus={onPlusButtonAddFood} disableSelect={!finalizedDay} />
                 }
                 {showSelectMeals &&
-                    <SelectFood2 foods={meals} textLabel={"Seleccione un plato preparado"} handleSelectedFood={handleSelectedMeal} onPlus={onPlusButtonAddMeal} disabled={!finalizedDay} />
+                    <SelectFood2 foods={meals} textLabel={"Seleccione un plato preparado"} handleSelectedFood={handleSelectedMeal} onPlus={onPlusButtonAddMeal} disableSelect={!finalizedDay} />
                 }
                 <div className={styles.finalizedDayArea}>
                     <input
@@ -438,14 +437,14 @@ const DatePage = (data: ServerProps) => {
 
                         <div className={styles.BottomButtonArea}>
 
-                            <ButtonMain textButton='Eliminar' fill={true} onClick={openModalToRemoveInfoNutriDay} disabled={data.infoDay ? true : false} />
+                            <ButtonMain textButton='Eliminar' fill={true} onClick={openModalToRemoveInfoNutriDay} disabled={data.infoDay ? false : true} />
 
                             {!data.infoDay &&
-                                <ButtonMain textButton='Guardar' fill={true} onClick={handleSaveDay} disabled={savedButton === false ? true : false} />
+                                <ButtonMain textButton='Guardar' fill={true} onClick={handleSaveDay} disabled={savedButton === false ? false : true} />
                             }
 
                             {data.infoDay &&
-                                <ButtonMain textButton='Actualizar' fill={true} onClick={handleUpdateDay} disabled={true} />
+                                <ButtonMain textButton='Actualizar' fill={true} onClick={handleUpdateDay} disabled={false} />
                             }
                         </div>
 

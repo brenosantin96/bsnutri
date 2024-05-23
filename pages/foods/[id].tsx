@@ -104,8 +104,8 @@ const FoodId = () => {
             <div className={styles.container}>
 
                 <div className={styles.areaEditButton}>
-                    <ButtonMain onClick={startEdditing} textButton={"Editar"} fill={false} disabled={true} />
-                    <ButtonMain onClick={removeFood} textButton={"Remover"} fill={false} disabled={true} />
+                    <ButtonMain onClick={startEdditing} textButton={"Editar"} fill={false} disabled={false} />
+                    <ButtonMain onClick={removeFood} textButton={"Remover"} fill={false} disabled={false} />
                 </div>
 
                 {food &&
@@ -121,8 +121,8 @@ const FoodId = () => {
 
 
                 <div className={styles.backAndSaveArea}>
-                    <ButtonMain onClick={cancelSave} textButton={"Cancelar"} fill={false} disabled={true} />
-                    <ButtonMain onClick={saveEdittedFood} textButton={"Guardar"} fill={true} disabled={true} />
+                    <ButtonMain onClick={cancelSave} textButton={"Cancelar"} fill={false} disabled={false} />
+                    <ButtonMain onClick={saveEdittedFood} textButton={"Guardar"} fill={true} disabled={false} />
                 </div>
             </div>
         </>

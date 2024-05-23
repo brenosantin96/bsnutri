@@ -84,7 +84,7 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled, saved, onSa
                     </div>
                     <div className={styles.downSideContainer}>
                         <div className={styles.infoItem}>
-                            <InputSecondary disabled={true} type={'text'} value={"Proteína"} onlyText />
+                            <InputSecondary disabled={false} type={'text'} value={"Proteína"} onlyText />
                             <InputSecondary
                                 disabled={!isEdditing as boolean}
                                 type={'number'}
@@ -94,7 +94,7 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled, saved, onSa
 
                         </div>
                         <div className={styles.infoItem}>
-                            <InputSecondary disabled={true} type={'text'} value={"Kcal"} onlyText />
+                            <InputSecondary disabled={false} type={'text'} value={"Kcal"} onlyText />
                             <InputSecondary
                                 disabled={!isEdditing as boolean}
                                 type={'number'}
@@ -103,7 +103,7 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled, saved, onSa
                             />
                         </div>
                         <div className={styles.infoItem}>
-                            <InputSecondary disabled={true} type={'text'} value={"Grasa"} onlyText />
+                            <InputSecondary disabled={false} type={'text'} value={"Grasa"} onlyText />
                             <InputSecondary
                                 disabled={!isEdditing as boolean}
                                 type={'number'}
@@ -112,7 +112,7 @@ export const FoodComponent2 = ({ data, light, isEdditing, cancelled, saved, onSa
                             />
                         </div>
                         <div className={styles.infoItem}>
-                            <InputSecondary disabled={true} type={'text'} value={"Sal"} onlyText />
+                            <InputSecondary disabled={false} type={'text'} value={"Sal"} onlyText />
                             <InputSecondary
                                 disabled={!isEdditing as boolean}
                                 type={'number'}

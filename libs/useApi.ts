@@ -1,7 +1,6 @@
 import { User } from '../types/User'
 import { foods } from '../data/food'
 import { meals } from '@/data/meal';
-import { infoDayData } from '@/data/InfoNutritionalDay';
 import { Food } from '@/types/Food';
 import axios from 'axios';
 import { Meal } from '@/types/Meal';
@@ -259,10 +258,9 @@ export const useApi = () => ({
 
     getAllInfoDay: async () => {
         //enviar ID do usuario para pegar de todos os dias.
-        return infoDayData;
     },
 
-    getInfoDay: async (id: string) => {
+    /* getInfoDay: async (id: string) => {
         let infoDay = await infoDayData.find(item => item.id === id);
         if (infoDay) {
             return infoDay;
@@ -270,8 +268,7 @@ export const useApi = () => ({
             return null;
 
         }
-    },
-
-
+    } */
+    
 
 })
