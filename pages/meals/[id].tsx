@@ -38,7 +38,9 @@ const MealId = (data: ServerProps) => {
     const [selectedFoodId, setSelectedFoodID] = useState(0);
 
     //booleans
-    const [disabled, setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(true);
+    const [disableSelect, setDisableSelect] = useState(true)
+    const [isEdditing, setIsEdditing] = useState(false);
 
     //modal
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,6 +56,8 @@ const MealId = (data: ServerProps) => {
         const updatedAvailableFoods = foods.filter(food => !meal.meals_has_foods || !meal.meals_has_foods.some(mealFood => mealFood.foods_id === food.id));
         console.log("updatedAvailableFoods FOODS", availableFoods)
         setAvailableFoods(updatedAvailableFoods);
+
+
         //CORRIGIR ESSA LINHA, VAI DAR BUG SE NAO TIVER ALIMENTOS
         if (updatedAvailableFoods.length > 0) {
             setSelectedFoodID(updatedAvailableFoods[0].id);
@@ -65,15 +69,16 @@ const MealId = (data: ServerProps) => {
 
     useEffect(() => {
         if (foods) {
-            if (availableFoods.length === quantityTimesCanClickPlusButton) {
-                setIsClickable(false)
-            } else {
-                setIsClickable(true);
+            if (isEdditing) { //se estiver editando, select vai estar LIBERADO!
+                setDisableSelect(false)
             }
+            if (isEdditing && availableFoods.length === 0) { //se estiver editando e foods disponiveis chegar a true, select vai estar DESABILITADO
+                setDisableSelect(true)
+            }
+            
+
         }
-    }, [availableFoods])
-
-
+    }, [availableFoods, isEdditing])
 
 
 
@@ -94,7 +99,8 @@ const MealId = (data: ServerProps) => {
 
 
     const handleEditButton = () => {
-        setDisabled(true);
+        setDisabled(false);
+        setIsEdditing(true);
     }
 
     const handleDeleteButton = () => {
@@ -183,6 +189,7 @@ const MealId = (data: ServerProps) => {
 
             setMeal(meal);
             let responseUpdateMeal = await api.saveEditedMeal(meal.id, meal.name, meal.portion, meal.protein, meal.calories, meal.grease, meal.salt, foodsSelected)
+            setIsEdditing(false);
             console.log(responseUpdateMeal);
             console.log(meal);
         }
@@ -196,7 +203,7 @@ const MealId = (data: ServerProps) => {
             <div className={styles.container}>
 
                 <div className={styles.editButton}>
-                    <ButtonMain onClick={handleEditButton} textButton={"Editar"} fill={false} disabled={true} />
+                    <ButtonMain onClick={handleEditButton} textButton={"Editar"} fill={false} disabled={false} />
                     <ButtonMain onClick={removeMeal} textButton={"Remover"} fill={true} disabled={disabled} />
                 </div>
 
@@ -211,7 +218,7 @@ const MealId = (data: ServerProps) => {
                     <SelectFood2
                         foods={availableFoods}
                         textLabel={"Alimento"}
-                        disabled={disabled}
+                        disableSelect={disableSelect}
                         handleSelectedFood={handleSelectedFood}
                         onPlus={onPlusButtonAddFood}
                     />
@@ -228,7 +235,7 @@ const MealId = (data: ServerProps) => {
                 </div>
 
                 <div className={styles.bottomArea}>
-                    <ButtonMain onClick={() => { router.push('/meals') }} textButton={"Volver"} fill={false} disabled={true} />
+                    <ButtonMain onClick={() => { router.push('/meals') }} textButton={"Volver"} fill={false} disabled={disabled} />
                     <ButtonMain onClick={() => handleUpdateMeal(meal)} textButton={"Guardar"} fill={true} disabled={disabled} />
                 </div>
 

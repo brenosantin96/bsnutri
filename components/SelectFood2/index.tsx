@@ -7,11 +7,11 @@ type Props = {
     textLabel: string;
     foods: (Food | Meal)[];
     handleSelectedFood: (id: number) => void;
-    disabled?: boolean;
+    disableSelect?: boolean;
     onPlus: () => void;
 }
 
-const SelectFood2 = ({ textLabel, foods, handleSelectedFood, onPlus, disabled }: Props) => {
+const SelectFood2 = ({ textLabel, foods, handleSelectedFood, onPlus, disableSelect }: Props) => {
 
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -27,7 +27,7 @@ const SelectFood2 = ({ textLabel, foods, handleSelectedFood, onPlus, disabled }:
             <div className={styles.container}>
 
                 <div className={styles.selectArea}>
-                    <select className={styles.selectArea} name="foods" id="food-select" disabled={!disabled} onChange={handleChange}>
+                    <select className={styles.selectArea} name="foods" id="food-select" disabled={disableSelect} onChange={handleChange}>
                         <option value="">Seleccione un item</option>
                         {foods.map((food, index) => (
                             <option key={index} value={food.id} >
@@ -38,8 +38,8 @@ const SelectFood2 = ({ textLabel, foods, handleSelectedFood, onPlus, disabled }:
                 </div>
                 <div className={styles.addArea} onClick={onPlus}
                     style={{
-                        pointerEvents: !disabled ? 'none' : 'all',
-                        opacity: !disabled ? '0.4' : 'initial'
+                        pointerEvents: disableSelect ? 'none' : 'all',
+                        opacity: disableSelect ? '0.4' : 'initial'
                     }}
                 >
                     <Icon svg='plus' width={27} height={27} color={'#5F4646'} />

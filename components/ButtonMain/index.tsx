@@ -17,8 +17,8 @@ export const ButtonMain = ({ textButton, onClick, fill, width, disabled }: Props
             style={{
                 backgroundColor: fill ? '#FAA846' : '#FFF',
                 width: width ? width : '100%',
-                pointerEvents: !disabled ? 'none' : 'all',
-                opacity: !disabled ? '0.4' : 'initial'
+                pointerEvents: disabled ? 'none' : 'all',
+                opacity: disabled ? '0.4' : 'initial'
 
             }}
         >

@@ -73,7 +73,7 @@ const FoodsPage = () => {
 
                 <div className={styles.searchArea}>
                     <div className={styles.buttonSearchArea}>
-                        <ButtonMain textButton='Cadastrar' onClick={createNewFood} fill={false} disabled={true} />
+                        <ButtonMain textButton='Cadastrar' onClick={createNewFood} fill={false} disabled={false} />
                     </div>
                     <div className={styles.buttonWithIcon}>
                         {/* <input type="text" value={searchText} onChange={(e) => setSearchText(e.target.value)}/> */}

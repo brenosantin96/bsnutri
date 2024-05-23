@@ -102,8 +102,8 @@ export const FoodComponent = ({ data, light, url, minusButton, link, disabled, o
                 {minusButton &&
                     <div className={styles.minusButtonArea}
                         style={{
-                            pointerEvents: !disabled ? 'none' : 'all',
-                            opacity: !disabled ? '0.4' : 'initial'
+                            pointerEvents: disabled ? 'none' : 'all',
+                            opacity: disabled ? '0.4' : 'initial'
                         }}
                         onClick={() => handleOnMinus(data.id)}
                     >
