@@ -55,11 +55,15 @@ const FoodId = () => {
 
     }
 
+    const backPage = async () => {
+        router.push("/foods")
+    }
+
     const handleUpdateFood = (updatedFood: Food) => {
 
         // Atualiza o estado do alimento com os novos dados vindo do componente filho.
         setFood(updatedFood);
-        
+
     };
 
     const removeFood = () => {
@@ -79,7 +83,7 @@ const FoodId = () => {
         if (deletedResponse.msg === "Food removed with success") {
             router.push('/foods');
         }
-        
+
     }
 
 
@@ -121,7 +125,7 @@ const FoodId = () => {
 
 
                 <div className={styles.backAndSaveArea}>
-                    <ButtonMain onClick={cancelSave} textButton={"Cancelar"} fill={false} disabled={false} />
+                    <ButtonMain onClick={isEdditing ? cancelSave : backPage} textButton={isEdditing ? "Cancelar" : "Volver"} fill={false} disabled={false} />
                     <ButtonMain onClick={saveEdittedFood} textButton={"Guardar"} fill={true} disabled={false} />
                 </div>
             </div>

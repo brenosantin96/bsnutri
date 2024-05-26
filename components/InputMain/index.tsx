@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, KeyboardEvent } from 'react';
 import styles from './styles.module.css';
 
 type Props = {
@@ -8,11 +8,12 @@ type Props = {
     typeInput: 'text' | 'password' | 'number',
     widthInput?: number;
     onlyNumber?: boolean;
+    onPressIntro?: (e: KeyboardEvent<HTMLInputElement>) => void;
     onChange: (newValue: string) => void;
     onBlur?: () => void;
 }
 
-export const InputMain = ({ name, textLabel, fontSizeLabel, widthInput, typeInput, onChange, onBlur, onlyNumber }: Props) => {
+export const InputMain = ({ name, textLabel, fontSizeLabel, widthInput, typeInput, onChange, onBlur, onlyNumber, onPressIntro }: Props) => {
 
 
     const [focused, setFocused] = useState(false);
@@ -34,11 +35,17 @@ export const InputMain = ({ name, textLabel, fontSizeLabel, widthInput, typeInpu
                 }}>
                 {textLabel}
             </label>
-            <input className={styles.styleInput} onChange={e => onChange(e.target.value)} name={name} onBlur={handleBlur} onFocus={handleFocus}
+            <input className={styles.styleInput}
+                onChange={e => onChange(e.target.value)}
+                name={name} onBlur={handleBlur}
+                onFocus={handleFocus}
+                onKeyUp={onPressIntro}
+
                 style={{
                     width: widthInput,
                     border: focused ? "1px solid #FAA846" : "1px solid #DFDFDF"
                 }}
+
                 type={typeInput} />
         </div>
     )

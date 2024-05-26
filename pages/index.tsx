@@ -6,7 +6,7 @@ import { ButtonSecondary } from '../components/ButtonSecondary'
 import { Icon } from '@/components/Icon'
 import HealthyWoman from '../public/woman2.png'
 import Link from 'next/link'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState, KeyboardEvent } from 'react'
 import { useApi } from '@/libs/useApi'
 import { useRouter } from 'next/router'
 import { AuthContext } from '@/contexts/Auth/AuthContext'
@@ -34,9 +34,17 @@ const Login = () => {
     }
   }
 
- 
+  const handleKeyboardEvent = async (e: KeyboardEvent<HTMLInputElement>) => {
+
+    if (e.key === "Enter") {
+      await handleLogin();
+    }
+
+  };
+
+
   useEffect(() => {
-    if (auth.token !== "" ) { setCookie("token", auth.token); }
+    if (auth.token !== "") { setCookie("token", auth.token); }
   }, [auth.token])
 
   return (
@@ -61,7 +69,7 @@ const Login = () => {
         <div className={styles.registerArea}>
           <div className={styles.formArea}>
             <InputMain onChange={e => setEmail(e)} fontSizeLabel={12} name={`emailInputLogin`} textLabel={'Email'} widthInput={262} typeInput="text" />
-            <InputMain onChange={e => setPassword(e)} fontSizeLabel={12} name={`passwordInputLogin`} textLabel={'Password'} widthInput={262} typeInput="password" />
+            <InputMain onChange={e => setPassword(e)} fontSizeLabel={12} name={`passwordInputLogin`} textLabel={'Password'} widthInput={262} typeInput="password" onPressIntro={handleKeyboardEvent} />
             <div className={styles.forgotPasswordText}>
               ¿Ha olvidado su contraseña? <Link legacyBehavior href={`/forgotPassword`}><a>Pulse aquí</a></Link>
             </div>

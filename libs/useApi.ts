@@ -105,6 +105,7 @@ export const useApi = () => ({
 
     createFood: async (name: string, portion: number, protein: number, calories: number, grease: number, salt: number, image: string = '/default.png') => {
 
+        //aqui vai funcionar porque o token ja esta settado 
         let token = getCookie('token'); // => 'value'
 
         if (token === "" || !token || token === "noToken") {
@@ -120,7 +121,17 @@ export const useApi = () => ({
                 }
             });
 
-            return response.data;
+
+            if(response.data){
+                return response.data;
+            }
+
+            else {
+
+                console.log(response)
+                return null
+            }
+
         }
 
 
