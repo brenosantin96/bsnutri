@@ -398,10 +398,10 @@ const DatePage = (data: ServerProps) => {
                     <ButtonMain textButton='Plato' fill={showSelectMeals ? true : false} onClick={handleMealButton} disabled={false} />
                 </div>
                 {showSelectFoods &&
-                    <SelectFood2 foods={foods} textLabel={"Seleccione un alimento"} handleSelectedFood={handleSelectedFood} onPlus={onPlusButtonAddFood} disableSelect={!finalizedDay} />
+                    <SelectFood2 foods={foods} textLabel={"Seleccione un alimento"} handleSelectedFood={handleSelectedFood} onPlus={onPlusButtonAddFood} disableSelect={finalizedDay} />
                 }
                 {showSelectMeals &&
-                    <SelectFood2 foods={meals} textLabel={"Seleccione un plato preparado"} handleSelectedFood={handleSelectedMeal} onPlus={onPlusButtonAddMeal} disableSelect={!finalizedDay} />
+                    <SelectFood2 foods={meals} textLabel={"Seleccione un plato preparado"} handleSelectedFood={handleSelectedMeal} onPlus={onPlusButtonAddMeal} disableSelect={finalizedDay} />
                 }
                 <div className={styles.finalizedDayArea}>
                     <input

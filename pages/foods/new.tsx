@@ -24,6 +24,9 @@ const RegisterFoodPage = () => {
     const [greaseInput, setGreaseInput] = useState("");
     const [saltInput, setSaltInput] = useState("");
 
+    //error
+    const [error, setError] = useState<string | null>(null);
+
     
     const handleSaveFood = async () => {
         let newFood : Food = {
@@ -36,8 +39,13 @@ const RegisterFoodPage = () => {
             salt: parseInt(saltInput)
         };
 
-        await api.createFood(newFood.name, newFood.portion, newFood.protein, newFood.calories, newFood.grease, newFood.salt);
-        router.push("/foods");
+        try {
+            let result = await api.createFood(newFood.name, newFood.portion, newFood.protein, newFood.calories, newFood.grease, newFood.salt);
+            console.log(result);
+            router.push("/foods");
+        } catch (error: any) {
+            alert(error.message)
+        };
     }
 
 

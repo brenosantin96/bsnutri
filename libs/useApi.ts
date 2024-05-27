@@ -108,11 +108,16 @@ export const useApi = () => ({
         //aqui vai funcionar porque o token ja esta settado 
         let token = getCookie('token'); // => 'value'
 
-        if (token === "" || !token || token === "noToken") {
-            return;
+        if (!token || token === "noToken") {
+            throw new Error("Token inválido ou não presente.");
         }
 
-        if (name !== "" || !portion || !protein || !calories || !grease || !salt) {
+        if (!name || !portion || !protein || !calories || !grease || !salt) {
+            throw new Error("Todos os campos devem ser preenchidos.");
+        }
+
+        try {
+
             let response = await axios.post(`${baseURL}/foodsByUser`, {
                 name, portion, protein, calories, grease, salt, image
             }, {
@@ -121,17 +126,14 @@ export const useApi = () => ({
                 }
             });
 
-
-            if(response.data){
+            if (response.status === 200) {
                 return response.data;
+            } else {
+                throw new Error(`Erro inesperado: ${response.status}`);
             }
 
-            else {
-
-                console.log(response)
-                return null
-            }
-
+        } catch (error) {
+            console.log(error)
         }
 
 
@@ -250,7 +252,7 @@ export const useApi = () => ({
     },
 
     deleteMeal: async (id: number) => {
-       
+
         let token = getCookie('token'); // => 'value'
 
         if (token === "" || !token || token === "noToken") {
@@ -280,6 +282,6 @@ export const useApi = () => ({
 
         }
     } */
-    
+
 
 })
