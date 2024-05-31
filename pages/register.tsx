@@ -22,8 +22,15 @@ const Register = () => {
     const router = useRouter();
 
     const handleRegister = async () => {
-        await api.signUp({name, email, password, isAdmin : false});
-        router.push('/')
+
+
+        const registerResponse = await api.signUp({name, email, password, isAdmin : false});
+        if(registerResponse){
+            router.push('/')
+        } else {
+            alert("Email registrado ya existe.")
+            router.push('/')
+        }
     }
 
     return (

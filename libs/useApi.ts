@@ -42,8 +42,19 @@ export const useApi = () => ({
     },
 
     signUp: async (user: User) => {
-        const response = await axios.post(`${baseURL}/register`, user);
-        return response.data;
+
+        try {
+            const response = await axios.post(`${baseURL}/register`, user);
+
+            if(response.status === 200){
+                return response.data;
+            } else {
+                throw new Error(`Erro inesperado: ${response.status}`);
+            }
+
+        } catch(error) {
+            console.log(error)
+        }
     },
 
     loginUser: async (email: string, password: string) => {
@@ -165,9 +176,10 @@ export const useApi = () => ({
 
         let token = getCookie('token'); // => 'value'
 
-        if (token === "" || !token || token === "noToken") {
-            return;
+        if (!token || token === "noToken") {
+            throw new Error("Token inválido ou não presente.");
         }
+
 
         let response = await axios.delete(`${baseURL}/foodsByUser/${id}`, {
             headers: {
@@ -255,18 +267,27 @@ export const useApi = () => ({
 
         let token = getCookie('token'); // => 'value'
 
-        if (token === "" || !token || token === "noToken") {
-            return;
+        if (!token || token === "noToken") {
+            throw new Error("Token inválido ou não presente.");
         }
 
-        let response = await axios.delete(`${baseURL}/mealsByUser/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
+
+        try {
+            let response = await axios.delete(`${baseURL}/mealsByUser/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (response.status === 200) {
+                return response.data;
+            } else {
+                throw new Error(`Erro inesperado: ${response.status}`);
             }
-        });
 
-        return response.data;
-
+        } catch (error) {
+            console.log(error)
+        }
     },
 
     getAllInfoDay: async () => {

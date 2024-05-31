@@ -26,6 +26,12 @@ const MealsPage = () => {
 
     }, [])
 
+    useEffect(() => {
+
+        console.log(meals)
+
+    }, [meals])
+
     const getMeals = async () => {
         const meals = await api.getMeals();
         setMeals(meals);

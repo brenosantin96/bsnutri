@@ -87,9 +87,16 @@ const MealId = (data: ServerProps) => {
     }
 
     const handleDeleteMeal = async (id: number) => {
+
+
         let deleted = await api.deleteMeal(id);
 
-        if (deleted.msg) {
+        if (!deleted) {
+            alert("No es posible remover el meal porque ya esta relacionado con InfoNutriDays")
+            router.push('/meals');
+        }
+
+        if (deleted) {
             console.log("deletado com sucesso o Meal: ", id)
             console.log(deleted)
             router.push('/meals');

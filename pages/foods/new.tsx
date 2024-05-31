@@ -24,8 +24,6 @@ const RegisterFoodPage = () => {
     const [greaseInput, setGreaseInput] = useState("");
     const [saltInput, setSaltInput] = useState("");
 
-    //error
-    const [error, setError] = useState<string | null>(null);
 
     
     const handleSaveFood = async () => {
